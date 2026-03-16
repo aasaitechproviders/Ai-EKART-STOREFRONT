@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — eKart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --accent: #6c63ff; --bg: #ffffff; --text: #111827; --text2: #6b7280; --text3: #9ca3af; --border: #e5e7eb; --surface: #f9fafb; --surface2: #f3f4f6; --red: #ef4444; --green: #10b981; --yellow: #f59e0b; }
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 100; gap: 12px; }
+.nav-logo { font-size: 20px; font-weight: 800; text-decoration: none; color: var(--text); }
+.nav-logo span { color: var(--accent); }
+.nav-logo .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; margin-left: 2px; vertical-align: middle; }
+.nav-store { font-size: 14px; font-weight: 600; color: var(--text2); flex: 1; text-align: center; }
+.nav-actions { display: flex; gap: 10px; }
+.btn-nav { padding: 7px 14px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; text-decoration: none; transition: all .15s; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text2); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-accent { background: var(--accent); border: 1px solid var(--accent); color: #fff; }
+.btn-accent:hover { opacity: .88; }
+
+.page-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 24px 60px; }
+.page-header { margin-bottom: 28px; }
+.page-header h1 { font-size: 24px; font-weight: 800; }
+.page-header p { font-size: 14px; color: var(--text2); margin-top: 4px; }
+
+.account-layout { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: start; }
+.sidebar { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 8px; position: sticky; top: 76px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s; color: var(--text2); }
+.nav-item:hover { background: #fff; color: var(--text); }
+.nav-item.active { background: #fff; color: var(--accent); box-shadow: 0 1px 8px rgba(0,0,0,.07); }
+.nav-item .icon { font-size: 16px; width: 22px; text-align: center; }
+.logout-item { color: var(--red) !important; margin-top: 4px; }
+
+.content-panel { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+.section-title { font-size: 16px; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+
+/* Profile */
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 10px 13px; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; color: var(--text); font-family: 'Outfit', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; }
+.form-input:focus { border-color: var(--accent); background: #fff; }
+.form-input:read-only { color: var(--text2); cursor: default; }
+.btn-save { padding: 10px 22px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: opacity .15s; }
+.btn-save:hover:not(:disabled) { opacity: .88; }
+.btn-save:disabled { opacity: .5; }
+
+/* Orders */
+.order-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+.order-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--surface); flex-wrap: wrap; gap: 8px; cursor: pointer; }
+.order-num { font-size: 14px; font-weight: 800; font-family: 'DM Mono', monospace; }
+.order-date { font-size: 12px; color: var(--text2); }
+.order-total { font-size: 15px; font-weight: 900; font-family: 'DM Mono', monospace; color: var(--accent); }
+.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.badge-green  { background: rgba(16,185,129,.1); color: var(--green); }
+.badge-yellow { background: rgba(245,158,11,.1); color: var(--yellow); }
+.badge-red    { background: rgba(239,68,68,.1); color: var(--red); }
+.badge-gray   { background: var(--surface2); color: var(--text2); }
+.badge-blue   { background: rgba(108,99,255,.1); color: var(--accent); }
+.order-body { display: none; padding: 14px 16px; border-top: 1px solid var(--border); }
+.order-body.open { display: block; }
+.order-item-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.order-item-row:last-child { border-bottom: none; }
+.order-item-img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--surface2); flex-shrink: 0; }
+.order-item-img-ph { width: 44px; height: 44px; border-radius: 8px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.order-item-name { flex: 1; font-size: 13px; font-weight: 600; }
+.order-item-qty { font-size: 12px; color: var(--text2); }
+.order-item-price { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
+.order-address { font-size: 13px; color: var(--text2); line-height: 1.6; padding: 10px 0; border-top: 1px solid var(--border); margin-top: 8px; }
+.tracking-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(16,185,129,.06); border: 1px solid rgba(16,185,129,.2); border-radius: 8px; margin-top: 8px; font-size: 13px; }
+.tracking-id { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--green); }
+
+/* Addresses */
+.address-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.address-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px; position: relative; }
+.address-card.default { border-color: var(--accent); background: rgba(108,99,255,.03); }
+.address-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px; }
+.address-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.address-lines { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.address-actions { display: flex; gap: 6px; margin-top: 10px; }
+.btn-sm { padding: 5px 10px; border-radius: 7px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: #fff; font-family: 'Outfit', sans-serif; transition: all .15s; }
+.btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm.danger:hover { border-color: var(--red); color: var(--red); }
+.default-badge { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 700; background: rgba(108,99,255,.1); color: var(--accent); padding: 2px 7px; border-radius: 20px; }
+.add-address-card { border: 2px dashed var(--border); border-radius: 12px; padding: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; min-height: 120px; font-size: 13px; font-weight: 700; color: var(--text2); transition: all .15s; }
+.add-address-card:hover { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,.03); }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal { background: #fff; border-radius: 18px; padding: 26px; width: 100%; max-width: 420px; }
+.modal-title { font-size: 17px; font-weight: 800; margin-bottom: 18px; }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.btn-cancel { padding: 9px 18px; background: transparent; border: 1px solid var(--border); border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; color: var(--text2); }
+.btn-cancel:hover { border-color: var(--text); color: var(--text); }
+
+/* Empty state */
+.empty { text-align: center; padding: 50px 20px; color: var(--text2); }
+.empty-icon { font-size: 44px; margin-bottom: 14px; }
+.empty h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+
+/* Skel */
+.skel { background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; border-radius: 12px; padding: 12px 20px; font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s; z-index: 600; white-space: nowrap; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 700px) {
+  .account-layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; display: flex; flex-wrap: wrap; gap: 4px; }
+  .nav-item { flex: 1; min-width: 100px; justify-content: center; }
+  .nav-store { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" id="navLogo" href="#">e<span>K</span>art<span class="dot"></span></a>
+  <span class="nav-store" id="navStoreName"></span>
+  <div class="nav-actions">
+    <a class="btn-nav btn-ghost" id="navShop" href="#">🛍 Shop</a>
+    <a class="btn-nav btn-accent" id="navCart" href="#">🛒 Cart</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>My Account</h1>
+    <p id="welcomeMsg">Loading…</p>
+  </div>
+  <div class="account-layout">
+    <div class="sidebar">
+      <div class="nav-item active" onclick="showTab('orders')" id="navOrders"><span class="icon">📋</span>My Orders</div>
+      <div class="nav-item" onclick="showTab('addresses')" id="navAddresses"><span class="icon">📍</span>Addresses</div>
+      <div class="nav-item" onclick="showTab('profile')" id="navProfile"><span class="icon">👤</span>Profile</div>
+      <div class="nav-item logout-item" onclick="logout()"><span class="icon">↩</span>Logout</div>
+    </div>
+    <div id="tabContent" class="content-panel">
+      <div class="skel" style="height:22px;width:120px;margin-bottom:16px;"></div>
+      <div class="skel" style="height:80px;border-radius:12px;margin-bottom:10px;"></div>
+      <div class="skel" style="height:80px;border-radius:12px;margin-bottom:10px;opacity:.7;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Address Modal -->
+<div class="modal-overlay" id="addrModal">
+  <div class="modal">
+    <div class="modal-title" id="addrModalTitle">Add Address</div>
+    <input type="hidden" id="addrEditId">
+    <div class="form-row"><label>Label</label><input class="form-input" id="addrLabel" placeholder="Home / Work / Other"></div>
+    <div class="form-row"><label>Name</label><input class="form-input" id="addrName" placeholder="Full name"></div>
+    <div class="form-row"><label>Phone</label><input class="form-input" id="addrPhone" placeholder="+91 98765 43210"></div>
+    <div class="form-row"><label>Address Line 1 *</label><input class="form-input" id="addrLine1" placeholder="House / Flat / Street"></div>
+    <div class="form-row"><label>Line 2</label><input class="form-input" id="addrLine2" placeholder="Area / Landmark (optional)"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-row"><label>City *</label><input class="form-input" id="addrCity" placeholder="Chennai"></div>
+      <div class="form-row"><label>State</label><input class="form-input" id="addrState" placeholder="Tamil Nadu"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="form-row"><label>Pincode *</label><input class="form-input" id="addrPincode" placeholder="600001"></div>
+      <div class="form-row"><label>Country</label><input class="form-input" id="addrCountry" value="India"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeAddrModal()">Cancel</button>
+      <button class="btn-save" onclick="saveAddress()">Save Address</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const params = new URLSearchParams(location.search)
+const slug   = params.get('store')
+const API    = 'https://apiv2.aasaitech.in'
+const token  = localStorage.getItem(`cust_token_${slug}`)
+let customer = null
+let currency = '₹'
+let currentTab = 'orders'
+
+// Redirect to login if not authenticated
+if (!token) location.href = `customer-login.html?store=${slug}&redirect=${encodeURIComponent(location.href)}`
+
+// Nav links
+document.getElementById('navLogo').href  = `index.html?store=${slug}`
+document.getElementById('navShop').href  = `index.html?store=${slug}`
+document.getElementById('navCart').href  = `cart.html?store=${slug}`
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+}
+
+async function init() {
+  // Load store config
+  try {
+    const cfg = await fetch(`${API}/shop/${slug}/config`).then(r => r.json())
+    if (!cfg.error) {
+      document.getElementById('navStoreName').textContent = cfg.name
+      document.title = `My Account — ${cfg.name}`
+      if (cfg.brand_color) document.documentElement.style.setProperty('--accent', cfg.brand_color)
+      if (cfg.currency === 'USD') currency = '$'
+      else if (cfg.currency === 'EUR') currency = '€'
+    }
+  } catch {}
+
+  // Load profile
+  try {
+    const res = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() })
+    if (res.status === 401) { logout(); return }
+    customer = await res.json()
+    document.getElementById('welcomeMsg').textContent = `Welcome back, ${customer.name}!`
+  } catch {
+    document.getElementById('welcomeMsg').textContent = 'Welcome back!'
+  }
+  showTab('orders')
+}
+
+function showTab(tab) {
+  currentTab = tab
+  document.querySelectorAll('.nav-item[id^="nav"]').forEach(el => el.classList.remove('active'))
+  const navId = { orders: 'navOrders', addresses: 'navAddresses', profile: 'navProfile' }[tab]
+  if (navId) document.getElementById(navId)?.classList.add('active')
+  const content = document.getElementById('tabContent')
+  if (tab === 'orders')    renderOrders(content)
+  if (tab === 'addresses') renderAddresses(content)
+  if (tab === 'profile')   renderProfile(content)
+}
+
+// ── ORDERS ────────────────────────────────────────────────────────────────────
+async function renderOrders(el) {
+  el.innerHTML = `<div class="section-title">📋 My Orders</div><div class="skel" style="height:80px;border-radius:12px;margin-bottom:10px;"></div><div class="skel" style="height:80px;border-radius:12px;opacity:.7;"></div>`
+  try {
+    const data = await fetch(`${API}/shop/${slug}/customers/me/orders`, { headers: authHeaders() }).then(r => r.json())
+    const orders = data.orders || []
+    if (!orders.length) {
+      el.innerHTML = `<div class="section-title">📋 My Orders</div><div class="empty"><div class="empty-icon">📦</div><h3>No orders yet</h3><p>Start shopping and your orders will appear here.</p><a href="index.html?store=${slug}" style="display:inline-block;margin-top:16px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;">Browse Products</a></div>`
+      return
+    }
+    const statusBadge = s => {
+      const m = { pending:'badge-yellow', confirmed:'badge-blue', shipped:'badge-blue', delivered:'badge-green', cancelled:'badge-red', returned:'badge-gray' }
+      return `<span class="badge ${m[s]||'badge-gray'}">${s}</span>`
+    }
+    el.innerHTML = `<div class="section-title">📋 My Orders</div>` + orders.map(o => `
+      <div class="order-card">
+        <div class="order-header" onclick="toggleOrder('ord-${o._id}')">
+          <div>
+            <div class="order-num">#${o.order_number}</div>
+            <div class="order-date">${new Date(o.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            ${statusBadge(o.status)}
+            <div class="order-total">${currency}${o.total?.toFixed(2)}</div>
+            <span style="color:var(--text3);font-size:12px;">▾</span>
+          </div>
+        </div>
+        <div class="order-body" id="ord-${o._id}">
+          ${(o.items||[]).map(i => `
+            <div class="order-item-row">
+              ${i.image ? `<img class="order-item-img" src="${i.image}" alt="">` : `<div class="order-item-img-ph">📦</div>`}
+              <div class="order-item-name">${i.name}${i.variant?`<br><span style="font-size:11px;color:var(--text2);">${i.variant}</span>`:''}</div>
+              <div class="order-item-qty">×${i.qty}</div>
+              <div class="order-item-price">${currency}${(i.price * i.qty).toFixed(2)}</div>
+            </div>`).join('')}
+          <div class="order-address">
+            <strong>Ship to:</strong> ${o.shipping_address?.line1}, ${o.shipping_address?.city}, ${o.shipping_address?.state} — ${o.shipping_address?.pincode}
+          </div>
+          ${o.tracking_number ? `<div class="tracking-row">🚚 Tracking: <span class="tracking-id">${o.tracking_number}</span></div>` : ''}
+        </div>
+      </div>`).join('')
+  } catch (e) {
+    el.innerHTML = `<div class="section-title">📋 My Orders</div><div style="color:var(--red);font-size:14px;">Failed to load orders: ${e.message}</div>`
+  }
+}
+
+function toggleOrder(id) {
+  const el = document.getElementById(id)
+  if (el) el.classList.toggle('open')
+}
+
+// ── ADDRESSES ─────────────────────────────────────────────────────────────────
+async function renderAddresses(el) {
+  if (!customer) { el.innerHTML = '<div class="section-title">📍 My Addresses</div><div style="color:var(--text2)">Loading…</div>'; return }
+  const addrs = customer.addresses || []
+  el.innerHTML = `
+    <div class="section-title">📍 My Addresses</div>
+    <div class="address-grid">
+      ${addrs.map(a => `
+        <div class="address-card ${a.is_default ? 'default' : ''}">
+          ${a.is_default ? '<span class="default-badge">Default</span>' : ''}
+          <div class="address-label">${a.label || 'Home'}</div>
+          <div class="address-name">${a.name || ''}</div>
+          <div class="address-lines">${a.line1}${a.line2?',<br>'+a.line2:''}<br>${a.city}, ${a.state} — ${a.pincode}<br>${a.country || 'India'}</div>
+          ${a.phone ? `<div style="font-size:12px;color:var(--text2);margin-top:4px;">📞 ${a.phone}</div>` : ''}
+          <div class="address-actions">
+            <button class="btn-sm" onclick="editAddress('${a._id}')">✏️ Edit</button>
+            ${!a.is_default ? `<button class="btn-sm" onclick="setDefaultAddress('${a._id}')">⭐ Default</button>` : ''}
+            <button class="btn-sm danger" onclick="deleteAddress('${a._id}')">🗑</button>
+          </div>
+        </div>`).join('')}
+      <div class="add-address-card" onclick="openAddAddr()">+ Add Address</div>
+    </div>`
+}
+
+function openAddAddr() {
+  document.getElementById('addrModalTitle').textContent = 'Add Address'
+  document.getElementById('addrEditId').value = ''
+  ;['addrLabel','addrName','addrPhone','addrLine1','addrLine2','addrCity','addrState','addrPincode'].forEach(id => document.getElementById(id).value = '')
+  document.getElementById('addrCountry').value = 'India'
+  document.getElementById('addrModal').classList.add('open')
+}
+
+function editAddress(id) {
+  const a = customer.addresses?.find(x => x._id === id || String(x._id) === id)
+  if (!a) return
+  document.getElementById('addrModalTitle').textContent = 'Edit Address'
+  document.getElementById('addrEditId').value = a._id
+  document.getElementById('addrLabel').value   = a.label || ''
+  document.getElementById('addrName').value    = a.name || ''
+  document.getElementById('addrPhone').value   = a.phone || ''
+  document.getElementById('addrLine1').value   = a.line1 || ''
+  document.getElementById('addrLine2').value   = a.line2 || ''
+  document.getElementById('addrCity').value    = a.city || ''
+  document.getElementById('addrState').value   = a.state || ''
+  document.getElementById('addrPincode').value = a.pincode || ''
+  document.getElementById('addrCountry').value = a.country || 'India'
+  document.getElementById('addrModal').classList.add('open')
+}
+
+function closeAddrModal() { document.getElementById('addrModal').classList.remove('open') }
+
+async function saveAddress() {
+  const editId = document.getElementById('addrEditId').value
+  const line1  = document.getElementById('addrLine1').value.trim()
+  const city   = document.getElementById('addrCity').value.trim()
+  const pincode = document.getElementById('addrPincode').value.trim()
+  if (!line1 || !city || !pincode) { toast('Line 1, city and pincode are required'); return }
+  const body = {
+    label:   document.getElementById('addrLabel').value.trim() || 'Home',
+    name:    document.getElementById('addrName').value.trim(),
+    phone:   document.getElementById('addrPhone').value.trim(),
+    line1, line2: document.getElementById('addrLine2').value.trim(),
+    city, state: document.getElementById('addrState').value.trim(),
+    pincode, country: document.getElementById('addrCountry').value.trim() || 'India'
+  }
+  try {
+    const url    = editId ? `${API}/shop/${slug}/customers/me/addresses/${editId}` : `${API}/shop/${slug}/customers/me/addresses`
+    const method = editId ? 'PUT' : 'POST'
+    await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(body) })
+    toast(editId ? 'Address updated!' : 'Address added!')
+    closeAddrModal()
+    // Refresh customer
+    customer = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() }).then(r => r.json())
+    renderAddresses(document.getElementById('tabContent'))
+  } catch { toast('Failed to save address') }
+}
+
+async function deleteAddress(id) {
+  if (!confirm('Delete this address?')) return
+  try {
+    await fetch(`${API}/shop/${slug}/customers/me/addresses/${id}`, { method: 'DELETE', headers: authHeaders() })
+    customer = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() }).then(r => r.json())
+    renderAddresses(document.getElementById('tabContent'))
+    toast('Address deleted')
+  } catch { toast('Failed to delete') }
+}
+
+async function setDefaultAddress(id) {
+  try {
+    await fetch(`${API}/shop/${slug}/customers/me/addresses/${id}/default`, { method: 'POST', headers: authHeaders() })
+    customer = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() }).then(r => r.json())
+    renderAddresses(document.getElementById('tabContent'))
+    toast('Default address updated!')
+  } catch { toast('Failed') }
+}
+
+// ── PROFILE ───────────────────────────────────────────────────────────────────
+function renderProfile(el) {
+  if (!customer) { el.innerHTML = '<div class="section-title">👤 Profile</div><div style="color:var(--text2)">Loading…</div>'; return }
+  el.innerHTML = `
+    <div class="section-title">👤 Profile</div>
+    <div class="form-row"><label>Full Name</label><input class="form-input" id="profName" value="${esc(customer.name||'')}"></div>
+    <div class="form-row"><label>Email</label><input class="form-input" id="profEmail" value="${esc(customer.email||'')}" readonly></div>
+    <div class="form-row"><label>Phone</label><input class="form-input" id="profPhone" value="${esc(customer.phone||'')}" placeholder="+91 98765 43210"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;">
+      <input type="checkbox" id="profMktEmail" style="width:16px;height:16px;accent-color:var(--accent);" ${customer.marketing_consent?.email ? 'checked' : ''}>
+      <label for="profMktEmail" style="font-size:13px;color:var(--text2);cursor:pointer;">Receive promotional emails</label>
+    </div>
+    <button class="btn-save" id="btnSaveProfile" onclick="saveProfile()">Save Changes</button>
+    <div style="margin-top:28px;padding-top:22px;border-top:1px solid var(--border);">
+      <div class="section-title" style="margin-bottom:10px;">Account Stats</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;">
+          <div style="font-size:22px;font-weight:900;font-family:'DM Mono',monospace;color:var(--accent);">${customer.order_count || 0}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px;">Orders</div>
+        </div>
+        <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;">
+          <div style="font-size:22px;font-weight:900;font-family:'DM Mono',monospace;color:var(--accent);">${currency}${(customer.total_spend||0).toFixed(0)}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px;">Total Spent</div>
+        </div>
+        <div style="background:var(--surface);border-radius:10px;padding:14px;text-align:center;">
+          <div style="font-size:22px;font-weight:900;font-family:'DM Mono',monospace;color:var(--accent);">${customer.addresses?.length || 0}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:4px;">Addresses</div>
+        </div>
+      </div>
+    </div>`
+}
+
+async function saveProfile() {
+  const name  = document.getElementById('profName').value.trim()
+  const phone = document.getElementById('profPhone').value.trim()
+  const mkt   = document.getElementById('profMktEmail').checked
+  if (!name) { toast('Name is required'); return }
+  const btn = document.getElementById('btnSaveProfile')
+  btn.disabled = true; btn.textContent = 'Saving…'
+  try {
+    const res = await fetch(`${API}/shop/${slug}/customers/me`, {
+      method: 'PUT', headers: authHeaders(),
+      body: JSON.stringify({ name, phone, marketing_consent: { email: mkt, sms: false } })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+    customer = data.customer
+    localStorage.setItem(`cust_name_${slug}`, name)
+    document.getElementById('welcomeMsg').textContent = `Welcome back, ${name}!`
+    toast('Profile updated! ✅')
+  } catch (e) { toast(e.message || 'Failed to save') }
+  finally { btn.disabled = false; btn.textContent = 'Save Changes' }
+}
+
+function logout() {
+  localStorage.removeItem(`cust_token_${slug}`)
+  localStorage.removeItem(`cust_name_${slug}`)
+  location.href = `index.html?store=${slug}`
+}
+
+function esc(s) { return String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;') }
+function toast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show')
+  setTimeout(() => t.classList.remove('show'), 2500)
+}
+
+init()
+</script>
+</body>
+</html>

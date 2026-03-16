@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — eKart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --accent: #6c63ff;
+  --bg: #ffffff;
+  --text: #111827;
+  --text2: #6b7280;
+  --text3: #9ca3af;
+  --border: #e5e7eb;
+  --surface: #f9fafb;
+  --surface2: #f3f4f6;
+  --red: #ef4444;
+  --green: #10b981;
+  --yellow: #f59e0b;
+}
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── NAV ── */
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 100; gap: 16px; }
+.nav-logo { font-size: 20px; font-weight: 800; text-decoration: none; color: var(--text); }
+.nav-logo span { color: var(--accent); }
+.nav-logo .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; margin-left: 2px; vertical-align: middle; }
+.nav-store { font-size: 14px; font-weight: 600; color: var(--text2); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.btn-cart { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; text-decoration: none; transition: opacity .15s; }
+.btn-cart:hover { opacity: .88; }
+.cart-count { background: #fff; color: var(--accent); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
+
+/* ── BREADCRUMB ── */
+.breadcrumb { padding: 14px 24px; font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text2); text-decoration: none; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { color: var(--text3); }
+
+/* ── PRODUCT LAYOUT ── */
+.product-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 60px; }
+.product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+
+/* ── GALLERY ── */
+.gallery { position: sticky; top: 76px; }
+.main-image-wrap { position: relative; border-radius: 16px; overflow: hidden; background: var(--surface2); aspect-ratio: 1; margin-bottom: 12px; }
+.main-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .2s; }
+.main-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 80px; background: var(--surface2); }
+.thumb-strip { display: flex; gap: 8px; flex-wrap: wrap; }
+.thumb { width: 68px; height: 68px; border-radius: 10px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; flex-shrink: 0; }
+.thumb.active { border-color: var(--accent); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.badge-oos { position: absolute; top: 14px; left: 14px; background: var(--red); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+.badge-sale { position: absolute; top: 14px; right: 14px; background: var(--green); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+
+/* ── PRODUCT INFO ── */
+.product-info { padding-top: 4px; }
+.product-cat { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.product-name { font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+.price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.price-main { font-size: 32px; font-weight: 900; font-family: 'DM Mono', monospace; color: var(--accent); }
+.price-compare { font-size: 18px; color: var(--text3); text-decoration: line-through; font-family: 'DM Mono', monospace; }
+.price-save { font-size: 13px; font-weight: 700; background: rgba(16,185,129,.1); color: var(--green); padding: 3px 10px; border-radius: 20px; }
+.product-desc { font-size: 15px; color: var(--text2); line-height: 1.7; margin-bottom: 20px; white-space: pre-wrap; }
+.product-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.tag { padding: 4px 12px; background: var(--surface2); border-radius: 20px; font-size: 12px; color: var(--text2); font-weight: 600; }
+
+/* ── VARIANTS ── */
+.variant-section { margin-bottom: 20px; }
+.variant-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+.variant-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.variant-opt { padding: 7px 16px; border: 2px solid var(--border); border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; background: #fff; font-family: 'Outfit', sans-serif; color: var(--text); }
+.variant-opt:hover { border-color: var(--accent); color: var(--accent); }
+.variant-opt.selected { border-color: var(--accent); background: rgba(108,99,255,.08); color: var(--accent); }
+
+/* ── QTY + ADD ── */
+.qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.qty-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; }
+.qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.qty-btn { width: 38px; height: 38px; border: none; background: var(--surface2); cursor: pointer; font-size: 18px; font-weight: 700; color: var(--text); transition: background .15s; }
+.qty-btn:hover { background: var(--border); }
+.qty-val { width: 44px; text-align: center; font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; border: none; outline: none; background: #fff; padding: 8px 0; }
+.add-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.btn-add-cart { flex: 1; padding: 14px 20px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: opacity .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-add-cart:hover:not(:disabled) { opacity: .88; }
+.btn-add-cart:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── STOCK BADGE ── */
+.stock-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+.stock-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── META ── */
+.meta-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+.meta-row strong { color: var(--text); }
+
+/* ── REVIEWS ── */
+.section-title { font-size: 18px; font-weight: 800; margin: 40px 0 16px; }
+.review-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+.review-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.review-stars { font-size: 15px; letter-spacing: 1px; }
+.review-author { font-size: 13px; font-weight: 700; }
+.review-date { font-size: 12px; color: var(--text3); }
+.review-body { font-size: 14px; color: var(--text2); line-height: 1.6; }
+.review-form { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+.review-form h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+.form-row { margin-bottom: 12px; }
+.form-row label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 10px 13px; background: #fff; border: 1px solid var(--border); border-radius: 9px; color: var(--text); font-family: 'Outfit', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; }
+.form-input:focus { border-color: var(--accent); }
+textarea.form-input { min-height: 80px; resize: vertical; }
+.star-picker { display: flex; gap: 4px; margin-bottom: 12px; }
+.star-picker span { font-size: 24px; cursor: pointer; transition: transform .1s; user-select: none; }
+.star-picker span:hover { transform: scale(1.2); }
+.btn-submit { padding: 10px 22px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; }
+
+/* ── RELATED ── */
+.related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.related-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; text-decoration: none; color: var(--text); transition: box-shadow .2s; }
+.related-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+.related-img { aspect-ratio: 1; background: var(--surface2); }
+.related-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.related-img-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+.related-body { padding: 12px; }
+.related-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.related-price { font-size: 14px; font-weight: 900; font-family: 'DM Mono', monospace; color: var(--accent); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; border-radius: 12px; padding: 12px 20px; font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s; z-index: 400; white-space: nowrap; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── SKELETON ── */
+.skel { background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+@media (max-width: 768px) {
+  .product-layout { grid-template-columns: 1fr; gap: 24px; }
+  .gallery { position: static; }
+  .product-name { font-size: 22px; }
+  .price-main { font-size: 26px; }
+  .nav-store { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" id="navLogo" href="#">e<span>K</span>art<span class="dot"></span></a>
+  <span class="nav-store" id="navStoreName"></span>
+  <div class="nav-actions">
+    <a href="javascript:void(0)" id="accountBtn" style="display:flex;align-items:center;gap:6px;padding:7px 13px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:700;color:var(--text2);text-decoration:none;white-space:nowrap;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+      👤 <span id="accountBtnLabel">Account</span>
+    </a>
+    <a class="btn-cart" id="cartBtn" href="#">🛒 Cart <span class="cart-count" id="cartCount">0</span></a>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb" id="breadcrumb">
+  <a href="#" id="bcHome">Home</a>
+  <span>›</span>
+  <a href="#" id="bcShop">Shop</a>
+  <span>›</span>
+  <span id="bcProduct">Loading…</span>
+</div>
+
+<!-- MAIN -->
+<div class="product-wrap">
+  <div class="product-layout" id="productLayout">
+    <!-- skeleton -->
+    <div>
+      <div class="skel" style="aspect-ratio:1;border-radius:16px;margin-bottom:12px;"></div>
+      <div style="display:flex;gap:8px;"><div class="skel" style="width:68px;height:68px;border-radius:10px;"></div><div class="skel" style="width:68px;height:68px;border-radius:10px;"></div><div class="skel" style="width:68px;height:68px;border-radius:10px;"></div></div>
+    </div>
+    <div style="padding-top:4px;">
+      <div class="skel" style="height:14px;width:80px;margin-bottom:12px;"></div>
+      <div class="skel" style="height:32px;width:90%;margin-bottom:10px;"></div>
+      <div class="skel" style="height:32px;width:60%;margin-bottom:20px;"></div>
+      <div class="skel" style="height:40px;width:140px;margin-bottom:20px;"></div>
+      <div class="skel" style="height:16px;margin-bottom:8px;"></div>
+      <div class="skel" style="height:16px;margin-bottom:8px;width:80%;"></div>
+      <div class="skel" style="height:16px;margin-bottom:24px;width:65%;"></div>
+      <div class="skel" style="height:50px;border-radius:12px;"></div>
+    </div>
+  </div>
+
+  <div id="relatedSection" style="display:none;">
+    <div class="section-title">You might also like</div>
+    <div class="related-grid" id="relatedGrid"></div>
+  </div>
+
+  <div id="reviewsSection" style="display:none;">
+    <div class="section-title">Customer Reviews</div>
+    <div class="review-grid" id="reviewList"></div>
+    <div class="review-form" id="reviewForm">
+      <h4>Write a Review</h4>
+      <div class="star-picker" id="starPicker">
+        <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
+      </div>
+      <div class="form-row"><label>Your Name</label><input class="form-input" id="rvName" placeholder="John Doe"></div>
+      <div class="form-row"><label>Review</label><textarea class="form-input" id="rvBody" placeholder="Share your experience…"></textarea></div>
+      <button class="btn-submit" onclick="submitReview()">Submit Review</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const params  = new URLSearchParams(location.search)
+const slug    = params.get('store')
+const pid     = params.get('id')
+const API     = 'https://apiv2.aasaitech.in'
+
+let currency      = '₹'
+let storeConfig   = {}
+let product       = {}
+let selectedQty   = 1
+let selectedVariant = ''
+let reviewRating  = 5
+
+if (!slug || !pid) {
+  document.getElementById('productLayout').innerHTML = '<div style="text-align:center;padding:80px;grid-column:1/-1;"><h2>Product not found</h2><p style="color:#6b7280;margin-top:8px;">Missing store or product ID.</p></div>'
+}
+
+// ── CART HELPERS ────────────────────────────────────────────────────────────
+function getCart()   { return JSON.parse(localStorage.getItem('cart_' + slug) || '[]') }
+function saveCart(c) { localStorage.setItem('cart_' + slug, JSON.stringify(c)) }
+function updateCartCount() {
+  const n = getCart().reduce((a, i) => a + i.qty, 0)
+  document.getElementById('cartCount').textContent = n
+}
+
+function addToCart() {
+  if (!product._id) return
+  const cart = getCart()
+  const key  = product._id + (selectedVariant ? '_' + selectedVariant : '')
+  const existing = cart.find(i => i.key === key)
+  if (existing) existing.qty += selectedQty
+  else cart.push({ key, product_id: product._id, name: product.name, price: product.price, image: product.images?.[0] || '', qty: selectedQty, variant: selectedVariant || null })
+  saveCart(cart)
+  updateCartCount()
+  toast(`Added ${selectedQty} × "${product.name}" to cart 🛒`)
+  const btn = document.getElementById('btnAddCart')
+  if (btn) { btn.textContent = '✅ Added!'; setTimeout(() => btn.innerHTML = '🛒 Add to Cart', 1500) }
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+async function init() {
+  if (!slug || !pid) return
+  // Set nav links
+  document.getElementById('navLogo').href    = `index.html?store=${slug}`
+  document.getElementById('bcHome').href     = `index.html?store=${slug}`
+  document.getElementById('bcShop').href     = `index.html?store=${slug}`
+  document.getElementById('cartBtn').href    = `cart.html?store=${slug}`
+  // Wire account button
+  const custToken = localStorage.getItem(`cust_token_${slug}`)
+  const custName  = localStorage.getItem(`cust_name_${slug}`)
+  const acctBtn   = document.getElementById('accountBtn')
+  const acctLabel = document.getElementById('accountBtnLabel')
+  if (acctBtn) {
+    acctBtn.href = custToken ? `customer-account.html?store=${slug}` : `customer-login.html?store=${slug}`
+    if (acctLabel) acctLabel.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
+  }
+  updateCartCount()
+
+  try {
+    // Load store config and product in parallel
+    const [cfg, prod] = await Promise.all([
+      fetch(`${API}/shop/${slug}/config`).then(r => r.json()),
+      fetch(`${API}/shop/${slug}/products/${pid}`).then(r => r.json())
+    ])
+
+    if (cfg.error) throw new Error(cfg.error)
+    if (prod.error) throw new Error(prod.error)
+
+    storeConfig = cfg
+    product     = prod
+
+    // Apply brand color
+    if (cfg.brand_color) document.documentElement.style.setProperty('--accent', cfg.brand_color)
+
+    // Set currency
+    if (cfg.currency === 'USD')      currency = '$'
+    else if (cfg.currency === 'EUR') currency = '€'
+    else if (cfg.currency === 'GBP') currency = '£'
+
+    // Save session
+    sessionStorage.setItem('ekart_store',      slug)
+    sessionStorage.setItem('ekart_currency',   currency)
+    sessionStorage.setItem('ekart_store_name', cfg.name)
+    sessionStorage.setItem('ekart_pay_enabled', cfg.payment_enabled ? '1' : '0')
+
+    // Nav
+    document.getElementById('navStoreName').textContent = cfg.name
+    document.title = `${prod.name} — ${cfg.name}`
+
+    // Breadcrumb
+    document.getElementById('bcProduct').textContent = prod.name
+
+    renderProduct(prod)
+    loadRelated(prod)
+    loadReviews()
+
+  } catch (e) {
+    document.getElementById('productLayout').innerHTML = `<div style="text-align:center;padding:80px;grid-column:1/-1;"><div style="font-size:48px;margin-bottom:16px;">😕</div><h2>Product not found</h2><p style="color:#6b7280;margin-top:8px;">${e.message}</p><a href="index.html?store=${slug}" style="display:inline-block;margin-top:20px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;">← Back to Shop</a></div>`
+  }
+}
+
+function renderProduct(p) {
+  const oos        = p.track_inventory && p.stock_qty <= 0
+  const hasCompare = p.compare_at_price && p.compare_at_price > p.price
+  const saveAmt    = hasCompare ? Math.round((1 - p.price / p.compare_at_price) * 100) : 0
+  const imgs       = p.images?.length ? p.images : []
+
+  document.getElementById('productLayout').innerHTML = `
+    <!-- GALLERY -->
+    <div class="gallery">
+      <div class="main-image-wrap" id="mainImageWrap">
+        ${imgs.length
+          ? `<img class="main-image" id="mainImg" src="${imgs[0]}" alt="${p.name}">`
+          : `<div class="main-image-placeholder">📦</div>`}
+        ${oos ? '<span class="badge-oos">Out of Stock</span>' : ''}
+        ${hasCompare ? `<span class="badge-sale">-${saveAmt}%</span>` : ''}
+      </div>
+      ${imgs.length > 1 ? `
+      <div class="thumb-strip">
+        ${imgs.map((src, i) => `
+          <div class="thumb ${i === 0 ? 'active' : ''}" onclick="setMainImage(${i})" id="thumb-${i}">
+            <img src="${src}" alt="">
+          </div>`).join('')}
+      </div>` : ''}
+    </div>
+
+    <!-- INFO -->
+    <div class="product-info">
+      ${p.category_name ? `<div class="product-cat">${p.category_name}</div>` : ''}
+      <h1 class="product-name">${p.name}</h1>
+      <div class="price-row">
+        <span class="price-main">${currency}${p.price.toFixed(2)}</span>
+        ${hasCompare ? `<span class="price-compare">${currency}${p.compare_at_price.toFixed(2)}</span>` : ''}
+        ${saveAmt > 0 ? `<span class="price-save">Save ${saveAmt}%</span>` : ''}
+      </div>
+
+      ${p.description ? `<div class="product-desc">${escHtml(p.description)}</div>` : ''}
+
+      ${p.variants?.length ? `
+      <div class="variant-section">
+        <div class="variant-label">Options</div>
+        <div class="variant-options">
+          ${p.variants.map(v => `<button class="variant-opt" onclick="selectVariant(this,'${escAttr(v.name)}')">${escHtml(v.name)}</button>`).join('')}
+        </div>
+      </div>` : ''}
+
+      <div class="qty-row">
+        <span class="qty-label">Qty</span>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <input class="qty-val" id="qtyVal" value="1" min="1" type="number" onchange="selectedQty=Math.max(1,parseInt(this.value)||1);this.value=selectedQty" readonly>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+      </div>
+
+      <div class="add-row">
+        <button class="btn-add-cart" id="btnAddCart" onclick="addToCart()" ${oos ? 'disabled' : ''}>
+          ${oos ? '😞 Out of Stock' : '🛒 Add to Cart'}
+        </button>
+      </div>
+
+      ${p.track_inventory ? `
+      <div class="stock-badge">
+        <span class="stock-dot" style="background:${oos ? 'var(--red)' : p.stock_qty <= 5 ? 'var(--yellow)' : 'var(--green)'}"></span>
+        <span style="color:${oos ? 'var(--red)' : p.stock_qty <= 5 ? 'var(--yellow)' : 'var(--green)'}">
+          ${oos ? 'Out of stock' : p.stock_qty <= 5 ? `Only ${p.stock_qty} left` : 'In stock'}
+        </span>
+      </div>` : ''}
+
+      ${p.sku ? `<div class="meta-row"><strong>SKU:</strong> <span style="font-family:'DM Mono',monospace;font-size:12px;">${p.sku}</span></div>` : ''}
+      ${p.tags?.length ? `<div class="product-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;">
+        <div class="meta-row">🚚 <span>Free shipping on orders above ${currency}499</span></div>
+        <div class="meta-row">🔄 <span>Easy 7-day returns</span></div>
+        <div class="meta-row">🔒 <span>Secure checkout</span></div>
+      </div>
+    </div>`
+
+  // images array stored for setMainImage
+  window._productImages = imgs
+}
+
+function setMainImage(i) {
+  const imgs = window._productImages || []
+  const mainImg = document.getElementById('mainImg')
+  if (mainImg && imgs[i]) {
+    mainImg.style.opacity = '0'
+    setTimeout(() => { mainImg.src = imgs[i]; mainImg.style.opacity = '1' }, 150)
+  }
+  document.querySelectorAll('.thumb').forEach((el, j) => el.classList.toggle('active', j === i))
+}
+
+function selectVariant(el, name) {
+  selectedVariant = name
+  document.querySelectorAll('.variant-opt').forEach(b => b.classList.remove('selected'))
+  el.classList.add('selected')
+}
+
+function changeQty(delta) {
+  selectedQty = Math.max(1, selectedQty + delta)
+  const el = document.getElementById('qtyVal')
+  if (el) el.value = selectedQty
+}
+
+async function loadRelated(p) {
+  try {
+    const catParam = p.category_id ? `&category=${p.category_id}` : ''
+    const data = await fetch(`${API}/shop/${slug}/products?limit=5${catParam}`).then(r => r.json())
+    const items = (data.products || data.items || []).filter(r => r._id !== p._id).slice(0, 4)
+    if (!items.length) return
+    const section = document.getElementById('relatedSection')
+    const grid    = document.getElementById('relatedGrid')
+    grid.innerHTML = items.map(r => {
+      const img = r.images?.[0]
+        ? `<img src="${r.images[0]}" alt="${r.name}">`
+        : `<div class="related-img-ph">📦</div>`
+      return `<a class="related-card" href="product.html?store=${slug}&id=${r._id}">
+        <div class="related-img">${img}</div>
+        <div class="related-body">
+          <div class="related-name">${r.name}</div>
+          <div class="related-price">${currency}${r.price.toFixed(2)}</div>
+        </div>
+      </a>`
+    }).join('')
+    section.style.display = 'block'
+  } catch {}
+}
+
+async function loadReviews() {
+  try {
+    const data = await fetch(`${API}/shop/${slug}/products/${pid}/reviews`).then(r => r.json())
+    const reviews = data.reviews || data || []
+    const section = document.getElementById('reviewsSection')
+    const list    = document.getElementById('reviewList')
+    section.style.display = 'block'
+    if (!reviews.length) {
+      list.innerHTML = '<div style="color:var(--text2);font-size:14px;padding:12px 0;">No reviews yet. Be the first!</div>'
+    } else {
+      list.innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-header">
+            <div>
+              <div class="review-author">${escHtml(r.name || 'Anonymous')}</div>
+              <div class="review-stars">${'★'.repeat(r.rating || 5)}${'☆'.repeat(5 - (r.rating || 5))}</div>
+            </div>
+            <div class="review-date">${new Date(r.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+          </div>
+          ${r.body ? `<div class="review-body">${escHtml(r.body)}</div>` : ''}
+        </div>`).join('')
+    }
+    renderStars(reviewRating)
+  } catch {}
+}
+
+function setRating(n) { reviewRating = n; renderStars(n) }
+function renderStars(n) {
+  document.querySelectorAll('#starPicker span').forEach((s, i) => {
+    s.style.color = i < n ? '#f59e0b' : '#d1d5db'
+    s.style.fontSize = '24px'
+  })
+}
+
+async function submitReview() {
+  const name = document.getElementById('rvName').value.trim()
+  const body = document.getElementById('rvBody').value.trim()
+  if (!name) { toast('Enter your name'); return }
+  if (!body)  { toast('Write a review'); return }
+  try {
+    const r = await fetch(`${API}/shop/${slug}/products/${pid}/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, body, rating: reviewRating })
+    })
+    if (!r.ok) throw new Error('Failed')
+    document.getElementById('rvName').value = ''
+    document.getElementById('rvBody').value = ''
+    toast('Review submitted! Thank you 🙏')
+    await loadReviews()
+  } catch { toast('Could not submit review. Try again.') }
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function escAttr(s) { return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;') }
+
+function toast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show')
+  setTimeout(() => t.classList.remove('show'), 2800)
+}
+
+init()
+</script>
+</body>
+</html>

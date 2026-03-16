@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #6c63ff; --bg: #f8f9fc; --surface: #ffffff; --border: #e8eaf0; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8; --green: #16a34a; --red: #ef4444; --surface2: #f1f5f9; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+  .header-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; height: 64px; gap: 16px; }
+  .back-btn { font-size: 14.5px; font-weight: 600; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: opacity .15s; }
+  .back-btn:hover { opacity: 0.75; }
+  .page-title { font-size: 18px; font-weight: 800; }
+  .page-wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px; }
+  .layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+  .cart-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .cart-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-size: 13.5px; font-weight: 700; color: var(--text2); display: flex; justify-content: space-between; align-items: center; }
+  .cart-item { display: flex; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); align-items: center; transition: background .15s; }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item:hover { background: var(--bg); }
+  .cart-img { width: 76px; height: 76px; border-radius: 12px; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; overflow: hidden; }
+  .cart-img img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name { font-size: 14.5px; font-weight: 600; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cart-item-variant { font-size: 12px; color: var(--text3); margin-bottom: 6px; }
+  .cart-item-price { font-size: 15px; font-weight: 800; }
+  .cart-item-unit { font-size: 11.5px; color: var(--text3); margin-top: 2px; }
+  .cart-qty { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .qty-btn { width: 32px; height: 32px; border: none; background: var(--bg); font-size: 16px; cursor: pointer; transition: background .15s; }
+  .qty-btn:hover { background: #ebebff; color: var(--accent); }
+  .qty-num { width: 36px; text-align: center; font-size: 14px; font-weight: 700; border: none; background: var(--surface); border-left: 1px solid var(--border); border-right: 1px solid var(--border); height: 32px; font-family: 'DM Mono', monospace; }
+  .remove-btn { background: none; border: none; color: var(--text3); font-size: 17px; cursor: pointer; padding: 4px 8px; margin-left: 4px; border-radius: 6px; transition: all .15s; }
+  .remove-btn:hover { color: var(--red); background: #fef2f2; }
+  .checkout-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; position: sticky; top: 84px; }
+  .panel-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; font-size: 13.5px; color: var(--text2); margin-bottom: 8px; }
+  .summary-row.discount { color: var(--green); font-weight: 600; }
+  .summary-total { display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 800; margin-top: 12px; padding-top: 14px; border-top: 2px solid var(--border); }
+  .coupon-wrap { margin: 14px 0; }
+  .coupon-label { font-size: 11.5px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .coupon-input-row { display: flex; gap: 8px; }
+  .coupon-input { flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 13px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; outline: none; background: var(--bg); transition: border-color .15s; }
+  .coupon-input:focus { border-color: var(--accent); }
+  .btn-apply { padding: 9px 16px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; color: var(--text2); transition: all .15s; white-space: nowrap; }
+  .btn-apply:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  .coupon-msg { font-size: 12.5px; margin-top: 7px; padding: 7px 12px; border-radius: 7px; display: none; }
+  .coupon-msg.success { display: block; background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
+  .coupon-msg.error { display: block; background: #fef2f2; color: var(--red); border: 1px solid #fecaca; }
+
+  /* ── Payment Method Selector ─────────────────────────── */
+  .payment-methods { margin: 14px 0; }
+  .payment-methods-label { font-size: 11.5px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .payment-options { display: flex; flex-direction: column; gap: 8px; }
+  .payment-option { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all .15s; background: var(--bg); }
+  .payment-option:hover { border-color: var(--accent); background: #f5f4ff; }
+  .payment-option.selected { border-color: var(--accent); background: #f0efff; }
+  .payment-option input[type=radio] { accent-color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+  .payment-option-info { flex: 1; }
+  .payment-option-title { font-size: 13.5px; font-weight: 700; color: var(--text); }
+  .payment-option-desc { font-size: 11.5px; color: var(--text3); margin-top: 1px; }
+  .payment-option-icon { font-size: 22px; }
+  .razorpay-badge { display: flex; align-items: center; gap: 6px; background: #eef9f4; border: 1px solid #c3e6d8; border-radius: 8px; padding: 7px 12px; margin-top: 6px; font-size: 11.5px; color: #15803d; font-weight: 600; }
+
+  .form-section { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 18px; }
+  .form-section-title { font-size: 12.5px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .field { margin-bottom: 11px; }
+  .field label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text3); margin-bottom: 5px; }
+  .field input { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 14px; font-family: 'Outfit', sans-serif; color: var(--text); outline: none; transition: border-color .15s; background: var(--bg); }
+  .field input:focus { border-color: var(--accent); background: white; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn-checkout { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-top: 16px; transition: all .15s; }
+  .btn-checkout:hover:not(:disabled) { background: #7c74ff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(108,99,255,0.35); }
+  .btn-checkout:disabled { opacity: 0.6; cursor: not-allowed; }
+  .secure-note { text-align: center; font-size: 12px; color: var(--text3); margin-top: 10px; }
+  .empty-cart { text-align: center; padding: 80px 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+  .empty-cart .icon { font-size: 64px; margin-bottom: 16px; }
+  .empty-cart h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .empty-cart p { color: var(--text2); margin-bottom: 24px; }
+  .btn-shop { display: inline-block; padding: 12px 28px; background: var(--accent); color: white; border-radius: 10px; text-decoration: none; font-weight: 700; transition: all .15s; }
+  .btn-shop:hover { background: #7c74ff; }
+  .error-msg { background: #fef2f2; border: 1px solid #fecaca; color: var(--red); padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 10px; display: none; }
+  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(2px); }
+  .loading-overlay.show { display: flex; }
+  .spinner-wrap { background: white; border-radius: 16px; padding: 28px 36px; text-align: center; }
+  .spinner { width: 40px; height: 40px; border: 4px solid #e8eaf0; border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px; }
+  .spinner-wrap p { font-size: 14px; font-weight: 600; color: var(--text2); }
+  .spinner-wrap p span { display: block; font-size: 12px; color: var(--text3); margin-top: 4px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media(max-width:768px) { .layout { grid-template-columns: 1fr; } .checkout-panel { position: static; } .field-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="back-btn" id="shopLink" href="javascript:history.back()">← Continue Shopping</a>
+    <span class="page-title">Your Cart 🛒</span>
+    <a href="javascript:void(0)" id="accountBtn" style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:7px 13px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:700;color:var(--text2);text-decoration:none;white-space:nowrap;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+      👤 <span id="accountBtnLabel">Account</span>
+    </a>
+  </div>
+</header>
+
+<div class="page-wrap"><div id="cartView"></div></div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner-wrap">
+    <div class="spinner"></div>
+    <p id="loadingText">Placing your order...<span id="loadingSubtext"></span></p>
+  </div>
+</div>
+
+<!-- Razorpay SDK — loaded once on page load -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+const slug     = sessionStorage.getItem('ekart_store') || new URLSearchParams(location.search).get('store')
+const currency = sessionStorage.getItem('ekart_currency') || '₹'
+const API      = 'https://apiv2.aasaitech.in'
+
+let appliedCoupon   = null
+let paymentEnabled  = false   // set after fetching store config
+let selectedPayment = 'cod'   // 'cod' or 'razorpay'
+
+if (slug) document.getElementById('shopLink').href = `index.html?store=${slug}`
+
+// Wire account button
+;(function() {
+  const custToken = slug && localStorage.getItem(`cust_token_${slug}`)
+  const custName  = slug && localStorage.getItem(`cust_name_${slug}`)
+  const btn   = document.getElementById('accountBtn')
+  const label = document.getElementById('accountBtnLabel')
+  if (btn) {
+    btn.href = custToken
+      ? `customer-account.html?store=${slug}`
+      : `customer-login.html?store=${slug}&redirect=${encodeURIComponent(location.href)}`
+    if (label) label.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
+  }
+})()
+
+function getCart() { return JSON.parse(localStorage.getItem('cart_' + slug) || '[]') }
+function saveCart(c) { localStorage.setItem('cart_' + slug, JSON.stringify(c)) }
+
+// Load store config to check if Razorpay is enabled
+async function loadStoreConfig() {
+  try {
+    const res  = await fetch(`${API}/shop/${slug}/config`)
+    const data = await res.json()
+    paymentEnabled = !!(data.payment_enabled)
+  } catch(e) {
+    paymentEnabled = false
+  }
+  render()
+}
+
+function render() {
+  const cart = getCart()
+  const view = document.getElementById('cartView')
+  if (!cart.length) {
+    view.innerHTML = `<div class="empty-cart"><div class="icon">🛒</div><h2>Your cart is empty</h2><p>Looks like you haven't added anything yet</p><a class="btn-shop" href="index.html?store=${slug}">Browse Products</a></div>`
+    return
+  }
+  const subtotal  = cart.reduce((s, x) => s + x.price * x.qty, 0)
+  const discount  = appliedCoupon ? appliedCoupon.discount : 0
+  const total     = Math.max(subtotal - discount, 0)
+  const totalQty  = cart.reduce((s, x) => s + x.qty, 0)
+
+  // Payment method selector — only show Razorpay option if enabled
+  const paymentSelector = paymentEnabled ? `
+    <div class="payment-methods">
+      <div class="payment-methods-label">Payment Method</div>
+      <div class="payment-options">
+        <label class="payment-option ${selectedPayment==='razorpay'?'selected':''}" onclick="selectPayment('razorpay')">
+          <input type="radio" name="paymethod" value="razorpay" ${selectedPayment==='razorpay'?'checked':''}>
+          <span class="payment-option-icon">💳</span>
+          <div class="payment-option-info">
+            <div class="payment-option-title">Pay Online</div>
+            <div class="payment-option-desc">UPI, Cards, Netbanking, Wallets</div>
+          </div>
+        </label>
+        <label class="payment-option ${selectedPayment==='cod'?'selected':''}" onclick="selectPayment('cod')">
+          <input type="radio" name="paymethod" value="cod" ${selectedPayment==='cod'?'checked':''}>
+          <span class="payment-option-icon">💵</span>
+          <div class="payment-option-info">
+            <div class="payment-option-title">Cash on Delivery</div>
+            <div class="payment-option-desc">Pay when your order arrives</div>
+          </div>
+        </label>
+      </div>
+      ${selectedPayment==='razorpay' ? `<div class="razorpay-badge">⚡ Powered by Razorpay — 100% secure payments</div>` : ''}
+    </div>` : `<div style="display:flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:11px 14px;margin:14px 0;font-size:13px;color:var(--green);font-weight:600;">💰 Cash on Delivery</div>`
+
+  const btnLabel = selectedPayment === 'razorpay'
+    ? `💳 Pay ${currency}${total.toFixed(2)} Online`
+    : `✅ Place Order — ${currency}${total.toFixed(2)}`
+
+  const secureNote = selectedPayment === 'razorpay'
+    ? '🔒 Secured by Razorpay — UPI, Cards, Netbanking'
+    : '🔒 Pay in cash when your order arrives'
+
+  view.innerHTML = `<div class="layout">
+    <div>
+      <div class="cart-section">
+        <div class="cart-header"><span>${totalQty} item${totalQty!==1?'s':''}</span><span style="font-family:'DM Mono',monospace;">${currency}${subtotal.toFixed(2)}</span></div>
+        ${cart.map((item,i) => `
+        <div class="cart-item">
+          <div class="cart-img">${item.image ? `<img src="${item.image}" alt="">` : '📦'}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            ${item.variant ? `<div class="cart-item-variant">📌 ${item.variant}</div>` : ''}
+            <div class="cart-item-price">${currency}${(item.price*item.qty).toFixed(2)}</div>
+            <div class="cart-item-unit">${currency}${item.price.toFixed(2)} each</div>
+          </div>
+          <div class="cart-qty">
+            <button class="qty-btn" onclick="updateQty(${i},-1)">−</button>
+            <div class="qty-num">${item.qty}</div>
+            <button class="qty-btn" onclick="updateQty(${i},1)">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${i})">✕</button>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div>
+      <div class="checkout-panel">
+        <div class="panel-title">Order Summary</div>
+        <div class="summary-row"><span>Subtotal (${totalQty} items)</span><span>${currency}${subtotal.toFixed(2)}</span></div>
+        <div class="summary-row"><span>Shipping</span><span style="color:var(--green);font-weight:600;">FREE</span></div>
+        ${appliedCoupon ? `<div class="summary-row discount"><span>🎟 Coupon (${appliedCoupon.code})</span><span>−${currency}${discount.toFixed(2)}</span></div>` : ''}
+        <div class="summary-total"><span>Total</span><span>${currency}${total.toFixed(2)}</span></div>
+
+        ${paymentSelector}
+
+        <div class="coupon-wrap">
+          <div class="coupon-label">Have a coupon?</div>
+          <div class="coupon-input-row">
+            <input class="coupon-input" type="text" id="couponInput" placeholder="ENTER CODE" value="${appliedCoupon ? appliedCoupon.code : ''}">
+            <button class="btn-apply" onclick="${appliedCoupon ? 'removeCoupon()' : 'applyCoupon()'}">${appliedCoupon ? '✕ Remove' : 'Apply'}</button>
+          </div>
+          <div class="coupon-msg" id="couponMsg"></div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">👤 Contact Details</div>
+          <div class="field"><label>Full Name *</label><input type="text" id="custName" placeholder="John Doe"></div>
+          <div class="field-row">
+            <div class="field"><label>Email *</label><input type="email" id="custEmail" placeholder="john@email.com"></div>
+            <div class="field"><label>Phone *</label><input type="tel" id="custPhone" placeholder="+91 98765 43210"></div>
+          </div>
+          <div class="form-section-title" style="margin-top:16px;">📦 Shipping Address</div>
+          <div class="field"><label>Address Line 1 *</label><input type="text" id="addrLine1" placeholder="123 Main Street"></div>
+          <div class="field"><label>Address Line 2</label><input type="text" id="addrLine2" placeholder="Landmark, Area (optional)"></div>
+          <div class="field-row">
+            <div class="field"><label>City *</label><input type="text" id="addrCity" placeholder="Chennai"></div>
+            <div class="field"><label>State *</label><input type="text" id="addrState" placeholder="Tamil Nadu"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>PIN Code *</label><input type="text" id="addrPin" placeholder="600001"></div>
+            <div class="field"><label>Country</label><input type="text" id="addrCountry" value="India"></div>
+          </div>
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+        <button class="btn-checkout" id="checkoutBtn" onclick="handleCheckout()">${btnLabel}</button>
+        <p class="secure-note">${secureNote}</p>
+      </div>
+    </div>
+  </div>`
+}
+
+function selectPayment(method) {
+  selectedPayment = method
+  render()
+  // Restore any filled-in form values after re-render
+}
+
+function updateQty(i, delta) { const c=getCart(); c[i].qty=Math.max(1,c[i].qty+delta); saveCart(c); render() }
+function removeItem(i) { const c=getCart(); c.splice(i,1); saveCart(c); render() }
+
+// ── Coupon ────────────────────────────────────────────────────────────────────
+async function applyCoupon() {
+  const code = document.getElementById('couponInput').value.trim()
+  if (!code) return
+  const cart     = getCart()
+  const subtotal = cart.reduce((s,x) => s+x.price*x.qty, 0)
+  const msgEl    = document.getElementById('couponMsg')
+  try {
+    const res  = await fetch(`${API}/shop/${slug}/coupons/validate`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, subtotal })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Invalid coupon')
+    appliedCoupon = { code: data.code, discount: data.discount }
+    render()
+    const m = document.getElementById('couponMsg')
+    m.className = 'coupon-msg success'
+    m.textContent = `✅ ${data.type==='percent' ? data.value+'% off' : currency+data.value+' off'} applied! You save ${currency}${data.discount.toFixed(2)}`
+  } catch(e) {
+    msgEl.className = 'coupon-msg error'
+    msgEl.textContent = '❌ ' + e.message
+  }
+}
+
+function removeCoupon() { appliedCoupon = null; render() }
+
+// ── Form validation (shared) ──────────────────────────────────────────────────
+function getFormData() {
+  return {
+    name:    document.getElementById('custName')?.value.trim()   || '',
+    email:   document.getElementById('custEmail')?.value.trim()  || '',
+    phone:   document.getElementById('custPhone')?.value.trim()  || '',
+    line1:   document.getElementById('addrLine1')?.value.trim()  || '',
+    line2:   document.getElementById('addrLine2')?.value.trim()  || '',
+    city:    document.getElementById('addrCity')?.value.trim()   || '',
+    state:   document.getElementById('addrState')?.value.trim()  || '',
+    pincode: document.getElementById('addrPin')?.value.trim()    || '',
+    country: document.getElementById('addrCountry')?.value.trim() || 'India',
+  }
+}
+
+function validateForm(f) {
+  if (!f.name || !f.email || !f.phone || !f.line1 || !f.city || !f.state || !f.pincode) {
+    return 'Please fill in all required fields'
+  }
+  if (!/\S+@\S+\.\S+/.test(f.email)) return 'Please enter a valid email address'
+  if (!/^\d{6}$/.test(f.pincode))    return 'PIN code must be 6 digits'
+  return null
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg')
+  if (!el) return
+  el.textContent = msg; el.style.display = 'block'
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+function setLoading(show, text = 'Placing your order...', subtext = '') {
+  document.getElementById('loadingOverlay').classList.toggle('show', show)
+  document.getElementById('loadingText').innerHTML = text + (subtext ? `<span>${subtext}</span>` : '')
+  const btn = document.getElementById('checkoutBtn')
+  if (btn) btn.disabled = show
+}
+
+// ── Main checkout dispatcher ──────────────────────────────────────────────────
+function handleCheckout() {
+  const errEl = document.getElementById('errorMsg')
+  if (errEl) errEl.style.display = 'none'
+  if (selectedPayment === 'razorpay') {
+    payWithRazorpay()
+  } else {
+    placeOrderCOD()
+  }
+}
+
+// ── COD checkout (unchanged logic) ───────────────────────────────────────────
+async function placeOrderCOD() {
+  const f = getFormData()
+  const err = validateForm(f)
+  if (err) { showError(err); return }
+
+  const cart = getCart()
+  const body = {
+    customer_name:    f.name,
+    customer_email:   f.email,
+    customer_phone:   f.phone,
+    shipping_address: { line1: f.line1, line2: f.line2, city: f.city, state: f.state, pincode: f.pincode, country: f.country },
+    items:            cart.map(x => ({ product_id: x.product_id, qty: x.qty, variant: x.variant || null })),
+    coupon_code:      appliedCoupon ? appliedCoupon.code : null
+  }
+
+  setLoading(true, 'Placing your order...', 'This will just take a moment')
+  try {
+    const res  = await fetch(`${API}/shop/${slug}/checkout`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    })
+    const data = await res.json()
+    if (!res.ok || !data.success) throw new Error(data.error || 'Order failed')
+    localStorage.removeItem('cart_' + slug)
+    location.href = `order-confirm.html?store=${slug}&order=${data.order_number}&email=${encodeURIComponent(f.email)}`
+  } catch(e) {
+    setLoading(false)
+    showError(e.message)
+  }
+}
+
+// ── Razorpay checkout ─────────────────────────────────────────────────────────
+async function payWithRazorpay() {
+  const f = getFormData()
+  const err = validateForm(f)
+  if (err) { showError(err); return }
+
+  const cart = getCart()
+
+  setLoading(true, 'Preparing payment...', 'Setting up secure checkout')
+
+  let orderData
+  try {
+    // Step 1 — create order on backend (secret never touches browser)
+    const res = await fetch(`${API}/shop/${slug}/create-order`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customer_name:    f.name,
+        customer_email:   f.email,
+        customer_phone:   f.phone,
+        shipping_address: { line1: f.line1, line2: f.line2, city: f.city, state: f.state, pincode: f.pincode, country: f.country },
+        items:            cart.map(x => ({ product_id: x.product_id, qty: x.qty, variant: x.variant || null })),
+        coupon_code:      appliedCoupon ? appliedCoupon.code : null
+      })
+    })
+    orderData = await res.json()
+    if (!res.ok) throw new Error(orderData.error || 'Failed to create order')
+  } catch(e) {
+    setLoading(false)
+    showError(e.message)
+    return
+  }
+
+  // Step 2 — hide loading, open Razorpay modal
+  setLoading(false)
+
+  const options = {
+    key:          orderData.razorpay_key_id,
+    amount:       orderData.amount,           // in paise
+    currency:     orderData.currency || 'INR',
+    name:         orderData.store_name || 'eKart Store',
+    description:  `Order #${orderData.order_number}`,
+    order_id:     orderData.razorpay_order_id,
+    prefill: {
+      name:    f.name,
+      email:   f.email,
+      contact: f.phone,
+    },
+    notes: {
+      order_number: orderData.order_number,
+      shipping:     `${f.line1}, ${f.city} - ${f.pincode}`
+    },
+    theme: { color: '#6c63ff' },
+
+    // ── Payment SUCCESS ───────────────────────────────────────────────
+    handler: async function(response) {
+      setLoading(true, 'Verifying payment...', 'Please do not close this page')
+      try {
+        const verifyRes = await fetch(`${API}/shop/${slug}/verify-payment`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            razorpay_order_id:   response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature:  response.razorpay_signature,
+            order_number:        orderData.order_number
+          })
+        })
+        const verifyData = await verifyRes.json()
+        if (!verifyRes.ok) throw new Error(verifyData.error || 'Payment verification failed')
+
+        // Payment verified — clear cart and redirect
+        localStorage.removeItem('cart_' + slug)
+        location.href = `order-confirm.html?store=${slug}&order=${orderData.order_number}&email=${encodeURIComponent(f.email)}&paid=1`
+      } catch(e) {
+        setLoading(false)
+        showError('Payment received but verification failed. Please contact support with order #' + orderData.order_number)
+      }
+    },
+
+    // ── Payment MODAL DISMISSED ───────────────────────────────────────
+    modal: {
+      ondismiss: function() {
+        setLoading(false)
+        showError('Payment cancelled. Your cart is still saved — try again when ready.')
+      }
+    }
+  }
+
+  try {
+    const rzp = new Razorpay(options)
+    rzp.on('payment.failed', function(response) {
+      setLoading(false)
+      showError(`Payment failed: ${response.error.description}. Please try again.`)
+    })
+    rzp.open()
+  } catch(e) {
+    setLoading(false)
+    showError('Could not open payment window. Please refresh and try again.')
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadStoreConfig()  // fetches config then calls render()
+</script>
+</body>
+</html>

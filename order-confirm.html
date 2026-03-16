@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed!</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #6c63ff; --bg: #f8f9fc; --surface: #ffffff; --border: #e8eaf0; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8; --green: #16a34a; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 20px; }
+
+  .success-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 48px 40px; max-width: 560px; width: 100%; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.06); }
+
+  /* checkmark — green for COD, purple for paid online */
+  .checkmark { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 36px; animation: pop .4s cubic-bezier(0.175,0.885,0.32,1.275); }
+  .checkmark.cod  { background: linear-gradient(135deg, #22c55e, #16a34a); }
+  .checkmark.paid { background: linear-gradient(135deg, #6c63ff, #a78bfa); }
+  @keyframes pop { 0%{transform:scale(0)} 100%{transform:scale(1)} }
+
+  h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+  .sub { font-size: 15px; color: var(--text2); margin-bottom: 32px; line-height: 1.6; }
+
+  .order-number { background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(108,99,255,0.04)); border: 1.5px solid rgba(108,99,255,0.2); border-radius: 14px; padding: 18px 24px; margin-bottom: 24px; }
+  .order-number label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); display: block; margin-bottom: 6px; }
+  .order-number span { font-size: 22px; font-weight: 800; color: var(--accent); font-family: monospace; letter-spacing: 0.03em; }
+
+  /* payment method badge */
+  .pay-method-badge { display: inline-flex; align-items: center; gap: 7px; border-radius: 10px; padding: 9px 16px; margin-bottom: 20px; font-size: 13px; font-weight: 700; }
+  .pay-method-badge.online { background: #f0efff; border: 1.5px solid rgba(108,99,255,0.25); color: var(--accent); }
+  .pay-method-badge.cod    { background: #f0fdf4; border: 1.5px solid #bbf7d0; color: var(--green); }
+
+  .order-details { background: var(--bg); border-radius: 14px; padding: 20px; margin-bottom: 24px; text-align: left; }
+  .detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { color: var(--text2); font-weight: 500; }
+  .detail-value { font-weight: 600; text-align: right; max-width: 60%; }
+
+  .status-timeline { margin: 24px 0; text-align: left; }
+  .status-timeline h3 { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .t-step { display: flex; gap: 14px; align-items: flex-start; }
+  .t-dot-col { display: flex; flex-direction: column; align-items: center; width: 20px; flex-shrink: 0; }
+  .t-dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .t-dot.done { background: var(--green); color: white; }
+  .t-dot.active { background: var(--accent); color: white; animation: pulse-dot 1.5s infinite; }
+  .t-dot.upcoming { background: var(--bg); border: 2px solid var(--border); }
+  @keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 rgba(108,99,255,0.4)} 50%{box-shadow:0 0 0 6px rgba(108,99,255,0)} }
+  .t-line { flex: 1; width: 2px; background: var(--border); margin: 3px 0; min-height: 28px; }
+  .t-content { padding: 0 0 24px; }
+  .t-label { font-size: 14px; font-weight: 600; color: var(--text); }
+  .t-desc { font-size: 12.5px; color: var(--text3); margin-top: 2px; }
+
+  .info-box { border-radius: 14px; padding: 18px 20px; margin-bottom: 24px; text-align: left; }
+  .info-box.cod    { background: #f0fdf4; border: 1.5px solid #bbf7d0; }
+  .info-box.online { background: #f5f4ff; border: 1.5px solid rgba(108,99,255,0.25); }
+  .info-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .info-box.cod h3    { color: var(--green); }
+  .info-box.online h3 { color: var(--accent); }
+  .info-box p { font-size: 13.5px; line-height: 1.65; }
+  .info-box.cod p    { color: #15803d; }
+  .info-box.online p { color: #4338ca; }
+
+  /* Razorpay transaction ID */
+  .txn-chip { display: inline-flex; align-items: center; gap: 6px; background: white; border: 1px solid rgba(108,99,255,0.2); border-radius: 7px; padding: 4px 10px; font-size: 11.5px; font-family: monospace; color: var(--accent); margin-top: 8px; word-break: break-all; }
+
+  .btn-shop { display: inline-block; padding: 13px 28px; background: var(--accent); color: white; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14.5px; transition: background .15s; }
+  .btn-shop:hover { background: #7b74ff; }
+
+  .items-list { text-align: left; margin-bottom: 20px; }
+  .items-list h3 { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .item-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .item-row:last-child { border-bottom: none; }
+  .item-img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; overflow: hidden; }
+  .item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .item-name { flex: 1; font-size: 13.5px; font-weight: 600; }
+  .item-meta { font-size: 12px; color: var(--text3); }
+  .item-price { font-size: 14px; font-weight: 700; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="success-card" id="card">
+  <div style="text-align:center;padding:40px;color:#94a3b8;">Loading order details...</div>
+</div>
+
+<script>
+const params      = new URLSearchParams(location.search)
+const slug        = params.get('store')
+const orderNumber = params.get('order')
+const email       = params.get('email')
+const isPaid      = params.get('paid') === '1'   // set by cart.html after Razorpay verify success
+const currency    = sessionStorage.getItem('ekart_currency') || '\u20b9'
+const API         = 'https://apiv2.aasaitech.in'
+
+const STATUS_STEPS = [
+  { key: 'pending',    label: 'Order Placed',    desc: 'We received your order!' },
+  { key: 'confirmed',  label: 'Order Confirmed', desc: 'Merchant confirmed your order' },
+  { key: 'processing', label: 'Processing',      desc: 'Your order is being packed' },
+  { key: 'shipped',    label: 'Shipped',         desc: 'Your order is on the way' },
+  { key: 'delivered',  label: 'Delivered',       desc: 'Enjoy your purchase!' }
+]
+
+async function init() {
+  if (!slug || !orderNumber) {
+    document.getElementById('card').innerHTML = '<div style="text-align:center;padding:40px;"><h2>Order not found</h2></div>'
+    return
+  }
+  try {
+    const url   = `${API}/shop/${slug}/orders/${orderNumber}${email ? '?email=' + encodeURIComponent(email) : ''}`
+    const order = await fetch(url).then(r => r.json())
+    if (order.error) throw new Error(order.error)
+    render(order)
+  } catch(e) { renderFallback() }
+}
+
+function render(order) {
+  const isOnline  = order.payment_method === 'razorpay'
+  const statusIdx = STATUS_STEPS.findIndex(s => s.key === order.status)
+
+  const timelineHtml = STATUS_STEPS.map((step, i) => {
+    const isDone    = i < statusIdx
+    const isActive  = i === statusIdx
+    const dotClass  = isDone ? 'done' : isActive ? 'active' : 'upcoming'
+    const dotContent= isDone ? '\u2713' : isActive ? '\u25cf' : ''
+    const isLast    = i === STATUS_STEPS.length - 1
+    return `<div class="t-step">
+      <div class="t-dot-col">
+        <div class="t-dot ${dotClass}">${dotContent}</div>
+        ${!isLast ? '<div class="t-line"></div>' : ''}
+      </div>
+      <div class="t-content">
+        <div class="t-label" style="color:${isDone||isActive?'var(--text)':'var(--text3)'}">${step.label}</div>
+        <div class="t-desc">${isDone||isActive ? step.desc : 'Upcoming'}</div>
+      </div>
+    </div>`
+  }).join('')
+
+  const itemsHtml = (order.items || []).map(item => `
+    <div class="item-row">
+      <div class="item-img">${item.image ? `<img src="${item.image}" alt="">` : '\ud83d\udce6'}</div>
+      <div>
+        <div class="item-name">${item.name}</div>
+        ${item.variant ? `<div class="item-meta">${item.variant}</div>` : ''}
+        <div class="item-meta">Qty: ${item.qty}</div>
+      </div>
+      <div class="item-price">${currency}${(item.price * item.qty).toFixed(2)}</div>
+    </div>`).join('')
+
+  // heading & subtext differ for Razorpay vs COD
+  const heading = isOnline ? 'Payment Successful! \ud83d\udcb3' : 'Order Confirmed! \ud83c\udf89'
+  const subtext = isOnline
+    ? `Your payment was confirmed and order placed. A confirmation email was sent to <strong>${order.customer_email}</strong>`
+    : `Thank you for your order. You'll receive a confirmation email at <strong>${order.customer_email}</strong>`
+
+  // payment info block
+  const payBlock = isOnline
+    ? `<div class="info-box online">
+        <h3>\ud83d\udcb3 Payment Confirmed</h3>
+        <p>Your payment of <strong>${currency}${order.total?.toFixed(2)}</strong> was processed securely via Razorpay.</p>
+        ${order.razorpay_payment_id ? `<div class="txn-chip">\ud83d\udd16 Txn: ${order.razorpay_payment_id}</div>` : ''}
+      </div>`
+    : `<div class="info-box cod">
+        <h3>\ud83d\udcb0 Cash on Delivery</h3>
+        <p>Please keep <strong>${currency}${order.total?.toFixed(2)}</strong> ready when your order arrives. Our delivery partner will collect the payment at your doorstep.</p>
+      </div>`
+
+  const discountRow = order.discount > 0
+    ? `<div class="detail-row"><span class="detail-label">Discount</span><span class="detail-value" style="color:var(--green);">\u2212${currency}${order.discount?.toFixed(2)}</span></div>` : ''
+
+  document.getElementById('card').innerHTML = `
+    <div class="checkmark ${isOnline ? 'paid' : 'cod'}">${isOnline ? '\ud83d\udcb3' : '\u2713'}</div>
+    <h1>${heading}</h1>
+    <p class="sub">${subtext}</p>
+
+    <div class="pay-method-badge ${isOnline ? 'online' : 'cod'}">
+      ${isOnline ? '\u26a1 Paid Online via Razorpay' : '\ud83d\udcb0 Cash on Delivery'}
+    </div>
+
+    <div class="order-number">
+      <label>Order Number</label>
+      <span>${order.order_number}</span>
+    </div>
+
+    <div class="order-details">
+      <div class="detail-row"><span class="detail-label">Customer</span><span class="detail-value">${order.customer_name}</span></div>
+      <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value">${order.customer_phone}</span></div>
+      <div class="detail-row"><span class="detail-label">Deliver to</span><span class="detail-value">${order.shipping_address?.line1}, ${order.shipping_address?.city}, ${order.shipping_address?.state} ${order.shipping_address?.pincode}</span></div>
+      ${discountRow}
+      <div class="detail-row"><span class="detail-label">Total</span><span class="detail-value" style="color:var(--accent);font-size:16px;">${currency}${order.total?.toFixed(2)}</span></div>
+      ${order.tracking_number ? `<div class="detail-row"><span class="detail-label">Tracking</span><span class="detail-value">${order.tracking_number}</span></div>` : ''}
+    </div>
+
+    <div class="items-list">
+      <h3>Items Ordered</h3>
+      ${itemsHtml}
+    </div>
+
+    ${payBlock}
+
+    <div class="status-timeline">
+      <h3>Order Status</h3>
+      <div class="timeline">${timelineHtml}</div>
+    </div>
+
+    <a class="btn-shop" href="index.html?store=${slug}">Continue Shopping</a>
+    <p style="margin-top:16px;font-size:12.5px;color:var(--text3);">Save your order number: <strong style="color:var(--text);">${order.order_number}</strong></p>
+  `
+}
+
+function renderFallback() {
+  const isOnline = isPaid
+  document.getElementById('card').innerHTML = `
+    <div class="checkmark ${isOnline ? 'paid' : 'cod'}">${isOnline ? '\ud83d\udcb3' : '\u2713'}</div>
+    <h1>${isOnline ? 'Payment Successful! \ud83d\udcb3' : 'Order Placed!'}</h1>
+    <p class="sub">Your order <strong>${orderNumber}</strong> has been placed successfully!</p>
+    <div class="order-number"><label>Order Number</label><span>${orderNumber}</span></div>
+    <div class="pay-method-badge ${isOnline ? 'online' : 'cod'}">
+      ${isOnline ? '\u26a1 Paid Online via Razorpay' : '\ud83d\udcb0 Cash on Delivery'}
+    </div>
+    ${!isOnline ? `<div class="info-box cod"><h3>\ud83d\udcb0 Cash on Delivery</h3><p>Please keep the amount ready when your order arrives. You'll receive a confirmation email shortly.</p></div>` : ''}
+    <a class="btn-shop" href="index.html?store=${slug}">Continue Shopping</a>`
+}
+
+init()
+</script>
+</body>
+</html>

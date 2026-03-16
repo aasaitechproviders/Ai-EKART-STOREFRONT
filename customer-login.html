@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — eKart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --accent: #6c63ff; --bg: #ffffff; --text: #111827; --text2: #6b7280; --border: #e5e7eb; --surface: #f9fafb; --red: #ef4444; --green: #10b981; }
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--border); background: #fff; }
+.nav-logo { font-size: 20px; font-weight: 800; text-decoration: none; color: var(--text); }
+.nav-logo span { color: var(--accent); }
+.nav-logo .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; margin-left: 2px; vertical-align: middle; }
+.nav-link { font-size: 13px; font-weight: 600; color: var(--text2); text-decoration: none; }
+.nav-link:hover { color: var(--accent); }
+
+.auth-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+.auth-card { width: 100%; max-width: 420px; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 36px; box-shadow: 0 4px 30px rgba(0,0,0,.06); }
+.auth-logo { text-align: center; margin-bottom: 24px; }
+.auth-logo div { font-size: 36px; margin-bottom: 8px; }
+.auth-logo h1 { font-size: 22px; font-weight: 800; }
+.auth-logo p { font-size: 14px; color: var(--text2); margin-top: 4px; }
+.tabs { display: flex; background: var(--surface); border-radius: 12px; padding: 4px; margin-bottom: 24px; }
+.tab { flex: 1; padding: 9px; text-align: center; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; color: var(--text2); }
+.tab.active { background: #fff; color: var(--accent); box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 11px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Outfit', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; }
+.form-input:focus { border-color: var(--accent); background: #fff; }
+.form-input.error { border-color: var(--red); }
+.field-err { font-size: 12px; color: var(--red); margin-top: 4px; display: none; }
+.field-err.show { display: block; }
+.btn-submit { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-top: 6px; transition: opacity .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-submit:hover:not(:disabled) { opacity: .88; }
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+.divider { display: flex; align-items: center; gap: 10px; margin: 18px 0; color: var(--text2); font-size: 13px; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.forgot-link { text-align: right; margin-bottom: 14px; }
+.forgot-link a { font-size: 12px; color: var(--accent); text-decoration: none; }
+.forgot-link a:hover { text-decoration: underline; }
+.alert { padding: 12px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 14px; display: none; }
+.alert.error { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25); color: var(--red); display: block; }
+.alert.success { background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); color: var(--green); display: block; }
+.consent-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.consent-row input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+.consent-row label { font-size: 13px; color: var(--text2); cursor: pointer; }
+.spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Forgot password panel */
+.panel { display: none; }
+.panel.active { display: block; }
+.back-link { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); cursor: pointer; margin-bottom: 18px; font-weight: 600; }
+.back-link:hover { color: var(--accent); }
+
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; border-radius: 12px; padding: 12px 20px; font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s; z-index: 400; white-space: nowrap; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" id="navLogo" href="#">e<span>K</span>art<span class="dot"></span></a>
+  <a class="nav-link" id="navShop" href="#">← Back to Shop</a>
+</nav>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <div id="storeLogoWrap">🛍️</div>
+      <h1 id="storeNameTitle">My Store</h1>
+      <p>Sign in to your account or create a new one</p>
+    </div>
+
+    <!-- LOGIN / REGISTER TABS -->
+    <div id="panelAuth" class="panel active">
+      <div class="tabs">
+        <div class="tab active" id="tabLogin" onclick="switchTab('login')">Sign In</div>
+        <div class="tab" id="tabRegister" onclick="switchTab('register')">Register</div>
+      </div>
+
+      <div id="alertBox" class="alert"></div>
+
+      <!-- LOGIN FORM -->
+      <div id="formLogin">
+        <div class="form-row">
+          <label>Email</label>
+          <input class="form-input" id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email">
+          <div class="field-err" id="errLoginEmail">Enter a valid email</div>
+        </div>
+        <div class="form-row">
+          <label>Password</label>
+          <input class="form-input" id="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password">
+          <div class="field-err" id="errLoginPassword">Enter your password</div>
+        </div>
+        <div class="forgot-link"><a href="#" onclick="showForgot()">Forgot password?</a></div>
+        <button class="btn-submit" id="btnLogin" onclick="doLogin()">Sign In</button>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="formRegister" style="display:none;">
+        <div class="form-row">
+          <label>Full Name</label>
+          <input class="form-input" id="regName" type="text" placeholder="John Doe" autocomplete="name">
+          <div class="field-err" id="errRegName">Enter your name</div>
+        </div>
+        <div class="form-row">
+          <label>Email</label>
+          <input class="form-input" id="regEmail" type="email" placeholder="you@example.com" autocomplete="email">
+          <div class="field-err" id="errRegEmail">Enter a valid email</div>
+        </div>
+        <div class="form-row">
+          <label>Phone (optional)</label>
+          <input class="form-input" id="regPhone" type="tel" placeholder="+91 98765 43210" autocomplete="tel">
+        </div>
+        <div class="form-row">
+          <label>Password</label>
+          <input class="form-input" id="regPassword" type="password" placeholder="Min 6 characters" autocomplete="new-password">
+          <div class="field-err" id="errRegPassword">Password must be at least 6 characters</div>
+        </div>
+        <div class="consent-row">
+          <input type="checkbox" id="mktEmail">
+          <label for="mktEmail">Send me order updates & offers by email</label>
+        </div>
+        <button class="btn-submit" id="btnRegister" onclick="doRegister()">Create Account</button>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD PANEL -->
+    <div id="panelForgot" class="panel">
+      <div class="back-link" onclick="showAuth()">← Back to Sign In</div>
+      <h3 style="font-size:17px;font-weight:800;margin-bottom:6px;">Reset Password</h3>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:20px;">Enter your email and we'll send you a reset link.</p>
+      <div id="alertForgot" class="alert"></div>
+      <div class="form-row">
+        <label>Email</label>
+        <input class="form-input" id="forgotEmail" type="email" placeholder="you@example.com">
+      </div>
+      <button class="btn-submit" id="btnForgot" onclick="doForgot()">Send Reset Link</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const params = new URLSearchParams(location.search)
+const slug   = params.get('store')
+const redirect = params.get('redirect') || `index.html?store=${slug}`
+const API    = 'https://apiv2.aasaitech.in'
+
+// Set nav links
+document.getElementById('navLogo').href  = `index.html?store=${slug}`
+document.getElementById('navShop').href  = `index.html?store=${slug}`
+
+// Load store config for branding
+async function loadConfig() {
+  if (!slug) return
+  try {
+    const cfg = await fetch(`${API}/shop/${slug}/config`).then(r => r.json())
+    if (cfg.error) return
+    document.getElementById('storeNameTitle').textContent = cfg.name
+    document.title = `Login — ${cfg.name}`
+    if (cfg.brand_color) document.documentElement.style.setProperty('--accent', cfg.brand_color)
+    if (cfg.logo_url) {
+      document.getElementById('storeLogoWrap').innerHTML = `<img src="${cfg.logo_url}" style="height:52px;border-radius:10px;object-fit:contain;">`
+    }
+  } catch {}
+}
+loadConfig()
+
+// If already logged in, redirect
+const token = localStorage.getItem(`cust_token_${slug}`)
+if (token) location.href = redirect
+
+function switchTab(tab) {
+  const isLogin = tab === 'login'
+  document.getElementById('tabLogin').classList.toggle('active', isLogin)
+  document.getElementById('tabRegister').classList.toggle('active', !isLogin)
+  document.getElementById('formLogin').style.display    = isLogin ? 'block' : 'none'
+  document.getElementById('formRegister').style.display = isLogin ? 'none'  : 'block'
+  clearAlert()
+}
+
+function showForgot() { showPanel('panelForgot') }
+function showAuth()   { showPanel('panelAuth') }
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
+  document.getElementById(id).classList.add('active')
+  clearAlert()
+}
+function clearAlert() {
+  const a = document.getElementById('alertBox')
+  if (a) { a.className = 'alert'; a.textContent = '' }
+  const af = document.getElementById('alertForgot')
+  if (af) { af.className = 'alert'; af.textContent = '' }
+}
+function showAlert(msg, type = 'error', boxId = 'alertBox') {
+  const a = document.getElementById(boxId)
+  a.className = `alert ${type}`; a.textContent = msg
+}
+function setErr(id, show) {
+  const el = document.getElementById(id)
+  el.classList.toggle('show', show)
+  el.previousElementSibling?.classList?.toggle('error', show)
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim()
+  const pass  = document.getElementById('loginPassword').value
+  let valid = true
+  setErr('errLoginEmail', !email || !email.includes('@'))
+  setErr('errLoginPassword', !pass)
+  if (!email || !email.includes('@') || !pass) return
+  const btn = document.getElementById('btnLogin')
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'
+  try {
+    const res = await fetch(`${API}/shop/${slug}/auth/login`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Login failed')
+    localStorage.setItem(`cust_token_${slug}`, data.token)
+    localStorage.setItem(`cust_name_${slug}`, data.customer?.name || '')
+    toast('Welcome back! 👋')
+    setTimeout(() => location.href = redirect, 800)
+  } catch (e) {
+    showAlert(e.message)
+    btn.disabled = false; btn.textContent = 'Sign In'
+  }
+}
+
+async function doRegister() {
+  const name  = document.getElementById('regName').value.trim()
+  const email = document.getElementById('regEmail').value.trim()
+  const phone = document.getElementById('regPhone').value.trim()
+  const pass  = document.getElementById('regPassword').value
+  const mktEmail = document.getElementById('mktEmail').checked
+  setErr('errRegName', !name)
+  setErr('errRegEmail', !email || !email.includes('@'))
+  setErr('errRegPassword', pass.length < 6)
+  if (!name || !email || !email.includes('@') || pass.length < 6) return
+  const btn = document.getElementById('btnRegister')
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'
+  try {
+    const res = await fetch(`${API}/shop/${slug}/auth/register`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, password: pass, marketing_consent: { email: mktEmail, sms: false } })
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Registration failed')
+    localStorage.setItem(`cust_token_${slug}`, data.token)
+    localStorage.setItem(`cust_name_${slug}`, data.customer?.name || name)
+    toast('Account created! Welcome 🎉')
+    setTimeout(() => location.href = redirect, 800)
+  } catch (e) {
+    showAlert(e.message)
+    btn.disabled = false; btn.textContent = 'Create Account'
+  }
+}
+
+async function doForgot() {
+  const email = document.getElementById('forgotEmail').value.trim()
+  if (!email || !email.includes('@')) { showAlert('Enter a valid email', 'error', 'alertForgot'); return }
+  const btn = document.getElementById('btnForgot')
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'
+  try {
+    await fetch(`${API}/shop/${slug}/auth/forgot-password`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    })
+    showAlert('If an account exists, a reset link has been sent to your email.', 'success', 'alertForgot')
+  } catch {
+    showAlert('Something went wrong. Try again.', 'error', 'alertForgot')
+  } finally {
+    btn.disabled = false; btn.textContent = 'Send Reset Link'
+  }
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show')
+  setTimeout(() => t.classList.remove('show'), 2500)
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return
+  if (document.getElementById('panelForgot').classList.contains('active')) return doForgot()
+  if (document.getElementById('formRegister').style.display !== 'none') return doRegister()
+  doLogin()
+})
+</script>
+</body>
+</html>
