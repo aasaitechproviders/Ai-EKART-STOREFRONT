@@ -117,15 +117,28 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-const slug     = sessionStorage.getItem('ekart_store') || new URLSearchParams(location.search).get('store')
+// ── Slug resolution: ?store= param OR custom domain hostname ──
+function resolveSlug() {
+  const fromSession = sessionStorage.getItem('ekart_store')
+  if (fromSession) return fromSession
+  const fromParam = new URLSearchParams(location.search).get('store')
+  if (fromParam) return fromParam
+  const hostname = location.hostname
+  const ownDomains = ['ai-ekart-storefront.pages.dev', 'ekarts.aasaitech.in', 'ekart.aasaitech.in', 'localhost', '127.0.0.1']
+  if (!ownDomains.some(d => hostname.includes(d))) return hostname
+  return null
+}
+const slug     = resolveSlug()
+const isCustomDomain = !new URLSearchParams(location.search).get('store') && !sessionStorage.getItem('ekart_store') && slug !== null
+const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const currency = sessionStorage.getItem('ekart_currency') || '₹'
 const API      = 'https://apiv2.aasaitech.in'
 
 let appliedCoupon   = null
-let paymentEnabled  = false   // set after fetching store config
-let selectedPayment = 'cod'   // 'cod' or 'razorpay'
+let paymentEnabled  = false
+let selectedPayment = 'cod'
 
-if (slug) document.getElementById('shopLink').href = `index.html?store=${slug}`
+if (slug) document.getElementById('shopLink').href = storeUrl('index.html')
 
 // Wire account button
 ;(function() {
@@ -135,8 +148,8 @@ if (slug) document.getElementById('shopLink').href = `index.html?store=${slug}`
   const label = document.getElementById('accountBtnLabel')
   if (btn) {
     btn.href = custToken
-      ? `customer-account.html?store=${slug}`
-      : `customer-login.html?store=${slug}&redirect=${encodeURIComponent(location.href)}`
+      ? storeUrl('customer-account.html')
+      : storeUrl('customer-login.html', `redirect=${encodeURIComponent(location.href)}`)
     if (label) label.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
   }
 })()
@@ -160,7 +173,7 @@ function render() {
   const cart = getCart()
   const view = document.getElementById('cartView')
   if (!cart.length) {
-    view.innerHTML = `<div class="empty-cart"><div class="icon">🛒</div><h2>Your cart is empty</h2><p>Looks like you haven't added anything yet</p><a class="btn-shop" href="index.html?store=${slug}">Browse Products</a></div>`
+    view.innerHTML = `<div class="empty-cart"><div class="icon">🛒</div><h2>Your cart is empty</h2><p>Looks like you haven't added anything yet</p><a class="btn-shop" href="${storeUrl('index.html')}">Browse Products</a></div>`
     return
   }
   const subtotal  = cart.reduce((s, x) => s + x.price * x.qty, 0)
@@ -379,7 +392,7 @@ async function placeOrderCOD() {
     const data = await res.json()
     if (!res.ok || !data.success) throw new Error(data.error || 'Order failed')
     localStorage.removeItem('cart_' + slug)
-    location.href = `order-confirm.html?store=${slug}&order=${data.order_number}&email=${encodeURIComponent(f.email)}`
+    location.href = storeUrl('order-confirm.html', `order=${data.order_number}&email=${encodeURIComponent(f.email)}`)
   } catch(e) {
     setLoading(false)
     showError(e.message)
@@ -459,7 +472,7 @@ async function payWithRazorpay() {
 
         // Payment verified — clear cart and redirect
         localStorage.removeItem('cart_' + slug)
-        location.href = `order-confirm.html?store=${slug}&order=${orderData.order_number}&email=${encodeURIComponent(f.email)}&paid=1`
+        location.href = storeUrl('order-confirm.html', `order=${orderData.order_number}&email=${encodeURIComponent(f.email)}&paid=1`)
       } catch(e) {
         setLoading(false)
         showError('Payment received but verification failed. Please contact support with order #' + orderData.order_number)
