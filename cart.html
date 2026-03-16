@@ -6,6 +6,7 @@
 <title>Cart</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  /* default fallback – will be overridden by theme variables */
   :root { --accent: #6c63ff; --bg: #f8f9fc; --surface: #ffffff; --border: #e8eaf0; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8; --green: #16a34a; --red: #ef4444; --surface2: #f1f5f9; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); }
@@ -50,7 +51,7 @@
   .coupon-msg.success { display: block; background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
   .coupon-msg.error { display: block; background: #fef2f2; color: var(--red); border: 1px solid #fecaca; }
 
-  /* ── Payment Method Selector ─────────────────────────── */
+  /* Payment Method Selector */
   .payment-methods { margin: 14px 0; }
   .payment-methods-label { font-size: 11.5px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
   .payment-options { display: flex; flex-direction: column; gap: 8px; }
@@ -113,11 +114,13 @@
   </div>
 </div>
 
-<!-- Razorpay SDK — loaded once on page load -->
+<!-- Razorpay SDK -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-// ── Slug resolution: ?store= param OR custom domain hostname ──
+// ── Helper functions (from main storefront) ──────────────────────────
+function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
+
 function resolveSlug() {
   const fromSession = sessionStorage.getItem('ekart_store')
   if (fromSession) return fromSession
@@ -128,36 +131,56 @@ function resolveSlug() {
   if (!ownDomains.some(d => hostname.includes(d))) return hostname
   return null
 }
+
 const slug     = resolveSlug()
 const isCustomDomain = !new URLSearchParams(location.search).get('store') && !sessionStorage.getItem('ekart_store') && slug !== null
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
-const currency = sessionStorage.getItem('ekart_currency') || '₹'
 const API      = 'https://apiv2.aasaitech.in'
 
-let appliedCoupon   = null
-let paymentEnabled  = false
+// ── Theme loader ─────────────────────────────────────────────────────
+async function applyTheme() {
+  if (!slug) return
+  try {
+    const res = await fetch(`${API}/shop/${slug}/theme`)
+    if (!res.ok) return
+    const raw = await res.json()
+    const doc = raw.published || raw.draft || raw
+    const settings = doc.settings || doc
+    const primary = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
+    const bg = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#f8f9fc'
+    const text = readKey(settings, 'accent_color', 'textColor') || '#1a1a2e'
+    const radiusRaw = readKey(settings, 'radius', 'border_radius') || '16px'
+    const radius = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
+    const font = readKey(settings, 'font_heading', 'font') || 'Outfit'
+    const btnStyle = readKey(settings, 'button_style') || 'rounded'
+    const btnR = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
+
+    const root = document.documentElement
+    root.style.setProperty('--accent', primary)
+    root.style.setProperty('--primary', primary)
+    root.style.setProperty('--bg', bg)
+    root.style.setProperty('--text', text)
+    root.style.setProperty('--text2', '#64748b') // keep secondary text as is, or derive?
+    root.style.setProperty('--radius', radius)
+    root.style.setProperty('--btn-r', btnR)
+    root.style.setProperty('--font', `'${font}', sans-serif`)
+
+    if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
+      document.head.appendChild(link)
+    }
+  } catch(e) { console.warn('Theme load failed, using defaults') }
+}
+
+let paymentEnabled = false
 let selectedPayment = 'cod'
 
-if (slug) document.getElementById('shopLink').href = storeUrl('index.html')
-
-// Wire account button
-;(function() {
-  const custToken = slug && localStorage.getItem(`cust_token_${slug}`)
-  const custName  = slug && localStorage.getItem(`cust_name_${slug}`)
-  const btn   = document.getElementById('accountBtn')
-  const label = document.getElementById('accountBtnLabel')
-  if (btn) {
-    btn.href = custToken
-      ? storeUrl('customer-account.html')
-      : storeUrl('customer-login.html', `redirect=${encodeURIComponent(location.href)}`)
-    if (label) label.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
-  }
-})()
-
+// ── Existing cart logic ──────────────────────────────────────────────
 function getCart() { return JSON.parse(localStorage.getItem('cart_' + slug) || '[]') }
 function saveCart(c) { localStorage.setItem('cart_' + slug, JSON.stringify(c)) }
 
-// Load store config to check if Razorpay is enabled
 async function loadStoreConfig() {
   try {
     const res  = await fetch(`${API}/shop/${slug}/config`)
@@ -181,7 +204,6 @@ function render() {
   const total     = Math.max(subtotal - discount, 0)
   const totalQty  = cart.reduce((s, x) => s + x.qty, 0)
 
-  // Payment method selector — only show Razorpay option if enabled
   const paymentSelector = paymentEnabled ? `
     <div class="payment-methods">
       <div class="payment-methods-label">Payment Method</div>
@@ -283,16 +305,11 @@ function render() {
   </div>`
 }
 
-function selectPayment(method) {
-  selectedPayment = method
-  render()
-  // Restore any filled-in form values after re-render
-}
-
+function selectPayment(method) { selectedPayment = method; render() }
 function updateQty(i, delta) { const c=getCart(); c[i].qty=Math.max(1,c[i].qty+delta); saveCart(c); render() }
 function removeItem(i) { const c=getCart(); c.splice(i,1); saveCart(c); render() }
 
-// ── Coupon ────────────────────────────────────────────────────────────────────
+let appliedCoupon = null
 async function applyCoupon() {
   const code = document.getElementById('couponInput').value.trim()
   if (!code) return
@@ -316,10 +333,8 @@ async function applyCoupon() {
     msgEl.textContent = '❌ ' + e.message
   }
 }
-
 function removeCoupon() { appliedCoupon = null; render() }
 
-// ── Form validation (shared) ──────────────────────────────────────────────────
 function getFormData() {
   return {
     name:    document.getElementById('custName')?.value.trim()   || '',
@@ -357,7 +372,6 @@ function setLoading(show, text = 'Placing your order...', subtext = '') {
   if (btn) btn.disabled = show
 }
 
-// ── Main checkout dispatcher ──────────────────────────────────────────────────
 function handleCheckout() {
   const errEl = document.getElementById('errorMsg')
   if (errEl) errEl.style.display = 'none'
@@ -368,7 +382,6 @@ function handleCheckout() {
   }
 }
 
-// ── COD checkout (unchanged logic) ───────────────────────────────────────────
 async function placeOrderCOD() {
   const f = getFormData()
   const err = validateForm(f)
@@ -399,19 +412,16 @@ async function placeOrderCOD() {
   }
 }
 
-// ── Razorpay checkout ─────────────────────────────────────────────────────────
 async function payWithRazorpay() {
   const f = getFormData()
   const err = validateForm(f)
   if (err) { showError(err); return }
 
   const cart = getCart()
-
   setLoading(true, 'Preparing payment...', 'Setting up secure checkout')
 
   let orderData
   try {
-    // Step 1 — create order on backend (secret never touches browser)
     const res = await fetch(`${API}/shop/${slug}/create-order`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -432,12 +442,11 @@ async function payWithRazorpay() {
     return
   }
 
-  // Step 2 — hide loading, open Razorpay modal
   setLoading(false)
 
   const options = {
     key:          orderData.razorpay_key_id,
-    amount:       orderData.amount,           // in paise
+    amount:       orderData.amount,
     currency:     orderData.currency || 'INR',
     name:         orderData.store_name || 'eKart Store',
     description:  `Order #${orderData.order_number}`,
@@ -451,9 +460,8 @@ async function payWithRazorpay() {
       order_number: orderData.order_number,
       shipping:     `${f.line1}, ${f.city} - ${f.pincode}`
     },
-    theme: { color: '#6c63ff' },
+    theme: { color: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6c63ff' },
 
-    // ── Payment SUCCESS ───────────────────────────────────────────────
     handler: async function(response) {
       setLoading(true, 'Verifying payment...', 'Please do not close this page')
       try {
@@ -470,7 +478,6 @@ async function payWithRazorpay() {
         const verifyData = await verifyRes.json()
         if (!verifyRes.ok) throw new Error(verifyData.error || 'Payment verification failed')
 
-        // Payment verified — clear cart and redirect
         localStorage.removeItem('cart_' + slug)
         location.href = storeUrl('order-confirm.html', `order=${orderData.order_number}&email=${encodeURIComponent(f.email)}&paid=1`)
       } catch(e) {
@@ -479,7 +486,6 @@ async function payWithRazorpay() {
       }
     },
 
-    // ── Payment MODAL DISMISSED ───────────────────────────────────────
     modal: {
       ondismiss: function() {
         setLoading(false)
@@ -501,8 +507,27 @@ async function payWithRazorpay() {
   }
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-loadStoreConfig()  // fetches config then calls render()
+// ── Start everything ─────────────────────────────────────────────────
+;(async function init() {
+  await applyTheme()
+  // Set back link
+  if (slug) document.getElementById('shopLink').href = storeUrl('index.html')
+
+  // Wire account button
+  const custToken = slug && localStorage.getItem(`cust_token_${slug}`)
+  const custName  = slug && localStorage.getItem(`cust_name_${slug}`)
+  const btn   = document.getElementById('accountBtn')
+  const label = document.getElementById('accountBtnLabel')
+  if (btn) {
+    btn.href = custToken
+      ? storeUrl('customer-account.html')
+      : storeUrl('customer-login.html', `redirect=${encodeURIComponent(location.href)}`)
+    if (label) label.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
+  }
+
+  // Load store config (for payment enabled) and then render
+  await loadStoreConfig()
+})()
 </script>
 </body>
 </html>
