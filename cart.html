@@ -7,9 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* default fallback – will be overridden by theme variables */
-  :root { --accent: #6c63ff; --bg: #f8f9fc; --surface: #ffffff; --border: #e8eaf0; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8; --green: #16a34a; --red: #ef4444; --surface2: #f1f5f9; }
+  :root { --accent: #6c63ff; --bg: #f8f9fc; --surface: #ffffff; --border: #e8eaf0; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8; --green: #16a34a; --red: #ef4444; --surface2: #f1f5f9; --btn-r: 12px; --font: 'Outfit', sans-serif; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); }
   header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
   .header-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; height: 64px; gap: 16px; }
   .back-btn { font-size: 14.5px; font-weight: 600; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: opacity .15s; }
@@ -72,7 +72,7 @@
   .field input { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 9px; font-size: 14px; font-family: 'Outfit', sans-serif; color: var(--text); outline: none; transition: border-color .15s; background: var(--bg); }
   .field input:focus { border-color: var(--accent); background: white; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .btn-checkout { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-top: 16px; transition: all .15s; }
+  .btn-checkout { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: var(--btn-r); font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--font); margin-top: 16px; transition: all .15s; }
   .btn-checkout:hover:not(:disabled) { background: #7c74ff; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(108,99,255,0.35); }
   .btn-checkout:disabled { opacity: 0.6; cursor: not-allowed; }
   .secure-note { text-align: center; font-size: 12px; color: var(--text3); margin-top: 10px; }
@@ -80,7 +80,7 @@
   .empty-cart .icon { font-size: 64px; margin-bottom: 16px; }
   .empty-cart h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
   .empty-cart p { color: var(--text2); margin-bottom: 24px; }
-  .btn-shop { display: inline-block; padding: 12px 28px; background: var(--accent); color: white; border-radius: 10px; text-decoration: none; font-weight: 700; transition: all .15s; }
+  .btn-shop { display: inline-block; padding: 12px 28px; background: var(--accent); color: white; border-radius: var(--btn-r); text-decoration: none; font-weight: 700; transition: all .15s; }
   .btn-shop:hover { background: #7c74ff; }
   .error-msg { background: #fef2f2; border: 1px solid #fecaca; color: var(--red); padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 10px; display: none; }
   .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(2px); }
@@ -137,6 +137,12 @@ const isCustomDomain = !new URLSearchParams(location.search).get('store') && !se
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const API      = 'https://apiv2.aasaitech.in'
 
+// ── Global variables ─────────────────────────────────────────────────
+let paymentEnabled = false
+let selectedPayment = 'cod'
+let appliedCoupon = null
+let currency = '₹'                     // default, will be updated from config
+
 // ── Theme loader ─────────────────────────────────────────────────────
 async function applyTheme() {
   if (!slug) return
@@ -160,7 +166,11 @@ async function applyTheme() {
     root.style.setProperty('--primary', primary)
     root.style.setProperty('--bg', bg)
     root.style.setProperty('--text', text)
-    root.style.setProperty('--text2', '#64748b') // keep secondary text as is, or derive?
+    root.style.setProperty('--text2', '#64748b') // keep secondary text as is
+    root.style.setProperty('--text3', '#94a3b8')
+    root.style.setProperty('--border', '#e8eaf0')
+    root.style.setProperty('--surface', '#ffffff')
+    root.style.setProperty('--surface2', '#f1f5f9')
     root.style.setProperty('--radius', radius)
     root.style.setProperty('--btn-r', btnR)
     root.style.setProperty('--font', `'${font}', sans-serif`)
@@ -174,9 +184,6 @@ async function applyTheme() {
   } catch(e) { console.warn('Theme load failed, using defaults') }
 }
 
-let paymentEnabled = false
-let selectedPayment = 'cod'
-
 // ── Existing cart logic ──────────────────────────────────────────────
 function getCart() { return JSON.parse(localStorage.getItem('cart_' + slug) || '[]') }
 function saveCart(c) { localStorage.setItem('cart_' + slug, JSON.stringify(c)) }
@@ -186,6 +193,10 @@ async function loadStoreConfig() {
     const res  = await fetch(`${API}/shop/${slug}/config`)
     const data = await res.json()
     paymentEnabled = !!(data.payment_enabled)
+    if (data.currency === 'USD')      currency = '$'
+    else if (data.currency === 'EUR') currency = '€'
+    else if (data.currency === 'GBP') currency = '£'
+    else currency = '₹'               // fallback / INR
   } catch(e) {
     paymentEnabled = false
   }
@@ -309,7 +320,6 @@ function selectPayment(method) { selectedPayment = method; render() }
 function updateQty(i, delta) { const c=getCart(); c[i].qty=Math.max(1,c[i].qty+delta); saveCart(c); render() }
 function removeItem(i) { const c=getCart(); c.splice(i,1); saveCart(c); render() }
 
-let appliedCoupon = null
 async function applyCoupon() {
   const code = document.getElementById('couponInput').value.trim()
   if (!code) return
@@ -525,7 +535,7 @@ async function payWithRazorpay() {
     if (label) label.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
   }
 
-  // Load store config (for payment enabled) and then render
+  // Load store config (for payment enabled and currency) and then render
   await loadStoreConfig()
 })()
 </script>
