@@ -32,7 +32,8 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 24px; height: 60px; gap: 12px;
 }
-.nav-logo { font-size: 18px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-logo { font-size: 18px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 8px;  flex-shrink: 0; min-width: 0; }
+.nav-logo #navLogoText { display: none; font-size: 18px; font-weight: 800; line-height: 1; white-space: nowrap; }
 .nav-logo img { height: 28px; border-radius: 5px; object-fit: contain; }
 .nav-logo-accent { color: var(--accent); }
 .nav-store { font-size: 14px; font-weight: 600; color: var(--text2); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -149,7 +150,7 @@ h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.02
 <nav class="page-nav" id="pageNav">
   <a class="nav-logo" id="navLogo" href="#" data-nav-logo>
     <span id="navLogoImg"></span>
-    <span id="navLogoText"><span class="nav-logo-accent">e</span>Kart</span>
+    <span id="navLogoText" style="display:none"></span>
   </a>
   <span class="nav-store" id="navStoreName" data-store-name></span>
   <div class="nav-actions">
@@ -196,6 +197,31 @@ const STATUS_STEPS = [
 /* ════════════════════════════════════
    THEME
 ════════════════════════════════════ */
+
+/* ── Nav logo renderer ── */
+function renderNavLogo(cfg) {
+  const imgEl = document.getElementById('navLogoImg')
+  const txtEl = document.getElementById('navLogoText')
+  if (!imgEl && !txtEl) return
+  if (cfg.logo_url) {
+    // Logo image available — show image, hide text
+    if (imgEl) imgEl.innerHTML = `<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:130px;border-radius:6px;object-fit:contain;display:block;">`
+    if (txtEl) txtEl.style.display = 'none'
+  } else {
+    // No logo — show store name as styled text
+    if (imgEl) imgEl.innerHTML = ''
+    if (txtEl) {
+      const name = cfg.name || ''
+      if (name) {
+        txtEl.innerHTML = `<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`
+      } else {
+        txtEl.textContent = 'Store'
+      }
+      txtEl.style.display = 'inline-flex'
+      txtEl.style.alignItems = 'center'
+    }
+  }
+}
 function isColorDark(hex) {
   const c = (hex||'').replace('#','')
   if (c.length !== 6) return false
@@ -208,6 +234,18 @@ function parseThemeSettings(raw) {
   if (raw.published && typeof raw.published === 'object') doc = raw.published
   else if (raw.draft && typeof raw.draft === 'object') doc = raw.draft
   const s = doc.settings || doc
+  // Scan sections[] for a navbar section to get its bgColor
+  let navBgFromSection = null, navTextFromSection = null
+  const sections = doc.sections || []
+  for (const sec of sections) {
+    const t = (sec.type || '').toLowerCase()
+    if (t === 'navbar' || t === 'navigation' || t === 'nav' || t === 'header') {
+      const sd = sec.data || sec.settings || {}
+      navBgFromSection   = sd.bgColor || sd.bg_color || sd.background || null
+      navTextFromSection = sd.textColor || sd.text_color || sd.linkColor || sd.link_color || null
+      break
+    }
+  }
   return {
     primaryColor: s.primary_color || s.primaryColor || null,
     bgColor:      s.secondary_color || s.bgColor || s.bg_color || null,
@@ -215,8 +253,8 @@ function parseThemeSettings(raw) {
     font:         s.font_heading || s.fontHeading || s.font || null,
     radius:       s.radius || s.border_radius || null,
     buttonStyle:  s.button_style || s.buttonStyle || null,
-    navBg:        s.nav_bg || s.navBg || null,
-    navTextColor: s.nav_text_color || s.navTextColor || null,
+    navBg:        s.nav_bg || s.navBg || navBgFromSection || null,
+    navTextColor: s.nav_text_color || s.navTextColor || navTextFromSection || null,
   }
 }
 function applyCSSVars(cfg, theme) {
@@ -242,11 +280,21 @@ function applyCSSVars(cfg, theme) {
     document.body.style.fontFamily = `'${theme.font}', 'Outfit', system-ui, sans-serif`
   }
   if (theme.navBg) {
+    const R2 = document.documentElement
+    R2.style.setProperty('--navbar-bg', theme.navBg)
     const nav = document.getElementById('pageNav')
     if (nav) {
       nav.style.background = theme.navBg
       nav.style.borderBottomColor = isColorDark(theme.navBg) ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)'
-      if (isColorDark(theme.navBg)) nav.style.color = theme.navTextColor || '#ffffff'
+      const isDark = isColorDark(theme.navBg)
+      const textCol = theme.navTextColor || (isDark ? '#ffffff' : '')
+      if (textCol) {
+        nav.style.color = textCol
+        // Cascade to direct text children that have explicit inline colors
+        nav.querySelectorAll('a, span, button').forEach(el => {
+          if (!el.style.color) el.style.color = textCol
+        })
+      }
     }
   }
 }
@@ -264,12 +312,8 @@ async function loadTheme() {
       if (cfg.currency === 'USD') currency = '$'; else if (cfg.currency === 'EUR') currency = '€'
       document.getElementById('navStoreName').textContent = cfg.name || ''
       document.title = `Order Confirmed — ${cfg.name || 'Store'}`
-      if (cfg.logo_url) {
-        document.getElementById('navLogoImg').innerHTML = `<img src="${cfg.logo_url}" alt="">`
-        document.getElementById('navLogoText').style.display = 'none'
-      } else if (cfg.name) {
-        document.getElementById('navLogoText').innerHTML = `<span class="nav-logo-accent">${esc(cfg.name[0])}</span>${esc(cfg.name.slice(1))}`
-      }
+      
+      renderNavLogo(cfg)
     }
     const theme = themeRes.status === 'fulfilled' ? parseThemeSettings(themeRes.value) : {}
     applyCSSVars(cfg, theme)
