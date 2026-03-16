@@ -111,7 +111,7 @@ a{color:inherit;text-decoration:none}
    so styles work regardless of which navbar the
    acctWrap is injected into.
 ══════════════════════════════════════════════════ */
-.nav-acct-inject{display:flex;align-items:center;flex-shrink:0;margin-right:8px}
+.nav-acct-inject{display:flex;align-items:center;flex-shrink:0}
 .acct-wrap{position:relative;display:flex;align-items:center}
 
 /* ── Guest button ── */
@@ -1041,24 +1041,29 @@ function initAccountButton() {
   const guestBtn = document.getElementById('acctBtnGuest')
   const userBtn  = document.getElementById('acctBtnUser')
   const wrap     = document.getElementById('acctWrap')
+  if (!guestBtn || !userBtn || !wrap) return
 
-  // Detect if the navbar is light or dark and set data-navtheme
-  // so CSS selectors work regardless of which navbar we're inside
-  function setNavTheme() {
+  // Detect navbar theme by reading the inline background-color set by theme builder
+  // (computed style returns transparent due to backdrop-filter, so we read inline style first)
+  function detectAndSetTheme() {
     const navbar = document.querySelector('.tc-navbar') || document.getElementById('origHeader')
     if (!navbar || !wrap) return
-    const bg = window.getComputedStyle(navbar).backgroundColor
-    // Parse rgb values
-    const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
+    // Try inline style first (theme builder sets this directly)
+    let colorStr = navbar.style.backgroundColor || navbar.style.background || ''
+    // Fallback to computed
+    if (!colorStr || colorStr === 'transparent') {
+      colorStr = window.getComputedStyle(navbar).backgroundColor
+    }
+    const m = colorStr.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/)
     if (m) {
-      const luminance = (0.299 * m[1] + 0.587 * m[2] + 0.114 * m[3]) / 255
-      wrap.setAttribute('data-navtheme', luminance > 0.55 ? 'light' : 'dark')
+      const lum = (0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3]) / 255
+      wrap.setAttribute('data-navtheme', lum > 0.6 ? 'light' : 'dark')
     } else {
+      // Default: if no color found assume dark (colored/dark navbars are more common)
       wrap.setAttribute('data-navtheme', 'dark')
     }
   }
-  // Run after paint so computed styles are ready
-  requestAnimationFrame(() => requestAnimationFrame(setNavTheme))
+  detectAndSetTheme()
 
   if (tok && name) {
     const first   = name.split(' ')[0]
@@ -1471,11 +1476,9 @@ function buildSec(sec,isMobile){
         ? `<div class="nav-links"${linkColor ? ` style="color:${linkColor}"` : ''}>${linksHtml}</div>`
         : ''
       const navCart = d.showCart !== 'no'
-        ? `<div class="nav-right"><a href="${storeUrl('cart.html')}" class="nav-cart-btn" style="${cartBtnStyle}">🛒 ${esc(d.cartText||'Cart')} <span class="nav-cart-count theme-cart-qty">0</span></a></div>`
-        : ''
-      // Account button injected into theme navbar
-      const navAcct = `<div class="nav-acct-inject" id="navAcctInject"></div>`
-      return `<nav class="tc-navbar" id="themeNavbar" style="${navStyle}"><div class="nav-logo"${logoColor ? ` style="color:${logoColor}"` : ''} onclick="scrollTop()">${logoInner}</div>${navLinks}${navAcct}${navCart}</nav>`
+        ? `<div class="nav-right"><div class="nav-acct-inject" id="navAcctInject"></div><a href="${storeUrl('cart.html')}" class="nav-cart-btn" style="${cartBtnStyle}">🛒 ${esc(d.cartText||'Cart')} <span class="nav-cart-count theme-cart-qty">0</span></a></div>`
+        : `<div class="nav-right"><div class="nav-acct-inject" id="navAcctInject"></div></div>`
+      return `<nav class="tc-navbar" id="themeNavbar" style="${navStyle}"><div class="nav-logo"${logoColor ? ` style="color:${logoColor}"` : ''} onclick="scrollTop()">${logoInner}</div>${navLinks}${navCart}</nav>`
     }
 
 
@@ -1857,23 +1860,10 @@ function renderSections(sections){
   tmpl.innerHTML = allHtml
   page.appendChild(tmpl.content)
 
-  // Move the account button into the theme navbar if it exists
+  // Move the account button into the theme navbar inject slot
   const injectSlot = document.getElementById('navAcctInject')
   const acctWrap   = document.getElementById('acctWrap')
-  if (injectSlot && acctWrap) {
-    injectSlot.appendChild(acctWrap)
-    // Re-detect navbar theme now that element is in its final position
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      const navbar = document.querySelector('.tc-navbar')
-      if (!navbar) return
-      const bg = window.getComputedStyle(navbar).backgroundColor
-      const m  = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
-      if (m) {
-        const lum = (0.299 * m[1] + 0.587 * m[2] + 0.114 * m[3]) / 255
-        acctWrap.setAttribute('data-navtheme', lum > 0.55 ? 'light' : 'dark')
-      }
-    }))
-  }
+  if (injectSlot && acctWrap) injectSlot.appendChild(acctWrap)
 
   document.querySelectorAll('.theme-cart-qty').forEach(e=>e.textContent=getCart().reduce((s,x)=>s+x.qty,0))
   setTimeout(()=>{ startCountdowns(); updateCartUI() },80)
@@ -1904,8 +1894,8 @@ async function init(){
     sessionStorage.setItem('ekart_store_name',storeConfig.name)
     sessionStorage.setItem('ekart_pay_enabled',storeConfig.payment_enabled?'1':'0')
     document.getElementById('cartBarBtn').href = storeUrl('cart.html')
-    initAccountButton()
     await loadTheme()
+    initAccountButton()
     updateCartUI()
     hideLoader()
     if(!document.querySelector('.tc-hero')) document.getElementById('heroBanner').classList.add('visible')
