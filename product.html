@@ -10,25 +10,13 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  /* fallback – will be overridden by theme */
-  --accent: #6c63ff;
-  --bg: #ffffff;
-  --text: #111827;
-  --text2: #6b7280;
-  --text3: #9ca3af;
-  --border: #e5e7eb;
-  --surface: #f9fafb;
-  --surface2: #f3f4f6;
-  --red: #ef4444;
-  --green: #10b981;
-  --yellow: #f59e0b;
-  --radius: 16px;
-  --btn-r: 12px;
-  --font: 'Outfit', sans-serif;
+  --accent: #6c63ff; --bg: #ffffff; --text: #111827; --text2: #6b7280; --text3: #9ca3af;
+  --border: #e5e7eb; --surface: #f9fafb; --surface2: #f3f4f6;
+  --red: #ef4444; --green: #10b981; --yellow: #f59e0b;
+  --radius: 16px; --btn-r: 12px; --font: 'Outfit', sans-serif;
 }
 body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* ── NAV ── */
 .nav { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 100; gap: 16px; }
 .nav-logo { font-size: 20px; font-weight: 800; text-decoration: none; color: var(--text); }
 .nav-logo span { color: var(--accent); }
@@ -39,17 +27,14 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .btn-cart:hover { opacity: .88; }
 .cart-count { background: #fff; color: var(--accent); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
 
-/* ── BREADCRUMB ── */
 .breadcrumb { padding: 14px 24px; font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .breadcrumb a { color: var(--text2); text-decoration: none; }
 .breadcrumb a:hover { color: var(--accent); }
 .breadcrumb span { color: var(--text3); }
 
-/* ── PRODUCT LAYOUT ── */
 .product-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 60px; }
 .product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
 
-/* ── GALLERY ── */
 .gallery { position: sticky; top: 76px; }
 .main-image-wrap { position: relative; border-radius: var(--radius); overflow: hidden; background: var(--surface2); aspect-ratio: 1; margin-bottom: 12px; }
 .main-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .2s; }
@@ -58,10 +43,9 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .thumb { width: 68px; height: 68px; border-radius: calc(var(--radius) * 0.5); overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; flex-shrink: 0; }
 .thumb.active { border-color: var(--accent); }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
-.badge-oos { position: absolute; top: 14px; left: 14px; background: var(--red); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+.badge-oos  { position: absolute; top: 14px; left: 14px;  background: var(--red);   color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
 .badge-sale { position: absolute; top: 14px; right: 14px; background: var(--green); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
 
-/* ── PRODUCT INFO ── */
 .product-info { padding-top: 4px; }
 .product-cat { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
 .product-name { font-size: 28px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
@@ -73,7 +57,6 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .product-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
 .tag { padding: 4px 12px; background: var(--surface2); border-radius: 20px; font-size: 12px; color: var(--text2); font-weight: 600; }
 
-/* ── VARIANTS ── */
 .variant-section { margin-bottom: 20px; }
 .variant-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
 .variant-options { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -81,7 +64,6 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .variant-opt:hover { border-color: var(--accent); color: var(--accent); }
 .variant-opt.selected { border-color: var(--accent); background: rgba(108,99,255,.08); color: var(--accent); }
 
-/* ── QTY + ADD ── */
 .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .qty-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; }
 .qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: var(--btn-r); overflow: hidden; }
@@ -93,15 +75,12 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .btn-add-cart:hover:not(:disabled) { opacity: .88; }
 .btn-add-cart:disabled { opacity: .4; cursor: not-allowed; }
 
-/* ── STOCK BADGE ── */
 .stock-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
 .stock-dot { width: 8px; height: 8px; border-radius: 50%; }
 
-/* ── META ── */
 .meta-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text2); margin-bottom: 8px; }
 .meta-row strong { color: var(--text); }
 
-/* ── REVIEWS ── */
 .section-title { font-size: 18px; font-weight: 800; margin: 40px 0 16px; }
 .review-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
 .review-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
@@ -122,7 +101,6 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 .star-picker span:hover { transform: scale(1.2); }
 .btn-submit { padding: 10px 22px; background: var(--accent); color: #fff; border: none; border-radius: var(--btn-r); font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font); }
 
-/* ── RELATED ── */
 .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 .related-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; text-decoration: none; color: var(--text); transition: box-shadow .2s; }
 .related-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); }
@@ -133,11 +111,9 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 .related-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .related-price { font-size: 14px; font-weight: 900; font-family: 'DM Mono', monospace; color: var(--accent); }
 
-/* ── TOAST ── */
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; border-radius: 12px; padding: 12px 20px; font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s; z-index: 400; white-space: nowrap; pointer-events: none; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── SKELETON ── */
 .skel { background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; }
 @keyframes shimmer { to { background-position: -200% 0; } }
 
@@ -152,7 +128,6 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="nav">
   <a class="nav-logo" id="navLogo" href="#">e<span>K</span>art<span class="dot"></span></a>
   <span class="nav-store" id="navStoreName"></span>
@@ -164,7 +139,6 @@ textarea.form-input { min-height: 80px; resize: vertical; }
   </div>
 </nav>
 
-<!-- BREADCRUMB -->
 <div class="breadcrumb" id="breadcrumb">
   <a href="#" id="bcHome">Home</a>
   <span>›</span>
@@ -173,10 +147,8 @@ textarea.form-input { min-height: 80px; resize: vertical; }
   <span id="bcProduct">Loading…</span>
 </div>
 
-<!-- MAIN -->
 <div class="product-wrap">
   <div class="product-layout" id="productLayout">
-    <!-- skeleton -->
     <div>
       <div class="skel" style="aspect-ratio:1;border-radius:16px;margin-bottom:12px;"></div>
       <div style="display:flex;gap:8px;"><div class="skel" style="width:68px;height:68px;border-radius:10px;"></div><div class="skel" style="width:68px;height:68px;border-radius:10px;"></div><div class="skel" style="width:68px;height:68px;border-radius:10px;"></div></div>
@@ -218,10 +190,11 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 <script>
 const params = new URLSearchParams(location.search)
 
-// ── Helper functions (from main storefront) ──────────────────────────
 function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
 
 function resolveSlug() {
+  const fromSession = sessionStorage.getItem('ekart_store')
+  if (fromSession) return fromSession
   const fromParam = params.get('store')
   if (fromParam) return fromParam
   const hostname = location.hostname
@@ -229,65 +202,93 @@ function resolveSlug() {
   if (!ownDomains.some(d => hostname.includes(d))) return hostname
   return null
 }
-const slug    = resolveSlug()
-const isCustomDomain = !params.get('store') && slug !== null
-const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
-const pid     = params.get('id')
-const API     = 'https://apiv2.aasaitech.in'
 
-// ── Theme loader ─────────────────────────────────────────────────────
+const slug     = resolveSlug()
+const isCustomDomain = !params.get('store') && !sessionStorage.getItem('ekart_store') && slug !== null
+const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
+const pid      = params.get('id')
+const API      = 'https://apiv2.aasaitech.in'
+
+// ── Theme: sessionStorage cache first, API fallback ──────────────────
 async function applyTheme() {
   if (!slug) return
+
+  const cached = sessionStorage.getItem(`ekart_theme_${slug}`)
+  if (cached) {
+    try {
+      const t = JSON.parse(cached)
+      const root = document.documentElement
+      root.style.setProperty('--accent',   t.primary || '#6c63ff')
+      root.style.setProperty('--primary',  t.primary || '#6c63ff')
+      root.style.setProperty('--bg',       t.bg      || '#ffffff')
+      root.style.setProperty('--text',     t.text    || '#111827')
+      root.style.setProperty('--text2',    '#6b7280')
+      root.style.setProperty('--text3',    '#9ca3af')
+      root.style.setProperty('--border',   '#e5e7eb')
+      root.style.setProperty('--surface',  '#f9fafb')
+      root.style.setProperty('--surface2', '#f3f4f6')
+      root.style.setProperty('--radius',   t.radius  || '16px')
+      root.style.setProperty('--btn-r',    t.btnR    || '12px')
+      root.style.setProperty('--font',     `'${t.font || 'Outfit'}', sans-serif`)
+      if (t.font && !['Outfit','DM Sans','system-ui'].includes(t.font)) {
+        const l = document.createElement('link'); l.rel = 'stylesheet'
+        l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(t.font)}:wght@300;400;500;600;700;800&display=swap`
+        document.head.appendChild(l)
+      }
+      return // ✅ instant — no API call
+    } catch(e) {}
+  }
+
+  // Fallback: fetch from API
   try {
     const res = await fetch(`${API}/shop/${slug}/theme`)
     if (!res.ok) return
     const raw = await res.json()
     const doc = raw.published || raw.draft || raw
     const settings = doc.settings || doc
-    const primary = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
-    const bg = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#ffffff'
-    const text = readKey(settings, 'accent_color', 'textColor') || '#111827'
+    const primary   = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
+    const bg        = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#ffffff'
+    const text      = readKey(settings, 'accent_color', 'textColor') || '#111827'
     const radiusRaw = readKey(settings, 'radius', 'border_radius') || '16px'
-    const radius = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
-    const font = readKey(settings, 'font_heading', 'font') || 'Outfit'
-    const btnStyle = readKey(settings, 'button_style') || 'rounded'
-    const btnR = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
+    const radius    = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
+    const font      = readKey(settings, 'font_heading', 'font') || 'Outfit'
+    const btnStyle  = readKey(settings, 'button_style') || 'rounded'
+    const btnR      = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
 
     const root = document.documentElement
-    root.style.setProperty('--accent', primary)
-    root.style.setProperty('--primary', primary)
-    root.style.setProperty('--bg', bg)
-    root.style.setProperty('--text', text)
-    root.style.setProperty('--text2', '#6b7280')
-    root.style.setProperty('--text3', '#9ca3af')
-    root.style.setProperty('--border', '#e5e7eb')
-    root.style.setProperty('--surface', '#f9fafb')
+    root.style.setProperty('--accent',   primary)
+    root.style.setProperty('--primary',  primary)
+    root.style.setProperty('--bg',       bg)
+    root.style.setProperty('--text',     text)
+    root.style.setProperty('--text2',    '#6b7280')
+    root.style.setProperty('--text3',    '#9ca3af')
+    root.style.setProperty('--border',   '#e5e7eb')
+    root.style.setProperty('--surface',  '#f9fafb')
     root.style.setProperty('--surface2', '#f3f4f6')
-    root.style.setProperty('--radius', radius)
-    root.style.setProperty('--btn-r', btnR)
-    root.style.setProperty('--font', `'${font}', sans-serif`)
+    root.style.setProperty('--radius',   radius)
+    root.style.setProperty('--btn-r',    btnR)
+    root.style.setProperty('--font',     `'${font}', sans-serif`)
 
     if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
+      const link = document.createElement('link'); link.rel = 'stylesheet'
       link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
       document.head.appendChild(link)
     }
+    try { sessionStorage.setItem(`ekart_theme_${slug}`, JSON.stringify({ primary, bg, text, radius, btnR, font })) } catch(e) {}
   } catch(e) { console.warn('Theme load failed, using defaults') }
 }
 
-let currency      = '₹'
-let storeConfig   = {}
-let product       = {}
-let selectedQty   = 1
+let currency    = '₹'
+let storeConfig = {}
+let product     = {}
+let selectedQty = 1
 let selectedVariant = ''
-let reviewRating  = 5
+let reviewRating    = 5
 
 if (!slug || !pid) {
   document.getElementById('productLayout').innerHTML = '<div style="text-align:center;padding:80px;grid-column:1/-1;"><h2>Product not found</h2><p style="color:#6b7280;margin-top:8px;">Missing store or product ID.</p></div>'
 }
 
-// ── CART HELPERS ────────────────────────────────────────────────────────────
 function getCart()   { return JSON.parse(localStorage.getItem('cart_' + slug) || '[]') }
 function saveCart(c) { localStorage.setItem('cart_' + slug, JSON.stringify(c)) }
 function updateCartCount() {
@@ -309,19 +310,16 @@ function addToCart() {
   if (btn) { btn.textContent = '✅ Added!'; setTimeout(() => btn.innerHTML = '🛒 Add to Cart', 1500) }
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
 async function init() {
-  await applyTheme()  // apply theme first
+  await applyTheme()
 
   if (!slug || !pid) return
 
-  // Set nav links
-  document.getElementById('navLogo').href    = storeUrl('index.html')
-  document.getElementById('bcHome').href     = storeUrl('index.html')
-  document.getElementById('bcShop').href     = storeUrl('index.html')
-  document.getElementById('cartBtn').href    = storeUrl('cart.html')
+  document.getElementById('navLogo').href = storeUrl('index.html')
+  document.getElementById('bcHome').href  = storeUrl('index.html')
+  document.getElementById('bcShop').href  = storeUrl('index.html')
+  document.getElementById('cartBtn').href = storeUrl('cart.html')
 
-  // Wire account button
   const custToken = localStorage.getItem(`cust_token_${slug}`)
   const custName  = localStorage.getItem(`cust_name_${slug}`)
   const acctBtn   = document.getElementById('accountBtn')
@@ -334,7 +332,6 @@ async function init() {
   updateCartCount()
 
   try {
-    // Load store config and product in parallel
     const [cfg, prod] = await Promise.all([
       fetch(`${API}/shop/${slug}/config`).then(r => r.json()),
       fetch(`${API}/shop/${slug}/products/${pid}`).then(r => r.json())
@@ -346,22 +343,17 @@ async function init() {
     storeConfig = cfg
     product     = prod
 
-    // Set currency from config
     if (cfg.currency === 'USD')      currency = '$'
     else if (cfg.currency === 'EUR') currency = '€'
     else if (cfg.currency === 'GBP') currency = '£'
 
-    // Save session
-    sessionStorage.setItem('ekart_store',      slug)
-    sessionStorage.setItem('ekart_currency',   currency)
-    sessionStorage.setItem('ekart_store_name', cfg.name)
+    sessionStorage.setItem('ekart_store',       slug)
+    sessionStorage.setItem('ekart_currency',    currency)
+    sessionStorage.setItem('ekart_store_name',  cfg.name)
     sessionStorage.setItem('ekart_pay_enabled', cfg.payment_enabled ? '1' : '0')
 
-    // Nav
     document.getElementById('navStoreName').textContent = cfg.name
     document.title = `${prod.name} — ${cfg.name}`
-
-    // Breadcrumb
     document.getElementById('bcProduct').textContent = prod.name
 
     renderProduct(prod)
@@ -380,25 +372,15 @@ function renderProduct(p) {
   const imgs       = p.images?.length ? p.images : []
 
   document.getElementById('productLayout').innerHTML = `
-    <!-- GALLERY -->
     <div class="gallery">
       <div class="main-image-wrap" id="mainImageWrap">
-        ${imgs.length
-          ? `<img class="main-image" id="mainImg" src="${imgs[0]}" alt="${p.name}">`
-          : `<div class="main-image-placeholder">📦</div>`}
+        ${imgs.length ? `<img class="main-image" id="mainImg" src="${imgs[0]}" alt="${p.name}">` : `<div class="main-image-placeholder">📦</div>`}
         ${oos ? '<span class="badge-oos">Out of Stock</span>' : ''}
         ${hasCompare ? `<span class="badge-sale">-${saveAmt}%</span>` : ''}
       </div>
-      ${imgs.length > 1 ? `
-      <div class="thumb-strip">
-        ${imgs.map((src, i) => `
-          <div class="thumb ${i === 0 ? 'active' : ''}" onclick="setMainImage(${i})" id="thumb-${i}">
-            <img src="${src}" alt="">
-          </div>`).join('')}
-      </div>` : ''}
+      ${imgs.length > 1 ? `<div class="thumb-strip">${imgs.map((src, i) => `<div class="thumb ${i === 0 ? 'active' : ''}" onclick="setMainImage(${i})" id="thumb-${i}"><img src="${src}" alt=""></div>`).join('')}</div>` : ''}
     </div>
 
-    <!-- INFO -->
     <div class="product-info">
       ${p.category_name ? `<div class="product-cat">${p.category_name}</div>` : ''}
       <h1 class="product-name">${escHtml(p.name)}</h1>
@@ -407,17 +389,8 @@ function renderProduct(p) {
         ${hasCompare ? `<span class="price-compare">${currency}${p.compare_at_price.toFixed(2)}</span>` : ''}
         ${saveAmt > 0 ? `<span class="price-save">Save ${saveAmt}%</span>` : ''}
       </div>
-
       ${p.description ? `<div class="product-desc">${escHtml(p.description)}</div>` : ''}
-
-      ${p.variants?.length ? `
-      <div class="variant-section">
-        <div class="variant-label">Options</div>
-        <div class="variant-options">
-          ${p.variants.map(v => `<button class="variant-opt" onclick="selectVariant(this,'${escAttr(v.name)}')">${escHtml(v.name)}</button>`).join('')}
-        </div>
-      </div>` : ''}
-
+      ${p.variants?.length ? `<div class="variant-section"><div class="variant-label">Options</div><div class="variant-options">${p.variants.map(v => `<button class="variant-opt" onclick="selectVariant(this,'${escAttr(v.name)}')">${escHtml(v.name)}</button>`).join('')}</div></div>` : ''}
       <div class="qty-row">
         <span class="qty-label">Qty</span>
         <div class="qty-ctrl">
@@ -426,24 +399,14 @@ function renderProduct(p) {
           <button class="qty-btn" onclick="changeQty(1)">+</button>
         </div>
       </div>
-
       <div class="add-row">
         <button class="btn-add-cart" id="btnAddCart" onclick="addToCart()" ${oos ? 'disabled' : ''}>
           ${oos ? '😞 Out of Stock' : '🛒 Add to Cart'}
         </button>
       </div>
-
-      ${p.track_inventory ? `
-      <div class="stock-badge">
-        <span class="stock-dot" style="background:${oos ? 'var(--red)' : p.stock_qty <= 5 ? 'var(--yellow)' : 'var(--green)'}"></span>
-        <span style="color:${oos ? 'var(--red)' : p.stock_qty <= 5 ? 'var(--yellow)' : 'var(--green)'}">
-          ${oos ? 'Out of stock' : p.stock_qty <= 5 ? `Only ${p.stock_qty} left` : 'In stock'}
-        </span>
-      </div>` : ''}
-
+      ${p.track_inventory ? `<div class="stock-badge"><span class="stock-dot" style="background:${oos ? 'var(--red)' : p.stock_qty <= 5 ? 'var(--yellow)' : 'var(--green)'}"></span><span style="color:${oos ? 'var(--red)' : p.stock_qty <= 5 ? 'var(--yellow)' : 'var(--green)'}">${oos ? 'Out of stock' : p.stock_qty <= 5 ? `Only ${p.stock_qty} left` : 'In stock'}</span></div>` : ''}
       ${p.sku ? `<div class="meta-row"><strong>SKU:</strong> <span style="font-family:'DM Mono',monospace;font-size:12px;">${p.sku}</span></div>` : ''}
       ${p.tags?.length ? `<div class="product-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
-
       <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px;">
         <div class="meta-row">🚚 <span>Free shipping on orders above ${currency}499</span></div>
         <div class="meta-row">🔄 <span>Easy 7-day returns</span></div>
@@ -451,7 +414,6 @@ function renderProduct(p) {
       </div>
     </div>`
 
-  // images array stored for setMainImage
   window._productImages = imgs
 }
 
@@ -486,9 +448,7 @@ async function loadRelated(p) {
     const section = document.getElementById('relatedSection')
     const grid    = document.getElementById('relatedGrid')
     grid.innerHTML = items.map(r => {
-      const img = r.images?.[0]
-        ? `<img src="${r.images[0]}" alt="${r.name}">`
-        : `<div class="related-img-ph">📦</div>`
+      const img = r.images?.[0] ? `<img src="${r.images[0]}" alt="${r.name}">` : `<div class="related-img-ph">📦</div>`
       return `<a class="related-card" href="${storeUrl('product.html', `id=${r._id}`)}">
         <div class="related-img">${img}</div>
         <div class="related-body">
@@ -503,7 +463,7 @@ async function loadRelated(p) {
 
 async function loadReviews() {
   try {
-    const data = await fetch(`${API}/shop/${slug}/products/${pid}/reviews`).then(r => r.json())
+    const data    = await fetch(`${API}/shop/${slug}/products/${pid}/reviews`).then(r => r.json())
     const reviews = data.reviews || data || []
     const section = document.getElementById('reviewsSection')
     const list    = document.getElementById('reviewList')
@@ -542,8 +502,7 @@ async function submitReview() {
   if (!body)  { toast('Write a review'); return }
   try {
     const r = await fetch(`${API}/shop/${slug}/products/${pid}/reviews`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, body, rating: reviewRating })
     })
     if (!r.ok) throw new Error('Failed')
