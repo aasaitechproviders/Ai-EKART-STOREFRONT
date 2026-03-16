@@ -6,7 +6,6 @@
 <title>Cart</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* default fallback – will be overridden by theme variables */
   :root { --accent: #6c63ff; --bg: #f8f9fc; --surface: #ffffff; --border: #e8eaf0; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8; --green: #16a34a; --red: #ef4444; --surface2: #f1f5f9; --btn-r: 12px; --font: 'Outfit', sans-serif; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: var(--font); background: var(--bg); color: var(--text); }
@@ -50,8 +49,6 @@
   .coupon-msg { font-size: 12.5px; margin-top: 7px; padding: 7px 12px; border-radius: 7px; display: none; }
   .coupon-msg.success { display: block; background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
   .coupon-msg.error { display: block; background: #fef2f2; color: var(--red); border: 1px solid #fecaca; }
-
-  /* Payment Method Selector */
   .payment-methods { margin: 14px 0; }
   .payment-methods-label { font-size: 11.5px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
   .payment-options { display: flex; flex-direction: column; gap: 8px; }
@@ -64,7 +61,6 @@
   .payment-option-desc { font-size: 11.5px; color: var(--text3); margin-top: 1px; }
   .payment-option-icon { font-size: 22px; }
   .razorpay-badge { display: flex; align-items: center; gap: 6px; background: #eef9f4; border: 1px solid #c3e6d8; border-radius: 8px; padding: 7px 12px; margin-top: 6px; font-size: 11.5px; color: #15803d; font-weight: 600; }
-
   .form-section { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 18px; }
   .form-section-title { font-size: 12.5px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
   .field { margin-bottom: 11px; }
@@ -114,11 +110,9 @@
   </div>
 </div>
 
-<!-- Razorpay SDK -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
-// ── Helper functions (from main storefront) ──────────────────────────
 function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
 
 function resolveSlug() {
@@ -137,43 +131,72 @@ const isCustomDomain = !new URLSearchParams(location.search).get('store') && !se
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const API      = 'https://apiv2.aasaitech.in'
 
-// ── Global variables ─────────────────────────────────────────────────
 let paymentEnabled = false
 let selectedPayment = 'cod'
 let appliedCoupon = null
-let currency = '₹'                     // default, will be updated from config
+let currency = '₹'
 
-// ── Theme loader ─────────────────────────────────────────────────────
+// ── Theme loader: sessionStorage cache first, API fallback ────────────
 async function applyTheme() {
   if (!slug) return
+
+  // Try cache first (written by index.html)
+  const cached = sessionStorage.getItem(`ekart_theme_${slug}`)
+  if (cached) {
+    try {
+      const t = JSON.parse(cached)
+      const root = document.documentElement
+      root.style.setProperty('--accent',  t.primary || '#6c63ff')
+      root.style.setProperty('--primary', t.primary || '#6c63ff')
+      root.style.setProperty('--bg',      t.bg      || '#f8f9fc')
+      root.style.setProperty('--text',    t.text    || '#1a1a2e')
+      root.style.setProperty('--text2',   '#64748b')
+      root.style.setProperty('--text3',   '#94a3b8')
+      root.style.setProperty('--border',  '#e8eaf0')
+      root.style.setProperty('--surface', '#ffffff')
+      root.style.setProperty('--surface2','#f1f5f9')
+      root.style.setProperty('--radius',  t.radius  || '16px')
+      root.style.setProperty('--btn-r',   t.btnR    || '12px')
+      root.style.setProperty('--font',    `'${t.font || 'Outfit'}', sans-serif`)
+      if (t.font && !['Outfit','DM Sans','system-ui'].includes(t.font)) {
+        const l = document.createElement('link')
+        l.rel = 'stylesheet'
+        l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(t.font)}:wght@300;400;500;600;700;800&display=swap`
+        document.head.appendChild(l)
+      }
+      return // ✅ done instantly, no API call
+    } catch(e) {}
+  }
+
+  // Fallback: fetch from API and save to cache
   try {
     const res = await fetch(`${API}/shop/${slug}/theme`)
     if (!res.ok) return
     const raw = await res.json()
     const doc = raw.published || raw.draft || raw
     const settings = doc.settings || doc
-    const primary = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
-    const bg = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#f8f9fc'
-    const text = readKey(settings, 'accent_color', 'textColor') || '#1a1a2e'
+    const primary   = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
+    const bg        = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#f8f9fc'
+    const text      = readKey(settings, 'accent_color', 'textColor') || '#1a1a2e'
     const radiusRaw = readKey(settings, 'radius', 'border_radius') || '16px'
-    const radius = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
-    const font = readKey(settings, 'font_heading', 'font') || 'Outfit'
-    const btnStyle = readKey(settings, 'button_style') || 'rounded'
-    const btnR = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
+    const radius    = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
+    const font      = readKey(settings, 'font_heading', 'font') || 'Outfit'
+    const btnStyle  = readKey(settings, 'button_style') || 'rounded'
+    const btnR      = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
 
     const root = document.documentElement
-    root.style.setProperty('--accent', primary)
-    root.style.setProperty('--primary', primary)
-    root.style.setProperty('--bg', bg)
-    root.style.setProperty('--text', text)
-    root.style.setProperty('--text2', '#64748b') // keep secondary text as is
-    root.style.setProperty('--text3', '#94a3b8')
-    root.style.setProperty('--border', '#e8eaf0')
-    root.style.setProperty('--surface', '#ffffff')
+    root.style.setProperty('--accent',   primary)
+    root.style.setProperty('--primary',  primary)
+    root.style.setProperty('--bg',       bg)
+    root.style.setProperty('--text',     text)
+    root.style.setProperty('--text2',    '#64748b')
+    root.style.setProperty('--text3',    '#94a3b8')
+    root.style.setProperty('--border',   '#e8eaf0')
+    root.style.setProperty('--surface',  '#ffffff')
     root.style.setProperty('--surface2', '#f1f5f9')
-    root.style.setProperty('--radius', radius)
-    root.style.setProperty('--btn-r', btnR)
-    root.style.setProperty('--font', `'${font}', sans-serif`)
+    root.style.setProperty('--radius',   radius)
+    root.style.setProperty('--btn-r',    btnR)
+    root.style.setProperty('--font',     `'${font}', sans-serif`)
 
     if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
       const link = document.createElement('link')
@@ -181,10 +204,15 @@ async function applyTheme() {
       link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
       document.head.appendChild(link)
     }
+
+    // Save to cache for future navigations
+    try {
+      sessionStorage.setItem(`ekart_theme_${slug}`, JSON.stringify({ primary, bg, text, radius, btnR, font }))
+    } catch(e) {}
+
   } catch(e) { console.warn('Theme load failed, using defaults') }
 }
 
-// ── Existing cart logic ──────────────────────────────────────────────
 function getCart() { return JSON.parse(localStorage.getItem('cart_' + slug) || '[]') }
 function saveCart(c) { localStorage.setItem('cart_' + slug, JSON.stringify(c)) }
 
@@ -196,7 +224,7 @@ async function loadStoreConfig() {
     if (data.currency === 'USD')      currency = '$'
     else if (data.currency === 'EUR') currency = '€'
     else if (data.currency === 'GBP') currency = '£'
-    else currency = '₹'               // fallback / INR
+    else currency = '₹'
   } catch(e) {
     paymentEnabled = false
   }
@@ -461,15 +489,8 @@ async function payWithRazorpay() {
     name:         orderData.store_name || 'eKart Store',
     description:  `Order #${orderData.order_number}`,
     order_id:     orderData.razorpay_order_id,
-    prefill: {
-      name:    f.name,
-      email:   f.email,
-      contact: f.phone,
-    },
-    notes: {
-      order_number: orderData.order_number,
-      shipping:     `${f.line1}, ${f.city} - ${f.pincode}`
-    },
+    prefill: { name: f.name, email: f.email, contact: f.phone },
+    notes: { order_number: orderData.order_number, shipping: `${f.line1}, ${f.city} - ${f.pincode}` },
     theme: { color: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#6c63ff' },
 
     handler: async function(response) {
@@ -487,7 +508,6 @@ async function payWithRazorpay() {
         })
         const verifyData = await verifyRes.json()
         if (!verifyRes.ok) throw new Error(verifyData.error || 'Payment verification failed')
-
         localStorage.removeItem('cart_' + slug)
         location.href = storeUrl('order-confirm.html', `order=${orderData.order_number}&email=${encodeURIComponent(f.email)}&paid=1`)
       } catch(e) {
@@ -517,13 +537,10 @@ async function payWithRazorpay() {
   }
 }
 
-// ── Start everything ─────────────────────────────────────────────────
 ;(async function init() {
   await applyTheme()
-  // Set back link
   if (slug) document.getElementById('shopLink').href = storeUrl('index.html')
 
-  // Wire account button
   const custToken = slug && localStorage.getItem(`cust_token_${slug}`)
   const custName  = slug && localStorage.getItem(`cust_name_${slug}`)
   const btn   = document.getElementById('accountBtn')
@@ -535,7 +552,6 @@ async function payWithRazorpay() {
     if (label) label.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
   }
 
-  // Load store config (for payment enabled and currency) and then render
   await loadStoreConfig()
 })()
 </script>
