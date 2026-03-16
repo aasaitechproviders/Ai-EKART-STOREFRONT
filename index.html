@@ -772,7 +772,16 @@ body.cart-bar-open{padding-bottom:66px}
 /* ═══════════════════════════════════════════
    CONFIG
 ═══════════════════════════════════════════ */
-const slug = new URLSearchParams(location.search).get('store')
+// ── Slug resolution: ?store= param OR custom domain hostname ──
+function resolveSlug() {
+  const fromParam = new URLSearchParams(location.search).get('store')
+  if (fromParam) return fromParam
+  const hostname = location.hostname
+  const ownDomains = ['ai-ekart-storefront.pages.dev', 'ekarts.aasaitech.in', 'ekart.aasaitech.in', 'localhost', '127.0.0.1']
+  if (!ownDomains.some(d => hostname.includes(d))) return hostname // custom merchant domain
+  return null
+}
+const slug = resolveSlug()
 if(!slug) document.body.innerHTML='<div style="text-align:center;padding:80px;font-family:sans-serif"><h2>Store not found</h2><p style="color:#888;margin-top:8px">Add ?store=your-slug to the URL</p></div>'
 
 const API = 'https://apiv2.aasaitech.in'
@@ -843,8 +852,11 @@ const smoothScroll = () => {
   if(el){ const nb=document.querySelector('.tc-navbar')||document.getElementById('origHeader'); window.scrollTo({top:el.getBoundingClientRect().top+scrollY-(nb?nb.offsetHeight+12:70),behavior:'smooth'}) }
 }
 const scrollToEl = id => { const el=document.getElementById(id); if(!el)return; const nb=document.querySelector('.tc-navbar')||document.getElementById('origHeader'); window.scrollTo({top:el.getBoundingClientRect().top+scrollY-(nb?nb.offsetHeight+12:70),behavior:'smooth'}) }
-const gotoCart = () => location.href=`cart.html?store=${slug}`
-const gotoAccount = () => location.href=localStorage.getItem(`cust_token_${slug}`)?`customer-account.html?store=${slug}`:`customer-login.html?store=${slug}`
+// ── URL helper: on custom domain omit ?store= param ──
+const isCustomDomain = !new URLSearchParams(location.search).get('store') && slug !== null
+const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
+const gotoCart = () => location.href = storeUrl('cart.html')
+const gotoAccount = () => location.href = localStorage.getItem(`cust_token_${slug}`) ? storeUrl('customer-account.html') : storeUrl('customer-login.html')
 const subscribeNL = (inputEl) => { const v=(inputEl||document.querySelector('.tc-newsletter-input'))?.value?.trim(); showToast(v?`📧 Thanks! We'll reach ${v}`:'Please enter your email') }
 
 function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
@@ -873,7 +885,7 @@ function handleCartBtn(btn){
 
 function cardClick(event,pid,storeSlug){
   if(event.target.closest('button,.wish-btn,.cart-controls,.cart-controls-wrap,.ov-ctrl,.card-atc-overlay')) return
-  location.href=`product.html?store=${storeSlug}&id=${pid}`
+  location.href = storeUrl('product.html', `id=${pid}`)
 }
 
 function incCart(id,name,price,image){
@@ -1221,7 +1233,7 @@ function buildSec(sec,isMobile){
         ? `<div class="nav-links"${linkColor ? ` style="color:${linkColor}"` : ''}>${linksHtml}</div>`
         : ''
       const navCart = d.showCart !== 'no'
-        ? `<div class="nav-right"><a href="cart.html?store=${slug}" class="nav-cart-btn" style="${cartBtnStyle}">🛒 ${esc(d.cartText||'Cart')} <span class="nav-cart-count theme-cart-qty">0</span></a></div>`
+        ? `<div class="nav-right"><a href="${storeUrl('cart.html')}" class="nav-cart-btn" style="${cartBtnStyle}">🛒 ${esc(d.cartText||'Cart')} <span class="nav-cart-count theme-cart-qty">0</span></a></div>`
         : ''
       return `<nav class="tc-navbar" id="themeNavbar" style="${navStyle}"><div class="nav-logo"${logoColor ? ` style="color:${logoColor}"` : ''} onclick="scrollTop()">${logoInner}</div>${navLinks}${navCart}</nav>`
     }
@@ -1633,7 +1645,7 @@ async function init(){
     sessionStorage.setItem('ekart_currency',currency)
     sessionStorage.setItem('ekart_store_name',storeConfig.name)
     sessionStorage.setItem('ekart_pay_enabled',storeConfig.payment_enabled?'1':'0')
-    document.getElementById('cartBarBtn').href=`cart.html?store=${slug}`
+    document.getElementById('cartBarBtn').href = storeUrl('cart.html')
     const tok=localStorage.getItem(`cust_token_${slug}`),name=localStorage.getItem(`cust_name_${slug}`)
     if(tok&&name){const icon=document.getElementById('accountBtnIcon');if(icon)icon.title=name.split(' ')[0]}
     await loadTheme()
