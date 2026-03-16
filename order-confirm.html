@@ -85,10 +85,21 @@
 
 <script>
 const params      = new URLSearchParams(location.search)
-const slug        = params.get('store')
+// ── Slug resolution: ?store= param OR custom domain hostname ──
+function resolveSlug() {
+  const fromParam = params.get('store')
+  if (fromParam) return fromParam
+  const hostname = location.hostname
+  const ownDomains = ['ai-ekart-storefront.pages.dev', 'ekarts.aasaitech.in', 'ekart.aasaitech.in', 'localhost', '127.0.0.1']
+  if (!ownDomains.some(d => hostname.includes(d))) return hostname
+  return null
+}
+const slug        = resolveSlug()
+const isCustomDomain = !params.get('store') && slug !== null
+const storeUrl    = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const orderNumber = params.get('order')
 const email       = params.get('email')
-const isPaid      = params.get('paid') === '1'   // set by cart.html after Razorpay verify success
+const isPaid      = params.get('paid') === '1'
 const currency    = sessionStorage.getItem('ekart_currency') || '\u20b9'
 const API         = 'https://apiv2.aasaitech.in'
 
@@ -202,7 +213,7 @@ function render(order) {
       <div class="timeline">${timelineHtml}</div>
     </div>
 
-    <a class="btn-shop" href="index.html?store=${slug}">Continue Shopping</a>
+    <a class="btn-shop" href="${storeUrl('index.html')}">Continue Shopping</a>
     <p style="margin-top:16px;font-size:12.5px;color:var(--text3);">Save your order number: <strong style="color:var(--text);">${order.order_number}</strong></p>
   `
 }
@@ -218,7 +229,7 @@ function renderFallback() {
       ${isOnline ? '\u26a1 Paid Online via Razorpay' : '\ud83d\udcb0 Cash on Delivery'}
     </div>
     ${!isOnline ? `<div class="info-box cod"><h3>\ud83d\udcb0 Cash on Delivery</h3><p>Please keep the amount ready when your order arrives. You'll receive a confirmation email shortly.</p></div>` : ''}
-    <a class="btn-shop" href="index.html?store=${slug}">Continue Shopping</a>`
+    <a class="btn-shop" href="${storeUrl('index.html')}">Continue Shopping</a>`
 }
 
 init()
