@@ -96,7 +96,7 @@ a{color:inherit;text-decoration:none}
 .hdr-nav{display:flex;align-items:center;gap:28px;flex:1;justify-content:center}
 .hdr-nav a{font-size:13px;font-weight:500;color:var(--p2);transition:color .15s;white-space:nowrap}
 .hdr-nav a:hover{color:var(--p)}
-.hdr-right{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:auto}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
 .hdr-icon-btn{width:36px;height:36px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--p2);transition:background .15s,color .15s}
 .hdr-icon-btn:hover{background:var(--bg2);color:var(--p)}
 .hdr-cart-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--p);color:#fff;border-radius:var(--btn-r);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:background .2s,transform .15s}
@@ -104,6 +104,26 @@ a{color:inherit;text-decoration:none}
 .cart-badge{background:#fff;color:var(--p);font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 4px}
 .cart-badge.on{display:flex}
 #payBadge{display:none;padding:4px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:11px;font-weight:600;color:#16a34a;align-items:center;gap:4px}
+
+/* ── ACCOUNT BUTTON & DROPDOWN ── */
+.acct-wrap{position:relative}
+.acct-btn-guest{display:flex;align-items:center;gap:6px;padding:7px 14px;background:transparent;border:1.5px solid var(--p);color:var(--p);border-radius:var(--btn-r);font-size:13px;font-weight:600;cursor:pointer;transition:background .18s,color .18s;white-space:nowrap;font-family:inherit}
+.acct-btn-guest:hover{background:var(--p);color:#fff}
+.acct-btn-user{display:flex;align-items:center;gap:7px;padding:6px 12px 6px 6px;background:var(--bg2);border:1.5px solid var(--border,#e5e7eb);color:var(--p);border-radius:var(--btn-r);font-size:13px;font-weight:600;cursor:pointer;transition:background .18s;white-space:nowrap;font-family:inherit}
+.acct-btn-user:hover{background:var(--bg3,#e5e7eb)}
+.acct-avatar{width:26px;height:26px;border-radius:50%;background:var(--p);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.acct-chevron{font-size:10px;opacity:.6;transition:transform .2s}
+.acct-wrap.open .acct-chevron{transform:rotate(180deg)}
+.acct-dropdown{position:absolute;top:calc(100% + 8px);right:0;min-width:180px;background:#fff;border:1px solid var(--border,#e5e7eb);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);padding:6px;z-index:300;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s}
+.acct-wrap.open .acct-dropdown{opacity:1;transform:translateY(0);pointer-events:all}
+.acct-dropdown-header{padding:10px 12px 8px;border-bottom:1px solid var(--border,#e5e7eb);margin-bottom:4px}
+.acct-dropdown-name{font-size:13px;font-weight:700;color:var(--p)}
+.acct-dropdown-email{font-size:11px;color:var(--p2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
+.acct-menu-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--p);cursor:pointer;transition:background .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.acct-menu-item:hover{background:var(--bg2)}
+.acct-menu-item.danger{color:#ef4444}
+.acct-menu-item.danger:hover{background:#fef2f2}
+.acct-divider{height:1px;background:var(--border,#e5e7eb);margin:4px 0}
 
 /* ── HERO BANNER fallback ── */
 #heroBanner{padding:80px 40px;text-align:center;background:var(--bg2);border-bottom:1px solid var(--border);display:none}
@@ -684,6 +704,9 @@ body.cart-bar-open{padding-bottom:66px}
   .hdr-inner{padding:0 16px;gap:12px}
   .hdr-nav,.nav-links{display:none}
   .nav-right{margin-left:auto}
+  .acct-btn-guest{padding:6px 10px;font-size:12px}
+  .acct-btn-user{padding:5px 8px 5px 5px;font-size:12px}
+  .acct-dropdown{right:0;min-width:160px}
   .tc-section,.tc-trust-section,.tc-newsletter,.tc-promo-banner,.tc-footer,
   .tc-faq-section,.tc-countdown-section,.tc-gallery-section,.tc-video-section,.tc-about-section,
   .tc-richtext-section,.tc-imagetext-section,.tc-brands-section,.tc-offers-section,
@@ -733,7 +756,38 @@ body.cart-bar-open{padding-bottom:66px}
     <nav class="hdr-nav" id="hdrNav"></nav>
     <div class="hdr-right">
       <div id="payBadge">⚡ Pay Online</div>
-      <button class="hdr-icon-btn" id="accountBtnIcon" title="Account" onclick="gotoAccount()">👤</button>
+
+      <!-- Smart account button — swaps between guest/logged-in -->
+      <div class="acct-wrap" id="acctWrap">
+        <!-- Guest state (default) -->
+        <button class="acct-btn-guest" id="acctBtnGuest" onclick="location.href=storeUrl('customer-login.html')">
+          👤 Login
+        </button>
+        <!-- Logged-in state (hidden until JS confirms token) -->
+        <button class="acct-btn-user" id="acctBtnUser" style="display:none" onclick="toggleAcctDropdown()">
+          <div class="acct-avatar" id="acctAvatar">?</div>
+          <span id="acctName">Account</span>
+          <span class="acct-chevron">▾</span>
+        </button>
+        <!-- Dropdown menu -->
+        <div class="acct-dropdown" id="acctDropdown">
+          <div class="acct-dropdown-header">
+            <div class="acct-dropdown-name" id="acctDropName">—</div>
+            <div class="acct-dropdown-email" id="acctDropEmail">—</div>
+          </div>
+          <a class="acct-menu-item" id="acctMenuAccount" href="#">
+            🧾 My Account
+          </a>
+          <a class="acct-menu-item" id="acctMenuOrders" href="#">
+            📦 My Orders
+          </a>
+          <div class="acct-divider"></div>
+          <button class="acct-menu-item danger" onclick="doLogout()">
+            🚪 Logout
+          </button>
+        </div>
+      </div>
+
       <button class="hdr-cart-btn" onclick="gotoCart()">
         🛒 <span id="cartLabel">Cart</span>
         <span class="cart-badge" id="cartCount">0</span>
@@ -856,7 +910,50 @@ const scrollToEl = id => { const el=document.getElementById(id); if(!el)return; 
 const isCustomDomain = !new URLSearchParams(location.search).get('store') && slug !== null
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const gotoCart = () => location.href = storeUrl('cart.html')
-const gotoAccount = () => location.href = localStorage.getItem(`cust_token_${slug}`) ? storeUrl('customer-account.html') : storeUrl('customer-login.html')
+
+// ── Smart account button ──
+function initAccountButton() {
+  const tok  = localStorage.getItem(`cust_token_${slug}`)
+  const name = localStorage.getItem(`cust_name_${slug}`)
+  const email= localStorage.getItem(`cust_email_${slug}`)
+  const guestBtn = document.getElementById('acctBtnGuest')
+  const userBtn  = document.getElementById('acctBtnUser')
+  if (tok && name) {
+    // Logged in state
+    const first = name.split(' ')[0]
+    const initial = first[0].toUpperCase()
+    guestBtn.style.display = 'none'
+    userBtn.style.display  = 'flex'
+    document.getElementById('acctName').textContent     = first
+    document.getElementById('acctAvatar').textContent   = initial
+    document.getElementById('acctDropName').textContent  = name
+    document.getElementById('acctDropEmail').textContent = email || ''
+    document.getElementById('acctMenuAccount').href = storeUrl('customer-account.html')
+    document.getElementById('acctMenuOrders').href  = storeUrl('customer-account.html')
+  } else {
+    // Guest state
+    guestBtn.style.display = 'flex'
+    userBtn.style.display  = 'none'
+  }
+}
+
+function toggleAcctDropdown() {
+  document.getElementById('acctWrap').classList.toggle('open')
+}
+
+function doLogout() {
+  localStorage.removeItem(`cust_token_${slug}`)
+  localStorage.removeItem(`cust_name_${slug}`)
+  localStorage.removeItem(`cust_email_${slug}`)
+  document.getElementById('acctWrap').classList.remove('open')
+  initAccountButton()
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('acctWrap')
+  if (wrap && !wrap.contains(e.target)) wrap.classList.remove('open')
+})
 const subscribeNL = (inputEl) => { const v=(inputEl||document.querySelector('.tc-newsletter-input'))?.value?.trim(); showToast(v?`📧 Thanks! We'll reach ${v}`:'Please enter your email') }
 
 function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
@@ -1646,8 +1743,7 @@ async function init(){
     sessionStorage.setItem('ekart_store_name',storeConfig.name)
     sessionStorage.setItem('ekart_pay_enabled',storeConfig.payment_enabled?'1':'0')
     document.getElementById('cartBarBtn').href = storeUrl('cart.html')
-    const tok=localStorage.getItem(`cust_token_${slug}`),name=localStorage.getItem(`cust_name_${slug}`)
-    if(tok&&name){const icon=document.getElementById('accountBtnIcon');if(icon)icon.title=name.split(' ')[0]}
+    initAccountButton()
     await loadTheme()
     updateCartUI()
     hideLoader()
