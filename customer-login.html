@@ -38,8 +38,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 .btn-submit { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-top: 6px; transition: opacity .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-submit:hover:not(:disabled) { opacity: .88; }
 .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
-.divider { display: flex; align-items: center; gap: 10px; margin: 18px 0; color: var(--text2); font-size: 13px; }
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .forgot-link { text-align: right; margin-bottom: 14px; }
 .forgot-link a { font-size: 12px; color: var(--accent); text-decoration: none; }
 .forgot-link a:hover { text-decoration: underline; }
@@ -52,7 +50,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 .spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Forgot password panel */
 .panel { display: none; }
 .panel.active { display: block; }
 .back-link { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); cursor: pointer; margin-bottom: 18px; font-weight: 600; }
@@ -78,16 +75,13 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
       <p>Sign in to your account or create a new one</p>
     </div>
 
-    <!-- LOGIN / REGISTER TABS -->
     <div id="panelAuth" class="panel active">
       <div class="tabs">
         <div class="tab active" id="tabLogin" onclick="switchTab('login')">Sign In</div>
         <div class="tab" id="tabRegister" onclick="switchTab('register')">Register</div>
       </div>
-
       <div id="alertBox" class="alert"></div>
 
-      <!-- LOGIN FORM -->
       <div id="formLogin">
         <div class="form-row">
           <label>Email</label>
@@ -103,7 +97,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
         <button class="btn-submit" id="btnLogin" onclick="doLogin()">Sign In</button>
       </div>
 
-      <!-- REGISTER FORM -->
       <div id="formRegister" style="display:none;">
         <div class="form-row">
           <label>Full Name</label>
@@ -132,7 +125,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
       </div>
     </div>
 
-    <!-- FORGOT PASSWORD PANEL -->
     <div id="panelForgot" class="panel">
       <div class="back-link" onclick="showAuth()">← Back to Sign In</div>
       <h3 style="font-size:17px;font-weight:800;margin-bottom:6px;">Reset Password</h3>
@@ -151,7 +143,6 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Helper functions ─────────────────────────────────────────────────
 function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
 
 function resolveSlug() {
@@ -165,54 +156,76 @@ function resolveSlug() {
   return null
 }
 
-const slug   = resolveSlug()
+const slug     = resolveSlug()
 const isCustomDomain = !new URLSearchParams(location.search).get('store') && !sessionStorage.getItem('ekart_store') && slug !== null
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const redirect = new URLSearchParams(location.search).get('redirect') || storeUrl('index.html')
-const API    = 'https://apiv2.aasaitech.in'
+const API      = 'https://apiv2.aasaitech.in'
 
-// ── Theme loader ─────────────────────────────────────────────────────
+// ── Theme: sessionStorage cache first, API fallback ──────────────────
 async function applyTheme() {
   if (!slug) return
+
+  const cached = sessionStorage.getItem(`ekart_theme_${slug}`)
+  if (cached) {
+    try {
+      const t = JSON.parse(cached)
+      const root = document.documentElement
+      root.style.setProperty('--accent',  t.primary || '#6c63ff')
+      root.style.setProperty('--primary', t.primary || '#6c63ff')
+      root.style.setProperty('--bg',      t.bg      || '#ffffff')
+      root.style.setProperty('--text',    t.text    || '#111827')
+      root.style.setProperty('--text2',   '#6b7280')
+      root.style.setProperty('--radius',  t.radius  || '20px')
+      root.style.setProperty('--btn-r',   t.btnR    || '12px')
+      root.style.setProperty('--font',    `'${t.font || 'Outfit'}', sans-serif`)
+      if (t.font && !['Outfit','DM Sans','system-ui'].includes(t.font)) {
+        const l = document.createElement('link'); l.rel = 'stylesheet'
+        l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(t.font)}:wght@300;400;500;600;700;800&display=swap`
+        document.head.appendChild(l)
+      }
+      return // ✅ instant — no API call
+    } catch(e) {}
+  }
+
+  // Fallback: fetch from API
   try {
     const res = await fetch(`${API}/shop/${slug}/theme`)
     if (!res.ok) return
     const raw = await res.json()
     const doc = raw.published || raw.draft || raw
     const settings = doc.settings || doc
-    const primary = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
-    const bg = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#ffffff'
-    const text = readKey(settings, 'accent_color', 'textColor') || '#111827'
+    const primary   = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
+    const bg        = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#ffffff'
+    const text      = readKey(settings, 'accent_color', 'textColor') || '#111827'
     const radiusRaw = readKey(settings, 'radius', 'border_radius') || '20px'
-    const radius = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
-    const font = readKey(settings, 'font_heading', 'font') || 'Outfit'
-    const btnStyle = readKey(settings, 'button_style') || 'rounded'
-    const btnR = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
+    const radius    = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
+    const font      = readKey(settings, 'font_heading', 'font') || 'Outfit'
+    const btnStyle  = readKey(settings, 'button_style') || 'rounded'
+    const btnR      = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
 
     const root = document.documentElement
-    root.style.setProperty('--accent', primary)
+    root.style.setProperty('--accent',  primary)
     root.style.setProperty('--primary', primary)
-    root.style.setProperty('--bg', bg)
-    root.style.setProperty('--text', text)
-    root.style.setProperty('--text2', '#6b7280')
-    root.style.setProperty('--radius', radius)
-    root.style.setProperty('--btn-r', btnR)
-    root.style.setProperty('--font', `'${font}', sans-serif`)
+    root.style.setProperty('--bg',      bg)
+    root.style.setProperty('--text',    text)
+    root.style.setProperty('--text2',   '#6b7280')
+    root.style.setProperty('--radius',  radius)
+    root.style.setProperty('--btn-r',   btnR)
+    root.style.setProperty('--font',    `'${font}', sans-serif`)
 
     if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
+      const link = document.createElement('link'); link.rel = 'stylesheet'
       link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
       document.head.appendChild(link)
     }
+    try { sessionStorage.setItem(`ekart_theme_${slug}`, JSON.stringify({ primary, bg, text, radius, btnR, font })) } catch(e) {}
   } catch(e) { console.warn('Theme load failed, using defaults') }
 }
 
-// Set nav links
-document.getElementById('navLogo').href  = storeUrl('index.html')
-document.getElementById('navShop').href  = storeUrl('index.html')
+document.getElementById('navLogo').href = storeUrl('index.html')
+document.getElementById('navShop').href = storeUrl('index.html')
 
-// Load store config for branding (theme already handles primary, but we also need name/logo)
 async function loadConfig() {
   if (!slug) return
   try {
@@ -226,7 +239,6 @@ async function loadConfig() {
   } catch {}
 }
 
-// If already logged in, redirect
 const token = localStorage.getItem(`cust_token_${slug}`)
 if (token) location.href = redirect
 
@@ -265,7 +277,6 @@ function setErr(id, show) {
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim()
   const pass  = document.getElementById('loginPassword').value
-  let valid = true
   setErr('errLoginEmail', !email || !email.includes('@'))
   setErr('errLoginPassword', !pass)
   if (!email || !email.includes('@') || !pass) return
@@ -290,10 +301,10 @@ async function doLogin() {
 }
 
 async function doRegister() {
-  const name  = document.getElementById('regName').value.trim()
-  const email = document.getElementById('regEmail').value.trim()
-  const phone = document.getElementById('regPhone').value.trim()
-  const pass  = document.getElementById('regPassword').value
+  const name     = document.getElementById('regName').value.trim()
+  const email    = document.getElementById('regEmail').value.trim()
+  const phone    = document.getElementById('regPhone').value.trim()
+  const pass     = document.getElementById('regPassword').value
   const mktEmail = document.getElementById('mktEmail').checked
   setErr('errRegName', !name)
   setErr('errRegEmail', !email || !email.includes('@'))
@@ -342,7 +353,6 @@ function toast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500)
 }
 
-// Enter key support
 document.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return
   if (document.getElementById('panelForgot').classList.contains('active')) return doForgot()
@@ -350,7 +360,6 @@ document.addEventListener('keydown', e => {
   doLogin()
 })
 
-// ── Start everything ─────────────────────────────────────────────────
 ;(async function init() {
   await applyTheme()
   await loadConfig()
