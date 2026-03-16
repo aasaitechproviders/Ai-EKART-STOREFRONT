@@ -35,7 +35,8 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 100; gap: 16px;
 }
-.nav-logo { font-size: 18px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-logo { font-size: 18px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 8px;  flex-shrink: 0; min-width: 0; }
+.nav-logo #navLogoText { display: none; font-size: 18px; font-weight: 800; line-height: 1; white-space: nowrap; }
 .nav-logo img { height: 28px; border-radius: 5px; object-fit: contain; }
 .nav-logo-accent { color: var(--accent); }
 .nav-store { font-size: 14px; font-weight: 600; color: var(--text2); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -202,7 +203,7 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 <nav class="page-nav" id="pageNav">
   <a class="nav-logo" id="navLogo" href="#">
     <span id="navLogoImg"></span>
-    <span id="navLogoText"><span class="nav-logo-accent">e</span>Kart</span>
+    <span id="navLogoText" style="display:none"></span>
   </a>
   <span class="nav-store" id="navStoreName" data-store-name></span>
   <div class="nav-actions">
@@ -302,20 +303,25 @@ let reviewRating = 5
 
 /* ── Nav logo renderer ── */
 function renderNavLogo(cfg) {
-  const imgEl  = document.getElementById('navLogoImg')
-  const txtEl  = document.getElementById('navLogoText')
+  const imgEl = document.getElementById('navLogoImg')
+  const txtEl = document.getElementById('navLogoText')
   if (!imgEl && !txtEl) return
   if (cfg.logo_url) {
-    // Show image only — hide text
-    if (imgEl) imgEl.innerHTML = `<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:120px;border-radius:6px;object-fit:contain;display:block;vertical-align:middle;">`
+    // Logo image available — show image, hide text
+    if (imgEl) imgEl.innerHTML = `<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:130px;border-radius:6px;object-fit:contain;display:block;">`
     if (txtEl) txtEl.style.display = 'none'
   } else {
-    // No logo image — show store name as text
+    // No logo — show store name as styled text
     if (imgEl) imgEl.innerHTML = ''
     if (txtEl) {
-      txtEl.style.display = ''
-      const name = cfg.name || 'eKart'
-      txtEl.innerHTML = `<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`
+      const name = cfg.name || ''
+      if (name) {
+        txtEl.innerHTML = `<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`
+      } else {
+        txtEl.textContent = 'Store'
+      }
+      txtEl.style.display = 'inline-flex'
+      txtEl.style.alignItems = 'center'
     }
   }
 }
