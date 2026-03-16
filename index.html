@@ -107,117 +107,141 @@ a{color:inherit;text-decoration:none}
 
 /* ══════════════════════════════════════════════════
    ACCOUNT BUTTON + DROPDOWN — production grade
-   Works on any navbar background (light or dark)
-   z-index:400 ensures dropdown is above sticky nav
+   Uses data-navtheme="light|dark" set by JS
+   so styles work regardless of which navbar the
+   acctWrap is injected into.
 ══════════════════════════════════════════════════ */
 .nav-acct-inject{display:flex;align-items:center;flex-shrink:0;margin-right:8px}
 .acct-wrap{position:relative;display:flex;align-items:center}
 
-/* Guest button — semi-transparent, works on dark/colored navbars */
+/* ── Guest button ── */
 .acct-btn-guest{
   display:inline-flex;align-items:center;gap:6px;
   height:38px;padding:0 16px;
-  background:rgba(255,255,255,.12);
-  border:1.5px solid rgba(255,255,255,.55);
-  color:inherit;
+  background:rgba(255,255,255,.15);
+  border:1.5px solid rgba(255,255,255,.5);
+  color:#fff;
   border-radius:var(--btn-r,10px);
   font-size:13px;font-weight:600;
   cursor:pointer;white-space:nowrap;font-family:inherit;
   transition:background .18s,border-color .18s;
 }
-.acct-btn-guest:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.8)}
-/* Override for light header */
-#origHeader .acct-btn-guest{background:transparent;border-color:var(--p,#111);color:var(--p,#111)}
-#origHeader .acct-btn-guest:hover{background:var(--p,#111);color:#fff}
+.acct-btn-guest:hover{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.9)}
+/* Light navbar override */
+.acct-wrap[data-navtheme="light"] .acct-btn-guest{
+  background:transparent;
+  border-color:rgba(0,0,0,.2);
+  color:inherit;
+}
+.acct-wrap[data-navtheme="light"] .acct-btn-guest:hover{
+  background:rgba(0,0,0,.06);
+  border-color:rgba(0,0,0,.4);
+}
 
-/* Logged-in button */
+/* ── Logged-in button ── */
 .acct-btn-user{
   display:inline-flex;align-items:center;gap:8px;
   height:38px;padding:0 12px 0 5px;
   background:rgba(255,255,255,.15);
-  border:1.5px solid rgba(255,255,255,.3);
-  color:inherit;
+  border:1.5px solid rgba(255,255,255,.25);
+  color:#fff;
   border-radius:var(--btn-r,10px);
   font-size:13px;font-weight:600;
   cursor:pointer;white-space:nowrap;font-family:inherit;
   transition:background .18s;
 }
-.acct-btn-user:hover{background:rgba(255,255,255,.25)}
-#origHeader .acct-btn-user{background:var(--bg2,#f4f4f4);border-color:var(--border,#e5e7eb);color:var(--p,#111)}
-#origHeader .acct-btn-user:hover{background:var(--bg3,#eaeaea)}
+.acct-btn-user:hover{background:rgba(255,255,255,.28)}
+.acct-wrap[data-navtheme="light"] .acct-btn-user{
+  background:rgba(0,0,0,.05);
+  border-color:rgba(0,0,0,.12);
+  color:inherit;
+}
+.acct-wrap[data-navtheme="light"] .acct-btn-user:hover{
+  background:rgba(0,0,0,.09);
+}
 
-/* Avatar circle */
+/* ── Avatar (small, inside button) ── */
 .acct-avatar{
   width:28px;height:28px;border-radius:50%;
-  background:rgba(255,255,255,.9);color:#111;
+  background:rgba(255,255,255,.9);
+  color:#111;
   font-size:12px;font-weight:700;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-#origHeader .acct-avatar{background:var(--p,#111);color:#fff}
+.acct-wrap[data-navtheme="light"] .acct-avatar{
+  background:rgba(0,0,0,.8);
+  color:#fff;
+}
 
-/* Chevron */
+/* ── Chevron ── */
 .acct-chevron{font-size:9px;opacity:.7;transition:transform .2s;margin-left:2px}
 .acct-wrap.open .acct-chevron{transform:rotate(180deg)}
 
-/* Dropdown panel */
+/* ── Dropdown panel — always white, always sharp ── */
 .acct-dropdown{
   position:absolute;
   top:calc(100% + 10px);right:0;
-  min-width:210px;
+  min-width:215px;
   background:#fff;
   border:1px solid rgba(0,0,0,.08);
   border-radius:16px;
-  box-shadow:0 16px 48px rgba(0,0,0,.16),0 2px 8px rgba(0,0,0,.06);
+  box-shadow:0 20px 60px rgba(0,0,0,.18), 0 4px 12px rgba(0,0,0,.08);
   padding:6px;
-  z-index:400;
+  z-index:9999;
   opacity:0;
   transform:translateY(-10px) scale(.97);
   pointer-events:none;
-  transition:opacity .18s cubic-bezier(.4,0,.2,1),transform .18s cubic-bezier(.4,0,.2,1);
+  transition:opacity .2s cubic-bezier(.4,0,.2,1), transform .2s cubic-bezier(.4,0,.2,1);
   transform-origin:top right;
 }
-.acct-wrap.open .acct-dropdown{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
+.acct-wrap.open .acct-dropdown{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:all;
+}
 
-/* Dropdown header */
+/* Dropdown user header */
 .acct-dropdown-header{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:11px;
   padding:12px 14px 10px;
-  margin-bottom:2px;
 }
 .acct-dropdown-avatar-lg{
-  width:38px;height:38px;border-radius:50%;
-  background:var(--p,#111);color:#fff;
-  font-size:15px;font-weight:700;
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,#6c63ff,#a78bfa);
+  color:#fff;
+  font-size:16px;font-weight:700;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(108,99,255,.35);
 }
-.acct-dropdown-info{min-width:0}
-.acct-dropdown-name{font-size:14px;font-weight:700;color:#111;line-height:1.3}
-.acct-dropdown-email{font-size:12px;color:#6b7280;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
+.acct-dropdown-info{min-width:0;flex:1}
+.acct-dropdown-name{font-size:14px;font-weight:700;color:#111;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acct-dropdown-email{font-size:11.5px;color:#6b7280;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* Divider */
-.acct-divider{height:1px;background:#f0f0f0;margin:4px 6px}
+.acct-divider{height:1px;background:#f0f0f2;margin:3px 8px}
 
 /* Menu items */
 .acct-menu-item{
   display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:10px;
+  padding:10px 12px;border-radius:10px;
   font-size:13.5px;font-weight:500;color:#1a1a1a;
   cursor:pointer;transition:background .12s;
   text-decoration:none;border:none;background:none;
   width:100%;text-align:left;font-family:inherit;line-height:1;
 }
 .acct-menu-item:hover{background:#f5f5f7}
-.acct-menu-item-icon{font-size:15px;width:22px;text-align:center;flex-shrink:0}
+.acct-menu-item-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0}
 .acct-menu-item.danger{color:#dc2626}
 .acct-menu-item.danger:hover{background:#fff1f1}
 
 /* Mobile */
 @media(max-width:640px){
   .nav-acct-inject{margin-right:4px}
-  .acct-btn-guest{height:34px;padding:0 10px;font-size:12px}
-  .acct-btn-user{height:34px;padding:0 8px 0 4px;font-size:12px}
+  .acct-btn-guest,.acct-btn-user{height:34px;font-size:12px}
+  .acct-btn-guest{padding:0 10px}
+  .acct-btn-user{padding:0 8px 0 4px}
   .acct-avatar{width:24px;height:24px;font-size:10px}
-  .acct-dropdown{min-width:185px}
+  .acct-dropdown{min-width:185px;right:-8px}
 }
 
 
@@ -1011,21 +1035,41 @@ const gotoCart = () => location.href = storeUrl('cart.html')
 
 // ── Smart account button ──
 function initAccountButton() {
-  const tok  = localStorage.getItem(`cust_token_${slug}`)
-  const name = localStorage.getItem(`cust_name_${slug}`)
-  const email= localStorage.getItem(`cust_email_${slug}`)
+  const tok   = localStorage.getItem(`cust_token_${slug}`)
+  const name  = localStorage.getItem(`cust_name_${slug}`)
+  const email = localStorage.getItem(`cust_email_${slug}`)
   const guestBtn = document.getElementById('acctBtnGuest')
   const userBtn  = document.getElementById('acctBtnUser')
+  const wrap     = document.getElementById('acctWrap')
+
+  // Detect if the navbar is light or dark and set data-navtheme
+  // so CSS selectors work regardless of which navbar we're inside
+  function setNavTheme() {
+    const navbar = document.querySelector('.tc-navbar') || document.getElementById('origHeader')
+    if (!navbar || !wrap) return
+    const bg = window.getComputedStyle(navbar).backgroundColor
+    // Parse rgb values
+    const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
+    if (m) {
+      const luminance = (0.299 * m[1] + 0.587 * m[2] + 0.114 * m[3]) / 255
+      wrap.setAttribute('data-navtheme', luminance > 0.55 ? 'light' : 'dark')
+    } else {
+      wrap.setAttribute('data-navtheme', 'dark')
+    }
+  }
+  // Run after paint so computed styles are ready
+  requestAnimationFrame(() => requestAnimationFrame(setNavTheme))
+
   if (tok && name) {
     const first   = name.split(' ')[0]
     const initial = first[0].toUpperCase()
     guestBtn.style.display = 'none'
     userBtn.style.display  = 'inline-flex'
-    document.getElementById('acctName').textContent        = first
-    document.getElementById('acctAvatar').textContent      = initial
-    document.getElementById('acctDropAvatarLg').textContent= initial
-    document.getElementById('acctDropName').textContent    = name
-    document.getElementById('acctDropEmail').textContent   = email || ''
+    document.getElementById('acctName').textContent         = first
+    document.getElementById('acctAvatar').textContent       = initial
+    document.getElementById('acctDropAvatarLg').textContent = initial
+    document.getElementById('acctDropName').textContent     = name
+    document.getElementById('acctDropEmail').textContent    = email || ''
     document.getElementById('acctMenuAccount').href = storeUrl('customer-account.html')
     document.getElementById('acctMenuOrders').href  = storeUrl('customer-account.html')
   } else {
@@ -1816,7 +1860,20 @@ function renderSections(sections){
   // Move the account button into the theme navbar if it exists
   const injectSlot = document.getElementById('navAcctInject')
   const acctWrap   = document.getElementById('acctWrap')
-  if (injectSlot && acctWrap) injectSlot.appendChild(acctWrap)
+  if (injectSlot && acctWrap) {
+    injectSlot.appendChild(acctWrap)
+    // Re-detect navbar theme now that element is in its final position
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const navbar = document.querySelector('.tc-navbar')
+      if (!navbar) return
+      const bg = window.getComputedStyle(navbar).backgroundColor
+      const m  = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
+      if (m) {
+        const lum = (0.299 * m[1] + 0.587 * m[2] + 0.114 * m[3]) / 255
+        acctWrap.setAttribute('data-navtheme', lum > 0.55 ? 'light' : 'dark')
+      }
+    }))
+  }
 
   document.querySelectorAll('.theme-cart-qty').forEach(e=>e.textContent=getCart().reduce((s,x)=>s+x.qty,0))
   setTimeout(()=>{ startCountdowns(); updateCartUI() },80)
