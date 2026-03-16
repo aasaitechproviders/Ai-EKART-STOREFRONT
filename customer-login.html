@@ -3,46 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — eKart</title>
+<title>Login</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* default fallback */
-:root { --accent: #6c63ff; --bg: #ffffff; --text: #111827; --text2: #6b7280; --border: #e5e7eb; --surface: #f9fafb; --red: #ef4444; --green: #10b981; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+:root {
+  --accent:   #111111;
+  --primary:  #111111;
+  --bg:       #ffffff;
+  --text:     #111827;
+  --text2:    #6b7280;
+  --text3:    #9ca3af;
+  --border:   #e5e7eb;
+  --surface:  #f9fafb;
+  --red:      #ef4444;
+  --green:    #10b981;
+  --radius:   12px;
+  --btn-r:    10px;
+  --font:     'Outfit', sans-serif;
+}
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
 
-.nav { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--border); background: #fff; }
-.nav-logo { font-size: 20px; font-weight: 800; text-decoration: none; color: var(--text); }
-.nav-logo span { color: var(--accent); }
-.nav-logo .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; margin-left: 2px; vertical-align: middle; }
-.nav-link { font-size: 13px; font-weight: 600; color: var(--text2); text-decoration: none; }
+/* ── NAV ── */
+.page-nav {
+  background: var(--navbar-bg, #fff);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 60px;
+}
+.nav-logo { font-size: 20px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.nav-logo img { height: 32px; border-radius: 6px; object-fit: contain; }
+.nav-logo-text { color: var(--accent); }
+.nav-link { font-size: 13px; font-weight: 600; color: var(--text2); text-decoration: none; transition: color .15s; }
 .nav-link:hover { color: var(--accent); }
 
+/* ── AUTH CARD ── */
 .auth-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
-.auth-card { width: 100%; max-width: 420px; background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 36px; box-shadow: 0 4px 30px rgba(0,0,0,.06); }
+.auth-card {
+  width: 100%; max-width: 420px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 36px; box-shadow: 0 4px 30px rgba(0,0,0,.05);
+}
 .auth-logo { text-align: center; margin-bottom: 24px; }
-.auth-logo div { font-size: 36px; margin-bottom: 8px; }
-.auth-logo h1 { font-size: 22px; font-weight: 800; }
-.auth-logo p { font-size: 14px; color: var(--text2); margin-top: 4px; }
-.tabs { display: flex; background: var(--surface); border-radius: 12px; padding: 4px; margin-bottom: 24px; }
-.tab { flex: 1; padding: 9px; text-align: center; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; color: var(--text2); }
-.tab.active { background: #fff; color: var(--accent); box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+.auth-logo .logo-icon { font-size: 40px; margin-bottom: 10px; line-height: 1; }
+.auth-logo img { height: 60px; border-radius: calc(var(--radius) - 2px); object-fit: contain; margin-bottom: 10px; display: block; margin-inline: auto; }
+.auth-logo h1 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+.auth-logo p { font-size: 14px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+.store-accent { color: var(--accent); }
+
+/* ── TABS ── */
+.tabs { display: flex; background: #f1f3f6; border-radius: calc(var(--radius) - 2px); padding: 4px; margin-bottom: 24px; }
+.tab {
+  flex: 1; padding: 9px; text-align: center; border-radius: calc(var(--radius) - 4px);
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; color: var(--text2);
+}
+.tab.active { background: var(--bg); color: var(--accent); box-shadow: 0 1px 6px rgba(0,0,0,.08); }
+
+/* ── FORMS ── */
 .form-row { margin-bottom: 14px; }
-.form-row label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-.form-input { width: 100%; padding: 11px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Outfit', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; }
-.form-input:focus { border-color: var(--accent); background: #fff; }
+.form-row label {
+  display: block; font-size: 11.5px; font-weight: 700; color: var(--text2);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px;
+}
+.form-input {
+  width: 100%; padding: 11px 14px; background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: calc(var(--btn-r) - 2px); color: var(--text); font-family: var(--font); font-size: 14px;
+  outline: none; transition: border-color .2s;
+}
+.form-input:focus { border-color: var(--accent); }
 .form-input.error { border-color: var(--red); }
 .field-err { font-size: 12px; color: var(--red); margin-top: 4px; display: none; }
 .field-err.show { display: block; }
-.btn-submit { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; margin-top: 6px; transition: opacity .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+/* ── SUBMIT ── */
+.btn-submit {
+  width: 100%; padding: 13px; background: var(--accent); color: #fff;
+  border: none; border-radius: var(--btn-r); font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: var(--font); margin-top: 6px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: opacity .15s;
+}
 .btn-submit:hover:not(:disabled) { opacity: .88; }
 .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── MISC ── */
 .forgot-link { text-align: right; margin-bottom: 14px; }
 .forgot-link a { font-size: 12px; color: var(--accent); text-decoration: none; }
 .forgot-link a:hover { text-decoration: underline; }
-.alert { padding: 12px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 14px; display: none; }
-.alert.error { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25); color: var(--red); display: block; }
+.alert { padding: 12px 14px; border-radius: calc(var(--btn-r) - 2px); font-size: 13px; font-weight: 600; margin-bottom: 14px; display: none; }
+.alert.error   { background: rgba(239,68,68,.08); border: 1px solid rgba(239,68,68,.25); color: var(--red); display: block; }
 .alert.success { background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); color: var(--green); display: block; }
 .consent-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
 .consent-row input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
@@ -50,19 +100,29 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 .spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── FORGOT PANEL ── */
 .panel { display: none; }
 .panel.active { display: block; }
 .back-link { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); cursor: pointer; margin-bottom: 18px; font-weight: 600; }
 .back-link:hover { color: var(--accent); }
 
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: white; border-radius: 12px; padding: 12px 20px; font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s; z-index: 400; white-space: nowrap; pointer-events: none; }
+.toast {
+  position: fixed; bottom: 30px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text); color: white; border-radius: var(--radius);
+  padding: 12px 20px; font-size: 14px; font-weight: 600;
+  opacity: 0; transition: all .3s; z-index: 400; white-space: nowrap; pointer-events: none;
+}
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<nav class="nav">
-  <a class="nav-logo" id="navLogo" href="#">e<span>K</span>art<span class="dot"></span></a>
+<nav class="page-nav" id="pageNav">
+  <a class="nav-logo" id="navLogo" href="#" data-nav-logo>
+    <span id="navLogoImg"></span>
+    <span id="navLogoText" class="nav-logo-text">eKart</span>
+  </a>
   <a class="nav-link" id="navShop" href="#">← Back to Shop</a>
 </nav>
 
@@ -70,18 +130,21 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
   <div class="auth-card">
 
     <div class="auth-logo">
-      <div id="storeLogoWrap">🛍️</div>
-      <h1 id="storeNameTitle">My Store</h1>
+      <div id="authLogoWrap"><div class="logo-icon">🛍️</div></div>
+      <h1><span class="store-accent" id="storeNameTitle">My Store</span></h1>
       <p>Sign in to your account or create a new one</p>
     </div>
 
+    <!-- AUTH PANEL -->
     <div id="panelAuth" class="panel active">
       <div class="tabs">
-        <div class="tab active" id="tabLogin" onclick="switchTab('login')">Sign In</div>
-        <div class="tab" id="tabRegister" onclick="switchTab('register')">Register</div>
+        <div class="tab active" id="tabLogin"    onclick="switchTab('login')">Sign In</div>
+        <div class="tab"        id="tabRegister" onclick="switchTab('register')">Register</div>
       </div>
+
       <div id="alertBox" class="alert"></div>
 
+      <!-- LOGIN -->
       <div id="formLogin">
         <div class="form-row">
           <label>Email</label>
@@ -97,6 +160,7 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
         <button class="btn-submit" id="btnLogin" onclick="doLogin()">Sign In</button>
       </div>
 
+      <!-- REGISTER -->
       <div id="formRegister" style="display:none;">
         <div class="form-row">
           <label>Full Name</label>
@@ -125,10 +189,11 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
       </div>
     </div>
 
+    <!-- FORGOT PANEL -->
     <div id="panelForgot" class="panel">
       <div class="back-link" onclick="showAuth()">← Back to Sign In</div>
       <h3 style="font-size:17px;font-weight:800;margin-bottom:6px;">Reset Password</h3>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:20px;">Enter your email and we'll send you a reset link.</p>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:20px;">Enter your email and we'll send a reset link.</p>
       <div id="alertForgot" class="alert"></div>
       <div class="form-row">
         <label>Email</label>
@@ -143,105 +208,128 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 <div class="toast" id="toast"></div>
 
 <script>
-function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
-
+/* ════════════════════════════════════
+   SLUG + URL
+════════════════════════════════════ */
+const _params = new URLSearchParams(location.search)
 function resolveSlug() {
-  const fromSession = sessionStorage.getItem('ekart_store')
-  if (fromSession) return fromSession
-  const fromParam = new URLSearchParams(location.search).get('store')
-  if (fromParam) return fromParam
-  const hostname = location.hostname
-  const ownDomains = ['ai-ekart-storefront.pages.dev', 'ekarts.aasaitech.in', 'ekart.aasaitech.in', 'localhost', '127.0.0.1']
-  if (!ownDomains.some(d => hostname.includes(d))) return hostname
+  const p = _params.get('store'); if (p) return p
+  const h = location.hostname
+  const own = ['ai-ekart-storefront.pages.dev','ekarts.aasaitech.in','ekart.aasaitech.in','localhost','127.0.0.1']
+  if (!own.some(d => h.includes(d))) return h
   return null
 }
+const slug = resolveSlug()
+const _isCustom = !_params.get('store') && slug !== null
+const storeUrl = (page, extra='') => _isCustom ? `${page}${extra?'?'+extra:''}` : `${page}?store=${slug}${extra?'&'+extra:''}`
+const redirect = _params.get('redirect') || storeUrl('index.html')
+const API = 'https://apiv2.aasaitech.in'
 
-const slug     = resolveSlug()
-const isCustomDomain = !new URLSearchParams(location.search).get('store') && !sessionStorage.getItem('ekart_store') && slug !== null
-const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
-const redirect = new URLSearchParams(location.search).get('redirect') || storeUrl('index.html')
-const API      = 'https://apiv2.aasaitech.in'
+/* ════════════════════════════════════
+   THEME
+════════════════════════════════════ */
+function isColorDark(hex) {
+  const c = (hex||'').replace('#','')
+  if (c.length !== 6) return false
+  const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16)
+  return (r*299+g*587+b*114)/1000 < 145
+}
 
-// ── Theme: sessionStorage cache first, API fallback ──────────────────
-async function applyTheme() {
-  if (!slug) return
-
-  const cached = sessionStorage.getItem(`ekart_theme_${slug}`)
-  if (cached) {
-    try {
-      const t = JSON.parse(cached)
-      const root = document.documentElement
-      root.style.setProperty('--accent',  t.primary || '#6c63ff')
-      root.style.setProperty('--primary', t.primary || '#6c63ff')
-      root.style.setProperty('--bg',      t.bg      || '#ffffff')
-      root.style.setProperty('--text',    t.text    || '#111827')
-      root.style.setProperty('--text2',   '#6b7280')
-      root.style.setProperty('--radius',  t.radius  || '20px')
-      root.style.setProperty('--btn-r',   t.btnR    || '12px')
-      root.style.setProperty('--font',    `'${t.font || 'Outfit'}', sans-serif`)
-      if (t.font && !['Outfit','DM Sans','system-ui'].includes(t.font)) {
-        const l = document.createElement('link'); l.rel = 'stylesheet'
-        l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(t.font)}:wght@300;400;500;600;700;800&display=swap`
-        document.head.appendChild(l)
-      }
-      return // ✅ instant — no API call
-    } catch(e) {}
+function parseThemeSettings(raw) {
+  if (!raw || typeof raw !== 'object') return {}
+  let doc = raw
+  if (raw.published && typeof raw.published === 'object') doc = raw.published
+  else if (raw.draft && typeof raw.draft === 'object') doc = raw.draft
+  const s = doc.settings || doc
+  return {
+    primaryColor: s.primary_color || s.primaryColor || null,
+    bgColor:      s.secondary_color || s.bgColor || s.bg_color || null,
+    textColor:    s.accent_color || s.textColor || null,
+    font:         s.font_heading || s.fontHeading || s.font || null,
+    radius:       s.radius || s.border_radius || null,
+    buttonStyle:  s.button_style || s.buttonStyle || null,
+    navBg:        s.nav_bg || s.navBg || null,
+    navTextColor: s.nav_text_color || s.navTextColor || null,
   }
-
-  // Fallback: fetch from API
-  try {
-    const res = await fetch(`${API}/shop/${slug}/theme`)
-    if (!res.ok) return
-    const raw = await res.json()
-    const doc = raw.published || raw.draft || raw
-    const settings = doc.settings || doc
-    const primary   = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
-    const bg        = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#ffffff'
-    const text      = readKey(settings, 'accent_color', 'textColor') || '#111827'
-    const radiusRaw = readKey(settings, 'radius', 'border_radius') || '20px'
-    const radius    = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
-    const font      = readKey(settings, 'font_heading', 'font') || 'Outfit'
-    const btnStyle  = readKey(settings, 'button_style') || 'rounded'
-    const btnR      = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
-
-    const root = document.documentElement
-    root.style.setProperty('--accent',  primary)
-    root.style.setProperty('--primary', primary)
-    root.style.setProperty('--bg',      bg)
-    root.style.setProperty('--text',    text)
-    root.style.setProperty('--text2',   '#6b7280')
-    root.style.setProperty('--radius',  radius)
-    root.style.setProperty('--btn-r',   btnR)
-    root.style.setProperty('--font',    `'${font}', sans-serif`)
-
-    if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
-      const link = document.createElement('link'); link.rel = 'stylesheet'
-      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
-      document.head.appendChild(link)
-    }
-    try { sessionStorage.setItem(`ekart_theme_${slug}`, JSON.stringify({ primary, bg, text, radius, btnR, font })) } catch(e) {}
-  } catch(e) { console.warn('Theme load failed, using defaults') }
 }
 
-document.getElementById('navLogo').href = storeUrl('index.html')
-document.getElementById('navShop').href = storeUrl('index.html')
+function applyCSSVars(cfg, theme) {
+  const R = document.documentElement
+  const primary = theme.primaryColor || cfg.brand_color || null
+  if (primary) { R.style.setProperty('--accent', primary); R.style.setProperty('--primary', primary) }
+  if (theme.bgColor) { R.style.setProperty('--bg', theme.bgColor); document.body.style.background = theme.bgColor }
+  if (theme.textColor) R.style.setProperty('--text', theme.textColor)
+  if (theme.radius) {
+    const r = typeof theme.radius === 'number' ? `${theme.radius}px` : String(theme.radius).includes('px') ? theme.radius : `${theme.radius}px`
+    R.style.setProperty('--radius', r)
+    const btnR = theme.buttonStyle === 'pill' ? '999px' : theme.buttonStyle === 'square' ? '4px' : r
+    R.style.setProperty('--btn-r', btnR)
+  }
+  if (theme.font && theme.font !== 'Outfit' && theme.font !== 'system-ui') {
+    const fid = 'gf-' + theme.font.replace(/\s+/g,'-')
+    if (!document.getElementById(fid)) {
+      const l = document.createElement('link'); l.id = fid; l.rel = 'stylesheet'
+      l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`
+      document.head.appendChild(l)
+    }
+    R.style.setProperty('--font', `'${theme.font}', 'Outfit', system-ui, sans-serif`)
+    document.body.style.fontFamily = `'${theme.font}', 'Outfit', system-ui, sans-serif`
+  }
+  if (theme.navBg) {
+    const nav = document.getElementById('pageNav')
+    if (nav) {
+      nav.style.background = theme.navBg
+      nav.style.borderBottomColor = isColorDark(theme.navBg) ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)'
+      if (isColorDark(theme.navBg)) nav.style.color = theme.navTextColor || '#ffffff'
+    }
+  }
+}
 
-async function loadConfig() {
+async function loadTheme() {
   if (!slug) return
   try {
-    const cfg = await fetch(`${API}/shop/${slug}/config`).then(r => r.json())
-    if (cfg.error) return
-    document.getElementById('storeNameTitle').textContent = cfg.name
-    document.title = `Login — ${cfg.name}`
-    if (cfg.logo_url) {
-      document.getElementById('storeLogoWrap').innerHTML = `<img src="${cfg.logo_url}" style="height:52px;border-radius:10px;object-fit:contain;">`
+    const [cfgRes, themeRes] = await Promise.allSettled([
+      fetch(`${API}/shop/${slug}/config`).then(r => r.json()),
+      fetch(`${API}/shop/${slug}/theme`).then(r => r.json()),
+    ])
+    let cfg = {}
+    if (cfgRes.status === 'fulfilled' && !cfgRes.value.error) {
+      cfg = cfgRes.value
+      // Update branding
+      document.getElementById('storeNameTitle').textContent = cfg.name || 'My Store'
+      document.title = `Login — ${cfg.name || 'Store'}`
+      if (cfg.logo_url) {
+        document.getElementById('authLogoWrap').innerHTML = `<img src="${cfg.logo_url}" alt="${esc(cfg.name||'')}">`
+      }
+      if (cfg.name) {
+        const lt = document.getElementById('navLogoText')
+        if (lt) lt.textContent = cfg.name
+      }
+      if (cfg.logo_url) {
+        const li = document.getElementById('navLogoImg')
+        if (li) li.innerHTML = `<img src="${cfg.logo_url}" style="height:28px;border-radius:5px;object-fit:contain;vertical-align:middle;">`
+      }
     }
-  } catch {}
+    const theme = themeRes.status === 'fulfilled' ? parseThemeSettings(themeRes.value) : {}
+    applyCSSVars(cfg, theme)
+  } catch(e) { console.warn('[login theme]', e.message) }
 }
 
-const token = localStorage.getItem(`cust_token_${slug}`)
-if (token) location.href = redirect
+/* ════════════════════════════════════
+   NAV
+════════════════════════════════════ */
+if (slug) {
+  document.getElementById('navLogo').href = storeUrl('index.html')
+  document.getElementById('navShop').href = storeUrl('index.html')
+}
 
+// Redirect if already logged in
+const _existingToken = slug && localStorage.getItem(`cust_token_${slug}`)
+if (_existingToken) location.href = redirect
+
+/* ════════════════════════════════════
+   UI HELPERS
+════════════════════════════════════ */
 function switchTab(tab) {
   const isLogin = tab === 'login'
   document.getElementById('tabLogin').classList.toggle('active', isLogin)
@@ -250,30 +338,27 @@ function switchTab(tab) {
   document.getElementById('formRegister').style.display = isLogin ? 'none'  : 'block'
   clearAlert()
 }
-
 function showForgot() { showPanel('panelForgot') }
 function showAuth()   { showPanel('panelAuth') }
 function showPanel(id) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'))
-  document.getElementById(id).classList.add('active')
-  clearAlert()
+  document.getElementById(id).classList.add('active'); clearAlert()
 }
 function clearAlert() {
-  const a = document.getElementById('alertBox')
-  if (a) { a.className = 'alert'; a.textContent = '' }
-  const af = document.getElementById('alertForgot')
-  if (af) { af.className = 'alert'; af.textContent = '' }
+  const a = document.getElementById('alertBox');    if (a) { a.className = 'alert'; a.textContent = '' }
+  const af = document.getElementById('alertForgot'); if (af) { af.className = 'alert'; af.textContent = '' }
 }
-function showAlert(msg, type = 'error', boxId = 'alertBox') {
-  const a = document.getElementById(boxId)
-  a.className = `alert ${type}`; a.textContent = msg
+function showAlert(msg, type='error', boxId='alertBox') {
+  const a = document.getElementById(boxId); a.className = `alert ${type}`; a.textContent = msg
 }
 function setErr(id, show) {
-  const el = document.getElementById(id)
-  el.classList.toggle('show', show)
+  const el = document.getElementById(id); el.classList.toggle('show', show)
   el.previousElementSibling?.classList?.toggle('error', show)
 }
 
+/* ════════════════════════════════════
+   AUTH
+════════════════════════════════════ */
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim()
   const pass  = document.getElementById('loginPassword').value
@@ -283,51 +368,37 @@ async function doLogin() {
   const btn = document.getElementById('btnLogin')
   btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'
   try {
-    const res = await fetch(`${API}/shop/${slug}/auth/login`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password: pass })
-    })
+    const res  = await fetch(`${API}/shop/${slug}/auth/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password:pass}) })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || 'Login failed')
     localStorage.setItem(`cust_token_${slug}`, data.token)
-    localStorage.setItem(`cust_name_${slug}`, data.customer?.name || '')
-    localStorage.setItem(`cust_email_${slug}`, data.customer?.email || email)
+    localStorage.setItem(`cust_name_${slug}`,  data.customer?.name || '')
+    localStorage.setItem(`cust_email_${slug}`,  data.customer?.email || email)
     toast('Welcome back! 👋')
     setTimeout(() => location.href = redirect, 800)
-  } catch (e) {
-    showAlert(e.message)
-    btn.disabled = false; btn.textContent = 'Sign In'
-  }
+  } catch(e) { showAlert(e.message); btn.disabled = false; btn.textContent = 'Sign In' }
 }
 
 async function doRegister() {
-  const name     = document.getElementById('regName').value.trim()
-  const email    = document.getElementById('regEmail').value.trim()
-  const phone    = document.getElementById('regPhone').value.trim()
-  const pass     = document.getElementById('regPassword').value
+  const name  = document.getElementById('regName').value.trim()
+  const email = document.getElementById('regEmail').value.trim()
+  const phone = document.getElementById('regPhone').value.trim()
+  const pass  = document.getElementById('regPassword').value
   const mktEmail = document.getElementById('mktEmail').checked
-  setErr('errRegName', !name)
-  setErr('errRegEmail', !email || !email.includes('@'))
-  setErr('errRegPassword', pass.length < 6)
+  setErr('errRegName', !name); setErr('errRegEmail', !email || !email.includes('@')); setErr('errRegPassword', pass.length < 6)
   if (!name || !email || !email.includes('@') || pass.length < 6) return
   const btn = document.getElementById('btnRegister')
   btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'
   try {
-    const res = await fetch(`${API}/shop/${slug}/auth/register`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, phone, password: pass, marketing_consent: { email: mktEmail, sms: false } })
-    })
+    const res  = await fetch(`${API}/shop/${slug}/auth/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name, email, phone, password:pass, marketing_consent:{email:mktEmail, sms:false}}) })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || 'Registration failed')
     localStorage.setItem(`cust_token_${slug}`, data.token)
-    localStorage.setItem(`cust_name_${slug}`, data.customer?.name || name)
-    localStorage.setItem(`cust_email_${slug}`, data.customer?.email || email)
+    localStorage.setItem(`cust_name_${slug}`,  data.customer?.name || name)
+    localStorage.setItem(`cust_email_${slug}`,  data.customer?.email || email)
     toast('Account created! Welcome 🎉')
     setTimeout(() => location.href = redirect, 800)
-  } catch (e) {
-    showAlert(e.message)
-    btn.disabled = false; btn.textContent = 'Create Account'
-  }
+  } catch(e) { showAlert(e.message); btn.disabled = false; btn.textContent = 'Create Account' }
 }
 
 async function doForgot() {
@@ -336,18 +407,13 @@ async function doForgot() {
   const btn = document.getElementById('btnForgot')
   btn.disabled = true; btn.innerHTML = '<div class="spinner"></div>'
   try {
-    await fetch(`${API}/shop/${slug}/auth/forgot-password`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    })
-    showAlert('If an account exists, a reset link has been sent to your email.', 'success', 'alertForgot')
-  } catch {
-    showAlert('Something went wrong. Try again.', 'error', 'alertForgot')
-  } finally {
-    btn.disabled = false; btn.textContent = 'Send Reset Link'
-  }
+    await fetch(`${API}/shop/${slug}/auth/forgot-password`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email}) })
+    showAlert('If an account exists, a reset link has been sent.', 'success', 'alertForgot')
+  } catch { showAlert('Something went wrong. Try again.', 'error', 'alertForgot') }
+  finally { btn.disabled = false; btn.textContent = 'Send Reset Link' }
 }
 
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
 function toast(msg) {
   const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show')
   setTimeout(() => t.classList.remove('show'), 2500)
@@ -360,10 +426,7 @@ document.addEventListener('keydown', e => {
   doLogin()
 })
 
-;(async function init() {
-  await applyTheme()
-  await loadConfig()
-})()
+loadTheme()
 </script>
 </body>
 </html>
