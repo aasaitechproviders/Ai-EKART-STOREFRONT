@@ -321,6 +321,26 @@ let storeConfig = {}
 /* ════════════════════════════════════
    THEME LOADER
 ════════════════════════════════════ */
+
+/* ── Nav logo renderer ── */
+function renderNavLogo(cfg) {
+  const imgEl  = document.getElementById('navLogoImg')
+  const txtEl  = document.getElementById('navLogoText')
+  if (!imgEl && !txtEl) return
+  if (cfg.logo_url) {
+    // Show image only — hide text
+    if (imgEl) imgEl.innerHTML = `<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:120px;border-radius:6px;object-fit:contain;display:block;vertical-align:middle;">`
+    if (txtEl) txtEl.style.display = 'none'
+  } else {
+    // No logo image — show store name as text
+    if (imgEl) imgEl.innerHTML = ''
+    if (txtEl) {
+      txtEl.style.display = ''
+      const name = cfg.name || 'eKart'
+      txtEl.innerHTML = `<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`
+    }
+  }
+}
 function isColorDark(hex) {
   const c = (hex||'').replace('#','')
   if (c.length !== 6) return false
@@ -334,6 +354,18 @@ function parseThemeSettings(raw) {
   if (raw.published && typeof raw.published === 'object') doc = raw.published
   else if (raw.draft && typeof raw.draft === 'object') doc = raw.draft
   const s = doc.settings || doc
+  // Scan sections[] for a navbar section to get its bgColor
+  let navBgFromSection = null, navTextFromSection = null
+  const sections = doc.sections || []
+  for (const sec of sections) {
+    const t = (sec.type || '').toLowerCase()
+    if (t === 'navbar' || t === 'navigation' || t === 'nav' || t === 'header') {
+      const sd = sec.data || sec.settings || {}
+      navBgFromSection   = sd.bgColor || sd.bg_color || sd.background || null
+      navTextFromSection = sd.textColor || sd.text_color || sd.linkColor || sd.link_color || null
+      break
+    }
+  }
   return {
     primaryColor: s.primary_color || s.primaryColor || null,
     bgColor:      s.secondary_color || s.bgColor || s.bg_color || null,
@@ -341,8 +373,8 @@ function parseThemeSettings(raw) {
     font:         s.font_heading || s.fontHeading || s.font || null,
     radius:       s.radius || s.border_radius || null,
     buttonStyle:  s.button_style || s.buttonStyle || null,
-    navBg:        s.nav_bg || s.navBg || null,
-    navTextColor: s.nav_text_color || s.navTextColor || null,
+    navBg:        s.nav_bg || s.navBg || navBgFromSection || null,
+    navTextColor: s.nav_text_color || s.navTextColor || navTextFromSection || null,
   }
 }
 
@@ -369,11 +401,21 @@ function applyCSSVars(cfg, theme) {
     document.body.style.fontFamily = `'${theme.font}', 'Outfit', system-ui, sans-serif`
   }
   if (theme.navBg) {
+    const R2 = document.documentElement
+    R2.style.setProperty('--navbar-bg', theme.navBg)
     const nav = document.getElementById('pageNav')
     if (nav) {
       nav.style.background = theme.navBg
       nav.style.borderBottomColor = isColorDark(theme.navBg) ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)'
-      if (isColorDark(theme.navBg)) nav.style.color = theme.navTextColor || '#ffffff'
+      const isDark = isColorDark(theme.navBg)
+      const textCol = theme.navTextColor || (isDark ? '#ffffff' : '')
+      if (textCol) {
+        nav.style.color = textCol
+        // Cascade to direct text children that have explicit inline colors
+        nav.querySelectorAll('a, span, button').forEach(el => {
+          if (!el.style.color) el.style.color = textCol
+        })
+      }
     }
   }
 }
