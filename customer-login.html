@@ -7,8 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* default fallback */
 :root { --accent: #6c63ff; --bg: #ffffff; --text: #111827; --text2: #6b7280; --border: #e5e7eb; --surface: #f9fafb; --red: #ef4444; --green: #10b981; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
 .nav { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--border); background: #fff; }
@@ -150,27 +151,68 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 <div class="toast" id="toast"></div>
 
 <script>
-const params = new URLSearchParams(location.search)
-// ── Slug resolution: ?store= param OR custom domain hostname ──
+// ── Helper functions ─────────────────────────────────────────────────
+function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
+
 function resolveSlug() {
-  const fromParam = params.get('store')
+  const fromSession = sessionStorage.getItem('ekart_store')
+  if (fromSession) return fromSession
+  const fromParam = new URLSearchParams(location.search).get('store')
   if (fromParam) return fromParam
   const hostname = location.hostname
   const ownDomains = ['ai-ekart-storefront.pages.dev', 'ekarts.aasaitech.in', 'ekart.aasaitech.in', 'localhost', '127.0.0.1']
   if (!ownDomains.some(d => hostname.includes(d))) return hostname
   return null
 }
+
 const slug   = resolveSlug()
-const isCustomDomain = !params.get('store') && slug !== null
+const isCustomDomain = !new URLSearchParams(location.search).get('store') && !sessionStorage.getItem('ekart_store') && slug !== null
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
-const redirect = params.get('redirect') || storeUrl('index.html')
+const redirect = new URLSearchParams(location.search).get('redirect') || storeUrl('index.html')
 const API    = 'https://apiv2.aasaitech.in'
+
+// ── Theme loader ─────────────────────────────────────────────────────
+async function applyTheme() {
+  if (!slug) return
+  try {
+    const res = await fetch(`${API}/shop/${slug}/theme`)
+    if (!res.ok) return
+    const raw = await res.json()
+    const doc = raw.published || raw.draft || raw
+    const settings = doc.settings || doc
+    const primary = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
+    const bg = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#ffffff'
+    const text = readKey(settings, 'accent_color', 'textColor') || '#111827'
+    const radiusRaw = readKey(settings, 'radius', 'border_radius') || '20px'
+    const radius = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
+    const font = readKey(settings, 'font_heading', 'font') || 'Outfit'
+    const btnStyle = readKey(settings, 'button_style') || 'rounded'
+    const btnR = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
+
+    const root = document.documentElement
+    root.style.setProperty('--accent', primary)
+    root.style.setProperty('--primary', primary)
+    root.style.setProperty('--bg', bg)
+    root.style.setProperty('--text', text)
+    root.style.setProperty('--text2', '#6b7280')
+    root.style.setProperty('--radius', radius)
+    root.style.setProperty('--btn-r', btnR)
+    root.style.setProperty('--font', `'${font}', sans-serif`)
+
+    if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
+      document.head.appendChild(link)
+    }
+  } catch(e) { console.warn('Theme load failed, using defaults') }
+}
 
 // Set nav links
 document.getElementById('navLogo').href  = storeUrl('index.html')
 document.getElementById('navShop').href  = storeUrl('index.html')
 
-// Load store config for branding
+// Load store config for branding (theme already handles primary, but we also need name/logo)
 async function loadConfig() {
   if (!slug) return
   try {
@@ -178,13 +220,11 @@ async function loadConfig() {
     if (cfg.error) return
     document.getElementById('storeNameTitle').textContent = cfg.name
     document.title = `Login — ${cfg.name}`
-    if (cfg.brand_color) document.documentElement.style.setProperty('--accent', cfg.brand_color)
     if (cfg.logo_url) {
       document.getElementById('storeLogoWrap').innerHTML = `<img src="${cfg.logo_url}" style="height:52px;border-radius:10px;object-fit:contain;">`
     }
   } catch {}
 }
-loadConfig()
 
 // If already logged in, redirect
 const token = localStorage.getItem(`cust_token_${slug}`)
@@ -309,6 +349,12 @@ document.addEventListener('keydown', e => {
   if (document.getElementById('formRegister').style.display !== 'none') return doRegister()
   doLogin()
 })
+
+// ── Start everything ─────────────────────────────────────────────────
+;(async function init() {
+  await applyTheme()
+  await loadConfig()
+})()
 </script>
 </body>
 </html>
