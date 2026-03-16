@@ -105,26 +105,121 @@ a{color:inherit;text-decoration:none}
 .cart-badge.on{display:flex}
 #payBadge{display:none;padding:4px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:11px;font-weight:600;color:#16a34a;align-items:center;gap:4px}
 
-/* ── ACCOUNT BUTTON & DROPDOWN ── */
-.nav-acct-inject{display:flex;align-items:center;margin-left:auto;margin-right:8px}
-.acct-wrap{position:relative}
-.acct-btn-guest{display:flex;align-items:center;gap:6px;padding:7px 14px;background:transparent;border:1.5px solid var(--p);color:var(--p);border-radius:var(--btn-r);font-size:13px;font-weight:600;cursor:pointer;transition:background .18s,color .18s;white-space:nowrap;font-family:inherit}
-.acct-btn-guest:hover{background:var(--p);color:#fff}
-.acct-btn-user{display:flex;align-items:center;gap:7px;padding:6px 12px 6px 6px;background:var(--bg2);border:1.5px solid var(--border,#e5e7eb);color:var(--p);border-radius:var(--btn-r);font-size:13px;font-weight:600;cursor:pointer;transition:background .18s;white-space:nowrap;font-family:inherit}
-.acct-btn-user:hover{background:var(--bg3,#e5e7eb)}
-.acct-avatar{width:26px;height:26px;border-radius:50%;background:var(--p);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.acct-chevron{font-size:10px;opacity:.6;transition:transform .2s}
+/* ══════════════════════════════════════════════════
+   ACCOUNT BUTTON + DROPDOWN — production grade
+   Works on any navbar background (light or dark)
+   z-index:400 ensures dropdown is above sticky nav
+══════════════════════════════════════════════════ */
+.nav-acct-inject{display:flex;align-items:center;flex-shrink:0;margin-right:8px}
+.acct-wrap{position:relative;display:flex;align-items:center}
+
+/* Guest button — semi-transparent, works on dark/colored navbars */
+.acct-btn-guest{
+  display:inline-flex;align-items:center;gap:6px;
+  height:38px;padding:0 16px;
+  background:rgba(255,255,255,.12);
+  border:1.5px solid rgba(255,255,255,.55);
+  color:inherit;
+  border-radius:var(--btn-r,10px);
+  font-size:13px;font-weight:600;
+  cursor:pointer;white-space:nowrap;font-family:inherit;
+  transition:background .18s,border-color .18s;
+}
+.acct-btn-guest:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.8)}
+/* Override for light header */
+#origHeader .acct-btn-guest{background:transparent;border-color:var(--p,#111);color:var(--p,#111)}
+#origHeader .acct-btn-guest:hover{background:var(--p,#111);color:#fff}
+
+/* Logged-in button */
+.acct-btn-user{
+  display:inline-flex;align-items:center;gap:8px;
+  height:38px;padding:0 12px 0 5px;
+  background:rgba(255,255,255,.15);
+  border:1.5px solid rgba(255,255,255,.3);
+  color:inherit;
+  border-radius:var(--btn-r,10px);
+  font-size:13px;font-weight:600;
+  cursor:pointer;white-space:nowrap;font-family:inherit;
+  transition:background .18s;
+}
+.acct-btn-user:hover{background:rgba(255,255,255,.25)}
+#origHeader .acct-btn-user{background:var(--bg2,#f4f4f4);border-color:var(--border,#e5e7eb);color:var(--p,#111)}
+#origHeader .acct-btn-user:hover{background:var(--bg3,#eaeaea)}
+
+/* Avatar circle */
+.acct-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.9);color:#111;
+  font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+#origHeader .acct-avatar{background:var(--p,#111);color:#fff}
+
+/* Chevron */
+.acct-chevron{font-size:9px;opacity:.7;transition:transform .2s;margin-left:2px}
 .acct-wrap.open .acct-chevron{transform:rotate(180deg)}
-.acct-dropdown{position:absolute;top:calc(100% + 8px);right:0;min-width:180px;background:#fff;border:1px solid var(--border,#e5e7eb);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);padding:6px;z-index:300;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s}
-.acct-wrap.open .acct-dropdown{opacity:1;transform:translateY(0);pointer-events:all}
-.acct-dropdown-header{padding:10px 12px 8px;border-bottom:1px solid var(--border,#e5e7eb);margin-bottom:4px}
-.acct-dropdown-name{font-size:13px;font-weight:700;color:var(--p)}
-.acct-dropdown-email{font-size:11px;color:var(--p2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
-.acct-menu-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;font-size:13px;font-weight:500;color:var(--p);cursor:pointer;transition:background .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left;font-family:inherit}
-.acct-menu-item:hover{background:var(--bg2)}
-.acct-menu-item.danger{color:#ef4444}
-.acct-menu-item.danger:hover{background:#fef2f2}
-.acct-divider{height:1px;background:var(--border,#e5e7eb);margin:4px 0}
+
+/* Dropdown panel */
+.acct-dropdown{
+  position:absolute;
+  top:calc(100% + 10px);right:0;
+  min-width:210px;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:16px;
+  box-shadow:0 16px 48px rgba(0,0,0,.16),0 2px 8px rgba(0,0,0,.06);
+  padding:6px;
+  z-index:400;
+  opacity:0;
+  transform:translateY(-10px) scale(.97);
+  pointer-events:none;
+  transition:opacity .18s cubic-bezier(.4,0,.2,1),transform .18s cubic-bezier(.4,0,.2,1);
+  transform-origin:top right;
+}
+.acct-wrap.open .acct-dropdown{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
+
+/* Dropdown header */
+.acct-dropdown-header{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px 10px;
+  margin-bottom:2px;
+}
+.acct-dropdown-avatar-lg{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--p,#111);color:#fff;
+  font-size:15px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.acct-dropdown-info{min-width:0}
+.acct-dropdown-name{font-size:14px;font-weight:700;color:#111;line-height:1.3}
+.acct-dropdown-email{font-size:12px;color:#6b7280;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
+
+/* Divider */
+.acct-divider{height:1px;background:#f0f0f0;margin:4px 6px}
+
+/* Menu items */
+.acct-menu-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:10px;
+  font-size:13.5px;font-weight:500;color:#1a1a1a;
+  cursor:pointer;transition:background .12s;
+  text-decoration:none;border:none;background:none;
+  width:100%;text-align:left;font-family:inherit;line-height:1;
+}
+.acct-menu-item:hover{background:#f5f5f7}
+.acct-menu-item-icon{font-size:15px;width:22px;text-align:center;flex-shrink:0}
+.acct-menu-item.danger{color:#dc2626}
+.acct-menu-item.danger:hover{background:#fff1f1}
+
+/* Mobile */
+@media(max-width:640px){
+  .nav-acct-inject{margin-right:4px}
+  .acct-btn-guest{height:34px;padding:0 10px;font-size:12px}
+  .acct-btn-user{height:34px;padding:0 8px 0 4px;font-size:12px}
+  .acct-avatar{width:24px;height:24px;font-size:10px}
+  .acct-dropdown{min-width:185px}
+}
+
 
 /* ── HERO BANNER fallback ── */
 #heroBanner{padding:80px 40px;text-align:center;background:var(--bg2);border-bottom:1px solid var(--border);display:none}
@@ -705,9 +800,6 @@ body.cart-bar-open{padding-bottom:66px}
   .hdr-inner{padding:0 16px;gap:12px}
   .hdr-nav,.nav-links{display:none}
   .nav-right{margin-left:auto}
-  .acct-btn-guest{padding:6px 10px;font-size:12px}
-  .acct-btn-user{padding:5px 8px 5px 5px;font-size:12px}
-  .acct-dropdown{right:0;min-width:160px}
   .tc-section,.tc-trust-section,.tc-newsletter,.tc-promo-banner,.tc-footer,
   .tc-faq-section,.tc-countdown-section,.tc-gallery-section,.tc-video-section,.tc-about-section,
   .tc-richtext-section,.tc-imagetext-section,.tc-brands-section,.tc-offers-section,
@@ -762,7 +854,8 @@ body.cart-bar-open{padding-bottom:66px}
       <div class="acct-wrap" id="acctWrap">
         <!-- Guest state (default) -->
         <button class="acct-btn-guest" id="acctBtnGuest" onclick="location.href=storeUrl('customer-login.html')">
-          👤 Login
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Login
         </button>
         <!-- Logged-in state (hidden until JS confirms token) -->
         <button class="acct-btn-user" id="acctBtnUser" style="display:none" onclick="toggleAcctDropdown()">
@@ -773,18 +866,22 @@ body.cart-bar-open{padding-bottom:66px}
         <!-- Dropdown menu -->
         <div class="acct-dropdown" id="acctDropdown">
           <div class="acct-dropdown-header">
-            <div class="acct-dropdown-name" id="acctDropName">—</div>
-            <div class="acct-dropdown-email" id="acctDropEmail">—</div>
+            <div class="acct-dropdown-avatar-lg" id="acctDropAvatarLg">?</div>
+            <div class="acct-dropdown-info">
+              <div class="acct-dropdown-name" id="acctDropName">—</div>
+              <div class="acct-dropdown-email" id="acctDropEmail">—</div>
+            </div>
           </div>
+          <div class="acct-divider"></div>
           <a class="acct-menu-item" id="acctMenuAccount" href="#">
-            🧾 My Account
+            <span class="acct-menu-item-icon">🧾</span> My Account
           </a>
           <a class="acct-menu-item" id="acctMenuOrders" href="#">
-            📦 My Orders
+            <span class="acct-menu-item-icon">📦</span> My Orders
           </a>
           <div class="acct-divider"></div>
           <button class="acct-menu-item danger" onclick="doLogout()">
-            🚪 Logout
+            <span class="acct-menu-item-icon">🚪</span> Logout
           </button>
         </div>
       </div>
@@ -920,20 +1017,19 @@ function initAccountButton() {
   const guestBtn = document.getElementById('acctBtnGuest')
   const userBtn  = document.getElementById('acctBtnUser')
   if (tok && name) {
-    // Logged in state
-    const first = name.split(' ')[0]
+    const first   = name.split(' ')[0]
     const initial = first[0].toUpperCase()
     guestBtn.style.display = 'none'
-    userBtn.style.display  = 'flex'
-    document.getElementById('acctName').textContent     = first
-    document.getElementById('acctAvatar').textContent   = initial
-    document.getElementById('acctDropName').textContent  = name
-    document.getElementById('acctDropEmail').textContent = email || ''
+    userBtn.style.display  = 'inline-flex'
+    document.getElementById('acctName').textContent        = first
+    document.getElementById('acctAvatar').textContent      = initial
+    document.getElementById('acctDropAvatarLg').textContent= initial
+    document.getElementById('acctDropName').textContent    = name
+    document.getElementById('acctDropEmail').textContent   = email || ''
     document.getElementById('acctMenuAccount').href = storeUrl('customer-account.html')
     document.getElementById('acctMenuOrders').href  = storeUrl('customer-account.html')
   } else {
-    // Guest state
-    guestBtn.style.display = 'flex'
+    guestBtn.style.display = 'inline-flex'
     userBtn.style.display  = 'none'
   }
 }
