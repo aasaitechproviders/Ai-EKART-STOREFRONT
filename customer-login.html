@@ -151,13 +151,24 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 
 <script>
 const params = new URLSearchParams(location.search)
-const slug   = params.get('store')
-const redirect = params.get('redirect') || `index.html?store=${slug}`
+// ── Slug resolution: ?store= param OR custom domain hostname ──
+function resolveSlug() {
+  const fromParam = params.get('store')
+  if (fromParam) return fromParam
+  const hostname = location.hostname
+  const ownDomains = ['ai-ekart-storefront.pages.dev', 'ekarts.aasaitech.in', 'ekart.aasaitech.in', 'localhost', '127.0.0.1']
+  if (!ownDomains.some(d => hostname.includes(d))) return hostname
+  return null
+}
+const slug   = resolveSlug()
+const isCustomDomain = !params.get('store') && slug !== null
+const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
+const redirect = params.get('redirect') || storeUrl('index.html')
 const API    = 'https://apiv2.aasaitech.in'
 
 // Set nav links
-document.getElementById('navLogo').href  = `index.html?store=${slug}`
-document.getElementById('navShop').href  = `index.html?store=${slug}`
+document.getElementById('navLogo').href  = storeUrl('index.html')
+document.getElementById('navShop').href  = storeUrl('index.html')
 
 // Load store config for branding
 async function loadConfig() {
