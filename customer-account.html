@@ -448,6 +448,7 @@ async function saveProfile() {
 function logout() {
   localStorage.removeItem(`cust_token_${slug}`)
   localStorage.removeItem(`cust_name_${slug}`)
+  localStorage.removeItem(`cust_email_${slug}`)
   location.href = storeUrl('index.html')
 }
 
