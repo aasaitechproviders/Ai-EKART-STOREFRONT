@@ -99,151 +99,107 @@ a{color:inherit;text-decoration:none}
 .hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
 .hdr-icon-btn{width:36px;height:36px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--p2);transition:background .15s,color .15s}
 .hdr-icon-btn:hover{background:var(--bg2);color:var(--p)}
-.hdr-cart-btn{display:flex;align-items:center;gap:7px;padding:8px 16px;background:var(--p);color:#fff;border-radius:var(--btn-r);font-size:13px;font-weight:600;border:none;cursor:pointer;transition:background .2s,transform .15s}
-.hdr-cart-btn:hover{background:#333;transform:translateY(-1px)}
-.cart-badge{background:#fff;color:var(--p);font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 4px}
-.cart-badge.on{display:flex}
 #payBadge{display:none;padding:4px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:11px;font-weight:600;color:#16a34a;align-items:center;gap:4px}
 
-/* ══════════════════════════════════════════════════
-   ACCOUNT BUTTON + DROPDOWN — production grade
-   Uses data-navtheme="light|dark" set by JS
-   so styles work regardless of which navbar the
-   acctWrap is injected into.
-══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   NAV ACTIONS — account + cart buttons
+   Clean pill buttons that adapt to any navbar color
+   via CSS color inheritance (no JS theme detection)
+═══════════════════════════════════════════════════ */
 .nav-acct-inject{display:flex;align-items:center;flex-shrink:0}
-.acct-wrap{position:relative;display:flex;align-items:center}
+.acct-wrap{display:flex;align-items:center;gap:8px}
 
-/* ── Guest button ── */
+/* ── Login button (guest) ── */
 .acct-btn-guest{
-  display:inline-flex;align-items:center;gap:6px;
-  height:38px;padding:0 16px;
-  background:rgba(255,255,255,.15);
-  border:1.5px solid rgba(255,255,255,.5);
-  color:#fff;
-  border-radius:var(--btn-r,10px);
-  font-size:13px;font-weight:600;
+  display:inline-flex;align-items:center;gap:7px;
+  height:38px;padding:0 18px;
+  background:rgba(255,255,255,.14);
+  border:1.5px solid rgba(255,255,255,.45);
+  color:currentColor;
+  border-radius:100px;
+  font-size:13px;font-weight:600;letter-spacing:.01em;
   cursor:pointer;white-space:nowrap;font-family:inherit;
-  transition:background .18s,border-color .18s;
+  transition:background .2s,border-color .2s,transform .15s;
+  text-decoration:none;
 }
-.acct-btn-guest:hover{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.9)}
-/* Light navbar override */
-.acct-wrap[data-navtheme="light"] .acct-btn-guest{
-  background:transparent;
-  border-color:rgba(0,0,0,.2);
-  color:inherit;
+.acct-btn-guest:hover{
+  background:rgba(255,255,255,.26);
+  border-color:rgba(255,255,255,.75);
+  transform:translateY(-1px);
 }
-.acct-wrap[data-navtheme="light"] .acct-btn-guest:hover{
-  background:rgba(0,0,0,.06);
-  border-color:rgba(0,0,0,.4);
-}
+.acct-btn-guest svg{opacity:.85;flex-shrink:0}
 
-/* ── Logged-in button ── */
+/* ── User avatar button (logged in) — just avatar + name, click → profile ── */
 .acct-btn-user{
-  display:inline-flex;align-items:center;gap:8px;
-  height:38px;padding:0 12px 0 5px;
-  background:rgba(255,255,255,.15);
-  border:1.5px solid rgba(255,255,255,.25);
-  color:#fff;
-  border-radius:var(--btn-r,10px);
+  display:inline-flex;align-items:center;gap:9px;
+  height:38px;padding:0 14px 0 5px;
+  background:rgba(255,255,255,.14);
+  border:1.5px solid rgba(255,255,255,.35);
+  color:currentColor;
+  border-radius:100px;
   font-size:13px;font-weight:600;
   cursor:pointer;white-space:nowrap;font-family:inherit;
-  transition:background .18s;
+  transition:background .2s,transform .15s;
+  text-decoration:none;
 }
-.acct-btn-user:hover{background:rgba(255,255,255,.28)}
-.acct-wrap[data-navtheme="light"] .acct-btn-user{
-  background:rgba(0,0,0,.05);
-  border-color:rgba(0,0,0,.12);
-  color:inherit;
+.acct-btn-user:hover{
+  background:rgba(255,255,255,.26);
+  transform:translateY(-1px);
 }
-.acct-wrap[data-navtheme="light"] .acct-btn-user:hover{
-  background:rgba(0,0,0,.09);
-}
-
-/* ── Avatar (small, inside button) ── */
 .acct-avatar{
   width:28px;height:28px;border-radius:50%;
-  background:rgba(255,255,255,.9);
+  background:rgba(255,255,255,.92);
   color:#111;
-  font-size:12px;font-weight:700;
+  font-size:11px;font-weight:800;letter-spacing:-.5px;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.acct-wrap[data-navtheme="light"] .acct-avatar{
-  background:rgba(0,0,0,.8);
-  color:#fff;
+  box-shadow:0 1px 4px rgba(0,0,0,.15);
 }
 
-/* ── Chevron ── */
-.acct-chevron{font-size:9px;opacity:.7;transition:transform .2s;margin-left:2px}
-.acct-wrap.open .acct-chevron{transform:rotate(180deg)}
-
-/* ── Dropdown panel — always white, always sharp ── */
-.acct-dropdown{
-  position:absolute;
-  top:calc(100% + 10px);right:0;
-  min-width:215px;
+/* ── Cart button — pill with icon + label + badge ── */
+.hdr-cart-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  height:38px;padding:0 18px;
+  background:rgba(255,255,255,.92);
+  color:#111;
+  border:none;border-radius:100px;
+  font-size:13px;font-weight:700;
+  cursor:pointer;white-space:nowrap;font-family:inherit;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+  position:relative;
+}
+.hdr-cart-btn:hover{
   background:#fff;
-  border:1px solid rgba(0,0,0,.08);
-  border-radius:16px;
-  box-shadow:0 20px 60px rgba(0,0,0,.18), 0 4px 12px rgba(0,0,0,.08);
-  padding:6px;
-  z-index:9999;
-  opacity:0;
-  transform:translateY(-10px) scale(.97);
-  pointer-events:none;
-  transition:opacity .2s cubic-bezier(.4,0,.2,1), transform .2s cubic-bezier(.4,0,.2,1);
-  transform-origin:top right;
+  transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(0,0,0,.16);
 }
-.acct-wrap.open .acct-dropdown{
-  opacity:1;
-  transform:translateY(0) scale(1);
-  pointer-events:all;
+.hdr-cart-btn svg{flex-shrink:0;opacity:.75}
+.cart-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:20px;padding:0 5px;
+  background:#111;color:#fff;
+  font-size:10px;font-weight:800;
+  border-radius:100px;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+  opacity:0;transform:scale(0);
 }
+.cart-badge.on{opacity:1;transform:scale(1)}
+.cart-label{font-size:13px;font-weight:700;color:#111}
 
-/* Dropdown user header */
-.acct-dropdown-header{
-  display:flex;align-items:center;gap:11px;
-  padding:12px 14px 10px;
-}
-.acct-dropdown-avatar-lg{
-  width:40px;height:40px;border-radius:50%;
-  background:linear-gradient(135deg,#6c63ff,#a78bfa);
-  color:#fff;
-  font-size:16px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 2px 8px rgba(108,99,255,.35);
-}
-.acct-dropdown-info{min-width:0;flex:1}
-.acct-dropdown-name{font-size:14px;font-weight:700;color:#111;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.acct-dropdown-email{font-size:11.5px;color:#6b7280;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* On light origHeader: same buttons look fine (white bg, dark navbar) */
+/* On dark/colored tc-navbar: rgba white glass looks great */
+/* The cart button's white bg always pops against any navbar color  */
 
-/* Divider */
-.acct-divider{height:1px;background:#f0f0f2;margin:3px 8px}
-
-/* Menu items */
-.acct-menu-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:10px;
-  font-size:13.5px;font-weight:500;color:#1a1a1a;
-  cursor:pointer;transition:background .12s;
-  text-decoration:none;border:none;background:none;
-  width:100%;text-align:left;font-family:inherit;line-height:1;
+@media(max-width:768px){
+  .hdr-inner{padding:0 16px;gap:12px}
+  .hdr-nav{display:none}
+  .acct-btn-guest .acct-btn-text{display:none}
+  .acct-btn-guest{padding:0 11px;width:38px;justify-content:center}
+  .acct-btn-user .acct-name-text{display:none}
+  .acct-btn-user{padding:0 5px;width:38px;justify-content:center}
+  .hdr-cart-btn .cart-label{display:none}
+  .hdr-cart-btn{padding:0 11px;width:38px;justify-content:center}
 }
-.acct-menu-item:hover{background:#f5f5f7}
-.acct-menu-item-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0}
-.acct-menu-item.danger{color:#dc2626}
-.acct-menu-item.danger:hover{background:#fff1f1}
-
-/* Mobile */
-@media(max-width:640px){
-  .nav-acct-inject{margin-right:4px}
-  .acct-btn-guest,.acct-btn-user{height:34px;font-size:12px}
-  .acct-btn-guest{padding:0 10px}
-  .acct-btn-user{padding:0 8px 0 4px}
-  .acct-avatar{width:24px;height:24px;font-size:10px}
-  .acct-dropdown{min-width:185px;right:-8px}
-}
-
 
 /* ── HERO BANNER fallback ── */
 #heroBanner{padding:80px 40px;text-align:center;background:var(--bg2);border-bottom:1px solid var(--border);display:none}
@@ -589,9 +545,9 @@ body.cart-bar-open{padding-bottom:66px}
   gap:8px;
   padding:0 20px;
   height:40px;
-  border-radius:var(--btn-r);
-  font-size:14px;
-  font-weight:600;
+  border-radius:100px;
+  font-size:13.5px;
+  font-weight:700;
   border:none;
   cursor:pointer;
   font-family:var(--font);
@@ -599,11 +555,12 @@ body.cart-bar-open{padding-bottom:66px}
   white-space:nowrap;
   line-height:1;
   box-sizing:border-box;
-  transition:opacity .15s,transform .15s var(--ease-spring);
-  background:rgba(0,0,0,.75);
-  color:#fff;
+  transition:transform .15s,box-shadow .2s,background .2s;
+  background:rgba(255,255,255,.92);
+  color:#111;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
 }
-.nav-cart-btn:hover{opacity:.88;transform:translateY(-1px)}
+.nav-cart-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.16);background:#fff}
 
 /* Cart count badge inside button */
 .nav-cart-count{
@@ -612,11 +569,14 @@ body.cart-bar-open{padding-bottom:66px}
   justify-content:center;
   min-width:20px;
   height:20px;
-  border-radius:10px;
-  font-size:11px;
-  font-weight:700;
+  border-radius:100px;
+  font-size:10px;
+  font-weight:800;
   padding:0 5px;
-  background:rgba(255,255,255,.22);
+  background:#111;
+  color:#fff;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+}
   line-height:1;
 }
 
@@ -874,44 +834,21 @@ body.cart-bar-open{padding-bottom:66px}
     <div class="hdr-right">
       <div id="payBadge">⚡ Pay Online</div>
 
-      <!-- Smart account button — swaps between guest/logged-in -->
+      <!-- Account button: guest → login page, logged in → account page -->
       <div class="acct-wrap" id="acctWrap">
-        <!-- Guest state (default) -->
         <button class="acct-btn-guest" id="acctBtnGuest" onclick="location.href=storeUrl('customer-login.html')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Login
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span class="acct-btn-text">Login</span>
         </button>
-        <!-- Logged-in state (hidden until JS confirms token) -->
-        <button class="acct-btn-user" id="acctBtnUser" style="display:none" onclick="toggleAcctDropdown()">
+        <button class="acct-btn-user" id="acctBtnUser" style="display:none" onclick="location.href=storeUrl('customer-account.html')">
           <div class="acct-avatar" id="acctAvatar">?</div>
-          <span id="acctName">Account</span>
-          <span class="acct-chevron">▾</span>
+          <span class="acct-name-text" id="acctName">Account</span>
         </button>
-        <!-- Dropdown menu -->
-        <div class="acct-dropdown" id="acctDropdown">
-          <div class="acct-dropdown-header">
-            <div class="acct-dropdown-avatar-lg" id="acctDropAvatarLg">?</div>
-            <div class="acct-dropdown-info">
-              <div class="acct-dropdown-name" id="acctDropName">—</div>
-              <div class="acct-dropdown-email" id="acctDropEmail">—</div>
-            </div>
-          </div>
-          <div class="acct-divider"></div>
-          <a class="acct-menu-item" id="acctMenuAccount" href="#">
-            <span class="acct-menu-item-icon">🧾</span> My Account
-          </a>
-          <a class="acct-menu-item" id="acctMenuOrders" href="#">
-            <span class="acct-menu-item-icon">📦</span> My Orders
-          </a>
-          <div class="acct-divider"></div>
-          <button class="acct-menu-item danger" onclick="doLogout()">
-            <span class="acct-menu-item-icon">🚪</span> Logout
-          </button>
-        </div>
       </div>
 
       <button class="hdr-cart-btn" onclick="gotoCart()">
-        🛒 <span id="cartLabel">Cart</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-label" id="cartLabel">Cart</span>
         <span class="cart-badge" id="cartCount">0</span>
       </button>
     </div>
@@ -1037,69 +974,22 @@ const gotoCart = () => location.href = storeUrl('cart.html')
 function initAccountButton() {
   const tok   = localStorage.getItem(`cust_token_${slug}`)
   const name  = localStorage.getItem(`cust_name_${slug}`)
-  const email = localStorage.getItem(`cust_email_${slug}`)
   const guestBtn = document.getElementById('acctBtnGuest')
   const userBtn  = document.getElementById('acctBtnUser')
-  const wrap     = document.getElementById('acctWrap')
-  if (!guestBtn || !userBtn || !wrap) return
-
-  // Detect navbar theme by reading the inline background-color set by theme builder
-  // (computed style returns transparent due to backdrop-filter, so we read inline style first)
-  function detectAndSetTheme() {
-    const navbar = document.querySelector('.tc-navbar') || document.getElementById('origHeader')
-    if (!navbar || !wrap) return
-    // Try inline style first (theme builder sets this directly)
-    let colorStr = navbar.style.backgroundColor || navbar.style.background || ''
-    // Fallback to computed
-    if (!colorStr || colorStr === 'transparent') {
-      colorStr = window.getComputedStyle(navbar).backgroundColor
-    }
-    const m = colorStr.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/)
-    if (m) {
-      const lum = (0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3]) / 255
-      wrap.setAttribute('data-navtheme', lum > 0.6 ? 'light' : 'dark')
-    } else {
-      // Default: if no color found assume dark (colored/dark navbars are more common)
-      wrap.setAttribute('data-navtheme', 'dark')
-    }
-  }
-  detectAndSetTheme()
-
+  if (!guestBtn || !userBtn) return
   if (tok && name) {
     const first   = name.split(' ')[0]
     const initial = first[0].toUpperCase()
     guestBtn.style.display = 'none'
     userBtn.style.display  = 'inline-flex'
-    document.getElementById('acctName').textContent         = first
-    document.getElementById('acctAvatar').textContent       = initial
-    document.getElementById('acctDropAvatarLg').textContent = initial
-    document.getElementById('acctDropName').textContent     = name
-    document.getElementById('acctDropEmail').textContent    = email || ''
-    document.getElementById('acctMenuAccount').href = storeUrl('customer-account.html')
-    document.getElementById('acctMenuOrders').href  = storeUrl('customer-account.html')
+    document.getElementById('acctName').textContent   = first
+    document.getElementById('acctAvatar').textContent = initial
   } else {
     guestBtn.style.display = 'inline-flex'
     userBtn.style.display  = 'none'
   }
 }
 
-function toggleAcctDropdown() {
-  document.getElementById('acctWrap').classList.toggle('open')
-}
-
-function doLogout() {
-  localStorage.removeItem(`cust_token_${slug}`)
-  localStorage.removeItem(`cust_name_${slug}`)
-  localStorage.removeItem(`cust_email_${slug}`)
-  document.getElementById('acctWrap').classList.remove('open')
-  initAccountButton()
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', e => {
-  const wrap = document.getElementById('acctWrap')
-  if (wrap && !wrap.contains(e.target)) wrap.classList.remove('open')
-})
 const subscribeNL = (inputEl) => { const v=(inputEl||document.querySelector('.tc-newsletter-input'))?.value?.trim(); showToast(v?`📧 Thanks! We'll reach ${v}`:'Please enter your email') }
 
 function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
@@ -1476,7 +1366,7 @@ function buildSec(sec,isMobile){
         ? `<div class="nav-links"${linkColor ? ` style="color:${linkColor}"` : ''}>${linksHtml}</div>`
         : ''
       const navCart = d.showCart !== 'no'
-        ? `<div class="nav-right"><div class="nav-acct-inject" id="navAcctInject"></div><a href="${storeUrl('cart.html')}" class="nav-cart-btn" style="${cartBtnStyle}">🛒 ${esc(d.cartText||'Cart')} <span class="nav-cart-count theme-cart-qty">0</span></a></div>`
+        ? `<div class="nav-right"><div class="nav-acct-inject" id="navAcctInject"></div><a href="${storeUrl('cart.html')}" class="nav-cart-btn" style="${cartBtnStyle}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>${esc(d.cartText||'Cart')} <span class="nav-cart-count theme-cart-qty">0</span></a></div>`
         : `<div class="nav-right"><div class="nav-acct-inject" id="navAcctInject"></div></div>`
       return `<nav class="tc-navbar" id="themeNavbar" style="${navStyle}"><div class="nav-logo"${logoColor ? ` style="color:${logoColor}"` : ''} onclick="scrollTop()">${logoInner}</div>${navLinks}${navCart}</nav>`
     }
