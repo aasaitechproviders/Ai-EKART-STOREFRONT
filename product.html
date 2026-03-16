@@ -10,6 +10,7 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
+  /* fallback – will be overridden by theme */
   --accent: #6c63ff;
   --bg: #ffffff;
   --text: #111827;
@@ -21,8 +22,11 @@
   --red: #ef4444;
   --green: #10b981;
   --yellow: #f59e0b;
+  --radius: 16px;
+  --btn-r: 12px;
+  --font: 'Outfit', sans-serif;
 }
-body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
 /* ── NAV ── */
 .nav { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 60px; border-bottom: 1px solid var(--border); background: #fff; position: sticky; top: 0; z-index: 100; gap: 16px; }
@@ -31,7 +35,7 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 .nav-logo .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; margin-left: 2px; vertical-align: middle; }
 .nav-store { font-size: 14px; font-weight: 600; color: var(--text2); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nav-actions { display: flex; align-items: center; gap: 10px; }
-.btn-cart { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; text-decoration: none; transition: opacity .15s; }
+.btn-cart { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: var(--btn-r); font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font); text-decoration: none; transition: opacity .15s; }
 .btn-cart:hover { opacity: .88; }
 .cart-count { background: #fff; color: var(--accent); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
 
@@ -47,11 +51,11 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 
 /* ── GALLERY ── */
 .gallery { position: sticky; top: 76px; }
-.main-image-wrap { position: relative; border-radius: 16px; overflow: hidden; background: var(--surface2); aspect-ratio: 1; margin-bottom: 12px; }
+.main-image-wrap { position: relative; border-radius: var(--radius); overflow: hidden; background: var(--surface2); aspect-ratio: 1; margin-bottom: 12px; }
 .main-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .2s; }
 .main-image-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 80px; background: var(--surface2); }
 .thumb-strip { display: flex; gap: 8px; flex-wrap: wrap; }
-.thumb { width: 68px; height: 68px; border-radius: 10px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; flex-shrink: 0; }
+.thumb { width: 68px; height: 68px; border-radius: calc(var(--radius) * 0.5); overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; flex-shrink: 0; }
 .thumb.active { border-color: var(--accent); }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .badge-oos { position: absolute; top: 14px; left: 14px; background: var(--red); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
@@ -73,19 +77,19 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 .variant-section { margin-bottom: 20px; }
 .variant-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
 .variant-options { display: flex; flex-wrap: wrap; gap: 8px; }
-.variant-opt { padding: 7px 16px; border: 2px solid var(--border); border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; background: #fff; font-family: 'Outfit', sans-serif; color: var(--text); }
+.variant-opt { padding: 7px 16px; border: 2px solid var(--border); border-radius: var(--btn-r); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; background: #fff; font-family: var(--font); color: var(--text); }
 .variant-opt:hover { border-color: var(--accent); color: var(--accent); }
 .variant-opt.selected { border-color: var(--accent); background: rgba(108,99,255,.08); color: var(--accent); }
 
 /* ── QTY + ADD ── */
 .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .qty-label { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; }
-.qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: var(--btn-r); overflow: hidden; }
 .qty-btn { width: 38px; height: 38px; border: none; background: var(--surface2); cursor: pointer; font-size: 18px; font-weight: 700; color: var(--text); transition: background .15s; }
 .qty-btn:hover { background: var(--border); }
 .qty-val { width: 44px; text-align: center; font-size: 15px; font-weight: 700; font-family: 'DM Mono', monospace; border: none; outline: none; background: #fff; padding: 8px 0; }
 .add-row { display: flex; gap: 10px; margin-bottom: 20px; }
-.btn-add-cart { flex: 1; padding: 14px 20px; background: var(--accent); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: opacity .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-add-cart { flex: 1; padding: 14px 20px; background: var(--accent); color: #fff; border: none; border-radius: var(--btn-r); font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--font); transition: opacity .15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-add-cart:hover:not(:disabled) { opacity: .88; }
 .btn-add-cart:disabled { opacity: .4; cursor: not-allowed; }
 
@@ -100,27 +104,27 @@ body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--te
 /* ── REVIEWS ── */
 .section-title { font-size: 18px; font-weight: 800; margin: 40px 0 16px; }
 .review-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
-.review-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.review-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
 .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 .review-stars { font-size: 15px; letter-spacing: 1px; }
 .review-author { font-size: 13px; font-weight: 700; }
 .review-date { font-size: 12px; color: var(--text3); }
 .review-body { font-size: 14px; color: var(--text2); line-height: 1.6; }
-.review-form { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+.review-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
 .review-form h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
 .form-row { margin-bottom: 12px; }
 .form-row label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-.form-input { width: 100%; padding: 10px 13px; background: #fff; border: 1px solid var(--border); border-radius: 9px; color: var(--text); font-family: 'Outfit', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; }
+.form-input { width: 100%; padding: 10px 13px; background: #fff; border: 1px solid var(--border); border-radius: var(--btn-r); color: var(--text); font-family: var(--font); font-size: 14px; outline: none; transition: border-color .2s; }
 .form-input:focus { border-color: var(--accent); }
 textarea.form-input { min-height: 80px; resize: vertical; }
 .star-picker { display: flex; gap: 4px; margin-bottom: 12px; }
 .star-picker span { font-size: 24px; cursor: pointer; transition: transform .1s; user-select: none; }
 .star-picker span:hover { transform: scale(1.2); }
-.btn-submit { padding: 10px 22px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; }
+.btn-submit { padding: 10px 22px; background: var(--accent); color: #fff; border: none; border-radius: var(--btn-r); font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font); }
 
 /* ── RELATED ── */
 .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-.related-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; text-decoration: none; color: var(--text); transition: box-shadow .2s; }
+.related-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; text-decoration: none; color: var(--text); transition: box-shadow .2s; }
 .related-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.08); }
 .related-img { aspect-ratio: 1; background: var(--surface2); }
 .related-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -212,8 +216,11 @@ textarea.form-input { min-height: 80px; resize: vertical; }
 <div class="toast" id="toast"></div>
 
 <script>
-const params  = new URLSearchParams(location.search)
-// ── Slug resolution: ?store= param OR custom domain hostname ──
+const params = new URLSearchParams(location.search)
+
+// ── Helper functions (from main storefront) ──────────────────────────
+function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
+
 function resolveSlug() {
   const fromParam = params.get('store')
   if (fromParam) return fromParam
@@ -227,6 +234,47 @@ const isCustomDomain = !params.get('store') && slug !== null
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const pid     = params.get('id')
 const API     = 'https://apiv2.aasaitech.in'
+
+// ── Theme loader ─────────────────────────────────────────────────────
+async function applyTheme() {
+  if (!slug) return
+  try {
+    const res = await fetch(`${API}/shop/${slug}/theme`)
+    if (!res.ok) return
+    const raw = await res.json()
+    const doc = raw.published || raw.draft || raw
+    const settings = doc.settings || doc
+    const primary = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
+    const bg = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#ffffff'
+    const text = readKey(settings, 'accent_color', 'textColor') || '#111827'
+    const radiusRaw = readKey(settings, 'radius', 'border_radius') || '16px'
+    const radius = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
+    const font = readKey(settings, 'font_heading', 'font') || 'Outfit'
+    const btnStyle = readKey(settings, 'button_style') || 'rounded'
+    const btnR = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
+
+    const root = document.documentElement
+    root.style.setProperty('--accent', primary)
+    root.style.setProperty('--primary', primary)
+    root.style.setProperty('--bg', bg)
+    root.style.setProperty('--text', text)
+    root.style.setProperty('--text2', '#6b7280')
+    root.style.setProperty('--text3', '#9ca3af')
+    root.style.setProperty('--border', '#e5e7eb')
+    root.style.setProperty('--surface', '#f9fafb')
+    root.style.setProperty('--surface2', '#f3f4f6')
+    root.style.setProperty('--radius', radius)
+    root.style.setProperty('--btn-r', btnR)
+    root.style.setProperty('--font', `'${font}', sans-serif`)
+
+    if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
+      document.head.appendChild(link)
+    }
+  } catch(e) { console.warn('Theme load failed, using defaults') }
+}
 
 let currency      = '₹'
 let storeConfig   = {}
@@ -263,12 +311,16 @@ function addToCart() {
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
 async function init() {
+  await applyTheme()  // apply theme first
+
   if (!slug || !pid) return
+
   // Set nav links
   document.getElementById('navLogo').href    = storeUrl('index.html')
   document.getElementById('bcHome').href     = storeUrl('index.html')
   document.getElementById('bcShop').href     = storeUrl('index.html')
   document.getElementById('cartBtn').href    = storeUrl('cart.html')
+
   // Wire account button
   const custToken = localStorage.getItem(`cust_token_${slug}`)
   const custName  = localStorage.getItem(`cust_name_${slug}`)
@@ -278,6 +330,7 @@ async function init() {
     acctBtn.href = custToken ? storeUrl('customer-account.html') : storeUrl('customer-login.html')
     if (acctLabel) acctLabel.textContent = (custToken && custName) ? custName.split(' ')[0] : 'Login'
   }
+
   updateCartCount()
 
   try {
@@ -293,10 +346,7 @@ async function init() {
     storeConfig = cfg
     product     = prod
 
-    // Apply brand color
-    if (cfg.brand_color) document.documentElement.style.setProperty('--accent', cfg.brand_color)
-
-    // Set currency
+    // Set currency from config
     if (cfg.currency === 'USD')      currency = '$'
     else if (cfg.currency === 'EUR') currency = '€'
     else if (cfg.currency === 'GBP') currency = '£'
@@ -319,7 +369,7 @@ async function init() {
     loadReviews()
 
   } catch (e) {
-    document.getElementById('productLayout').innerHTML = `<div style="text-align:center;padding:80px;grid-column:1/-1;"><div style="font-size:48px;margin-bottom:16px;">😕</div><h2>Product not found</h2><p style="color:#6b7280;margin-top:8px;">${e.message}</p><a href="${storeUrl('index.html')}" style="display:inline-block;margin-top:20px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;">← Back to Shop</a></div>`
+    document.getElementById('productLayout').innerHTML = `<div style="text-align:center;padding:80px;grid-column:1/-1;"><div style="font-size:48px;margin-bottom:16px;">😕</div><h2>Product not found</h2><p style="color:#6b7280;margin-top:8px;">${e.message}</p><a href="${storeUrl('index.html')}" style="display:inline-block;margin-top:20px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:var(--btn-r);text-decoration:none;font-weight:700;">← Back to Shop</a></div>`
   }
 }
 
@@ -351,7 +401,7 @@ function renderProduct(p) {
     <!-- INFO -->
     <div class="product-info">
       ${p.category_name ? `<div class="product-cat">${p.category_name}</div>` : ''}
-      <h1 class="product-name">${p.name}</h1>
+      <h1 class="product-name">${escHtml(p.name)}</h1>
       <div class="price-row">
         <span class="price-main">${currency}${p.price.toFixed(2)}</span>
         ${hasCompare ? `<span class="price-compare">${currency}${p.compare_at_price.toFixed(2)}</span>` : ''}
@@ -442,7 +492,7 @@ async function loadRelated(p) {
       return `<a class="related-card" href="${storeUrl('product.html', `id=${r._id}`)}">
         <div class="related-img">${img}</div>
         <div class="related-body">
-          <div class="related-name">${r.name}</div>
+          <div class="related-name">${escHtml(r.name)}</div>
           <div class="related-price">${currency}${r.price.toFixed(2)}</div>
         </div>
       </a>`
