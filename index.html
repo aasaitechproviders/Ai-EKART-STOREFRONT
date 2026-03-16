@@ -69,18 +69,11 @@ a{color:inherit;text-decoration:none}
 .ld-text{font-size:11.5px;color:var(--p3);letter-spacing:.06em;font-weight:500}
 @keyframes ldSpin{to{transform:rotate(360deg)}}
 
-/* ══════════════════════════════════════════════════════════════
-   FIX 1 — ANNOUNCEMENT BAR
-   z-index MUST be below navbar (200) so it never overlaps
-   the sticky nav when scrolling.
-   Old value was 201 — that caused it to scroll over the nav.
-══════════════════════════════════════════════════════════════ */
 .announcement-bar{
   background:var(--p);color:#fff;
   text-align:center;padding:10px 48px;
   font-size:13.5px;font-weight:500;letter-spacing:.04em;
   position:relative;
-  /* z-index LOWER than navbar (200) so nav always sits on top */
   z-index:100;
   display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
 }
@@ -101,15 +94,9 @@ a{color:inherit;text-decoration:none}
 .hdr-icon-btn:hover{background:var(--bg2);color:var(--p)}
 #payBadge{display:none;padding:4px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;font-size:11px;font-weight:600;color:#16a34a;align-items:center;gap:4px}
 
-/* ═══════════════════════════════════════════════════
-   NAV ACTIONS — account + cart buttons
-   Clean pill buttons that adapt to any navbar color
-   via CSS color inheritance (no JS theme detection)
-═══════════════════════════════════════════════════ */
 .nav-acct-inject{display:flex;align-items:center;flex-shrink:0}
 .acct-wrap{display:flex;align-items:center;gap:8px}
 
-/* ── Login button (guest) ── */
 .acct-btn-guest{
   display:inline-flex;align-items:center;gap:7px;
   height:38px;padding:0 18px;
@@ -129,7 +116,6 @@ a{color:inherit;text-decoration:none}
 }
 .acct-btn-guest svg{opacity:.85;flex-shrink:0}
 
-/* ── User avatar button (logged in) — just avatar + name, click → profile ── */
 .acct-btn-user{
   display:inline-flex;align-items:center;gap:9px;
   height:38px;padding:0 14px 0 5px;
@@ -155,7 +141,6 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 1px 4px rgba(0,0,0,.15);
 }
 
-/* ── Cart button — pill with icon + label + badge ── */
 .hdr-cart-btn{
   display:inline-flex;align-items:center;gap:8px;
   height:38px;padding:0 18px;
@@ -185,10 +170,6 @@ a{color:inherit;text-decoration:none}
 }
 .cart-badge.on{opacity:1;transform:scale(1)}
 .cart-label{font-size:13px;font-weight:700;color:#111}
-
-/* On light origHeader: same buttons look fine (white bg, dark navbar) */
-/* On dark/colored tc-navbar: rgba white glass looks great */
-/* The cart button's white bg always pops against any navbar color  */
 
 @media(max-width:768px){
   .hdr-inner{padding:0 16px;gap:12px}
@@ -247,14 +228,12 @@ a{color:inherit;text-decoration:none}
 .product-card:hover{transform:translateY(-3px);box-shadow:var(--card-shadow-hover);border-color:#d8d8d8}
 .card-link{display:flex;flex-direction:column;flex:1;color:inherit;min-width:0;cursor:pointer}
 
-/* Image */
 .product-img{width:100%;aspect-ratio:var(--card-aspect,3/4);background:var(--bg2);overflow:hidden;position:relative;flex-shrink:0}
 .product-img img{width:100%;height:100%;object-fit:cover;transition:transform .45s var(--ease-out);display:block}
 .product-card:hover .product-img img{transform:scale(1.05)}
 .img-fallback-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:40px;opacity:.12;pointer-events:none}
 .product-img.img-error img{display:none}
 
-/* Badges */
 .product-badge{position:absolute;top:8px;left:8px;font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:.04em;z-index:2;line-height:1.4}
 .badge-bestseller,.badge-hot{background:#f59e0b;color:#fff}
 .badge-new{background:#10b981;color:#fff}
@@ -262,19 +241,16 @@ a{color:inherit;text-decoration:none}
 .badge-sale,.badge-discount{background:#ef4444;color:#fff}
 .badge-custom{background:var(--primary);color:#fff}
 
-/* Wishlist */
 .wish-btn{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.94);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;z-index:3;opacity:0;transition:opacity .15s,transform .2s var(--ease-spring),background .15s;box-shadow:0 2px 8px rgba(0,0,0,.10);backdrop-filter:blur(6px)}
 .product-card:hover .wish-btn{opacity:1}
 .wish-btn.wished{opacity:1;color:#ef4444}
 .wish-btn:hover{transform:scale(1.12);background:#fff}
 
-/* Hover overlay ATC */
 .card-atc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.24) 0%,transparent 52%);display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;opacity:0;transition:opacity .18s var(--ease);z-index:4;pointer-events:none}
 .product-card:hover .card-atc-overlay{opacity:1;pointer-events:auto}
 .card-atc-btn{padding:7px 18px;background:#fff;color:var(--p);border:none;border-radius:999px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .12s,transform .12s var(--ease-spring),box-shadow .12s;box-shadow:0 3px 14px rgba(0,0,0,.14);white-space:nowrap}
 .card-atc-btn:hover{background:var(--bg2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.18)}
 
-/* Info */
 .product-info{padding:var(--card-info-pad,10px 12px 5px);background:var(--card-bg,#fff);flex:1;min-width:0}
 .product-cat{font-size:var(--card-cat-fs,11px);font-weight:600;color:var(--p3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.08em}
 .product-name{font-size:var(--card-name-fs,14px);font-weight:600;line-height:1.4;margin-bottom:6px;color:var(--p);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -283,7 +259,6 @@ a{color:inherit;text-decoration:none}
 .product-compare{font-size:13px;text-decoration:line-through;opacity:.36;color:var(--p)}
 .product-discount{font-size:11px;font-weight:700;background:rgba(239,68,68,.09);color:#ef4444;padding:2px 6px;border-radius:4px}
 
-/* Cart controls */
 .cart-controls-wrap{padding:var(--card-btn-pad,6px 12px 12px);background:var(--card-bg,#fff);flex-shrink:0}
 .cart-controls{width:100%}
 .btn-add{width:100%;height:var(--card-btn-h,38px);background:var(--primary);color:#fff;border:none;border-radius:var(--btn-r,8px);font-size:var(--card-btn-fs,11.5px);font-weight:600;cursor:pointer;font-family:var(--font);letter-spacing:.02em;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .15s,transform .15s var(--ease-spring)}
@@ -296,7 +271,6 @@ a{color:inherit;text-decoration:none}
 .qty-btn:hover{background:var(--primary);color:#fff}
 .qty-value{flex:1;text-align:center;font-size:13px;font-weight:700;color:var(--p);background:transparent;pointer-events:none;user-select:none}
 
-/* In-cart state */
 .product-card.in-cart{border-color:var(--primary);border-width:1.5px}
 .product-card.in-cart::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--primary);z-index:5}
 
@@ -323,7 +297,6 @@ a{color:inherit;text-decoration:none}
 [data-style="elevated"] .product-card.in-cart{box-shadow:0 0 0 2px var(--primary),0 4px 20px rgba(0,0,0,.07)}
 [data-style="elevated"] .product-card.in-cart::before{display:none}
 
-/* COMPACT */
 [data-style="compact"].products-grid{gap:var(--card-gap,8px)}
 [data-style="compact"] .product-img{aspect-ratio:1/1}
 [data-style="compact"] .product-info{padding:6px 8px 3px}
@@ -336,7 +309,6 @@ a{color:inherit;text-decoration:none}
 [data-style="compact"] .qty-btn{flex:0 0 calc(var(--card-btn-h,38px) * 0.84);font-size:15px}
 [data-style="compact"] .qty-value{font-size:11.5px}
 
-/* LIST */
 [data-style="list"].products-grid{gap:10px}
 [data-style="list"] .product-card{flex-direction:row;height:calc(var(--card-btn-h,38px) * 3.7);min-height:120px;max-height:180px;align-items:stretch;border-radius:12px}
 [data-style="list"] .card-link{flex-direction:row;flex:1;min-width:0}
@@ -355,7 +327,6 @@ a{color:inherit;text-decoration:none}
 [data-style="list"] .product-card.in-cart::before{display:none}
 [data-style="list"] .product-card.in-cart{border-left:3px solid var(--primary)}
 
-/* MAGAZINE */
 [data-style="magazine"].products-grid{gap:12px}
 [data-style="magazine"] .product-card:first-child{grid-column:span 2;grid-row:span 2}
 [data-style="magazine"] .product-card:first-child .product-img{aspect-ratio:16/10}
@@ -363,7 +334,6 @@ a{color:inherit;text-decoration:none}
 [data-style="magazine"] .product-card:first-child .product-price{font-size:calc(var(--card-price-fs) * 1.2)}
 [data-style="magazine"] .product-card:first-child .cart-controls-wrap{padding:8px 16px 16px}
 
-/* OVERLAY */
 [data-style="overlay"] .product-card{overflow:hidden}
 [data-style="overlay"] .product-img{aspect-ratio:var(--card-aspect,3/4)}
 [data-style="overlay"] .product-info,[data-style="overlay"] .cart-controls-wrap{display:none}
@@ -383,7 +353,6 @@ a{color:inherit;text-decoration:none}
 .ov-qty-btn:hover{background:rgba(255,255,255,.2)}
 .ov-qty-val{flex:1;text-align:center;font-size:var(--card-btn-fs,11.5px);font-weight:700;color:#fff}
 
-/* ── SKELETON ── */
 @keyframes shimmer{0%{background-position:-800px 0}100%{background-position:800px 0}}
 .skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#f8f8f8 50%,#f0f0f0 75%);background-size:800px 100%;animation:shimmer 1.5s ease-in-out infinite;border-radius:var(--card-radius);border:none;box-shadow:none}
 .skeleton *{visibility:hidden}
@@ -417,34 +386,12 @@ body.cart-bar-open{padding-bottom:66px}
 .cbar-btn:hover{opacity:.92;transform:translateY(-1px)}
 .cbar-btn::after{content:'→';font-size:14px}
 
-/* ── TOAST ── */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(12,12,12,.95);color:#fff;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:500;opacity:0;transition:all .22s var(--ease);z-index:400;white-space:nowrap;pointer-events:none;box-shadow:0 8px 28px rgba(0,0,0,.22);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.07)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ══════════════════════════════════════════════════════════════
-   FIX 2 — NAVBAR (tc-navbar)
-   Problems in original:
-   1. Logo "Aasai" text was rendering slightly above center because
-      font-display has descenders that throw off grid alignment.
-   2. The 3-col grid align-items:center was correct but child
-      elements (logo span, nav links, cart btn) needed explicit
-      vertical centering reinforcement.
-   3. z-index was set per-instance via inline style — now locked
-      to 200 here, which is ABOVE the announcement bar (100).
-
-   Fixes applied:
-   - align-items:center on the grid (already correct, kept)
-   - .nav-logo: align-self:center + line-height:var(--navbar-h)
-     removed — replaced with explicit flex vertical centering
-   - .nav-links: align-self:center (centers the link row in its cell)
-   - .nav-right: align-self:center (centers cart btn in its cell)
-   - All children use display:flex + align-items:center
-   - z-index:200 is hardcoded so it's always above ann-bar (100)
-══════════════════════════════════════════════════════════════ */
 .tc-navbar{
   width:100%;
   box-sizing:border-box;
-  /* !important ensures inline style on <nav> never breaks the flex row */
   display:flex!important;
   flex-direction:row!important;
   align-items:center!important;
@@ -455,7 +402,6 @@ body.cart-bar-open{padding-bottom:66px}
   min-height:var(--navbar-h);
   max-height:var(--navbar-h);
   overflow:hidden;
-  /* Default bg — inline style overrides background/border only */
   background:rgba(250,250,250,.97);
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
@@ -465,7 +411,6 @@ body.cart-bar-open{padding-bottom:66px}
   z-index:200;
 }
 
-/* Logo — left side, natural width */
 .nav-logo{
   font-family:var(--font-display);
   font-size:20px;
@@ -504,7 +449,6 @@ body.cart-bar-open{padding-bottom:66px}
   white-space:nowrap;
 }
 
-/* Nav links — fills center via flex:1, centered */
 .nav-links{
   flex:1;
   display:flex;
@@ -528,7 +472,6 @@ body.cart-bar-open{padding-bottom:66px}
 }
 .nav-links a:hover{opacity:1}
 
-/* Nav right actions — right side, natural width */
 .nav-right{
   display:flex;
   flex-direction:row;
@@ -538,7 +481,6 @@ body.cart-bar-open{padding-bottom:66px}
   margin-left:auto;
 }
 
-/* Cart button */
 .nav-cart-btn{
   display:inline-flex;
   align-items:center;
@@ -562,7 +504,6 @@ body.cart-bar-open{padding-bottom:66px}
 }
 .nav-cart-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.16);background:#fff}
 
-/* Cart count badge inside button */
 .nav-cart-count{
   display:inline-flex;
   align-items:center;
@@ -576,11 +517,9 @@ body.cart-bar-open{padding-bottom:66px}
   background:#111;
   color:#fff;
   transition:transform .2s cubic-bezier(.34,1.56,.64,1);
-}
   line-height:1;
 }
 
-/* ── HERO SECTION ── */
 .tc-hero{position:relative;overflow:hidden;text-align:center}
 .hero-bg-img{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
 .hero-ov{position:absolute;inset:0;z-index:1}
@@ -598,7 +537,6 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-hero.hero-dark p{color:var(--p2)}
 .tc-hero.hero-dark .hero-badge-pill{background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.1)}
 
-/* ── SECTION BASE ── */
 .tc-section{padding:52px 40px}
 .tc-section-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:10px}
 .tc-section-title{font-family:var(--font-display);font-size:30px;font-weight:400;letter-spacing:-.02em}
@@ -606,7 +544,6 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-view-all{font-size:14px;font-weight:600;border:1.5px solid rgba(0,0,0,.12);border-radius:7px;background:none;cursor:pointer;padding:6px 14px;transition:border-color .15s,background .15s;text-decoration:none;white-space:nowrap;flex-shrink:0}
 .tc-view-all:hover{border-color:currentColor;background:rgba(0,0,0,.04)}
 
-/* ── CATEGORIES ── */
 .tc-cats-grid{display:grid;gap:12px}
 .tc-cat-card{background:#fff;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;border:1px solid var(--border);transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s}
 .tc-cat-card:hover{border-color:#d0d0d0;box-shadow:var(--sh1);transform:translateY(-2px)}
@@ -625,7 +562,6 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-cats-grid.cats-circle .tc-cat-name{font-size:13px;font-weight:700;text-align:center}
 .tc-cats-grid.cats-circle .tc-cat-count{font-size:11px;color:var(--p3);text-align:center}
 
-/* ── PROMO BANNER ── */
 .tc-promo-banner{padding:60px 40px;text-align:center;color:#fff;position:relative;overflow:hidden}
 .tc-promo-banner::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:rgba(255,255,255,.06);border-radius:50%;pointer-events:none}
 .tc-promo-content h2{font-family:var(--font-display);font-size:34px;font-weight:400;margin-bottom:10px}
@@ -634,7 +570,6 @@ body.cart-bar-open{padding-bottom:66px}
 .btn-solid-white{background:#fff;color:var(--primary);padding:11px 26px;border-radius:var(--btn-r);font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--font);border:none;transition:opacity .2s,transform .15s var(--ease-spring);display:inline-flex;align-items:center;gap:8px}
 .btn-solid-white:hover{opacity:.92;transform:translateY(-1px)}
 
-/* ── TRUST BADGES ── */
 .tc-trust-section{padding:24px 40px;border-top:1px solid rgba(0,0,0,.06);border-bottom:1px solid rgba(0,0,0,.06)}
 .tc-trust-grid{display:grid;gap:0}
 .tc-trust-item{display:flex;align-items:center;gap:12px;padding:16px 24px;border-right:1px solid rgba(0,0,0,.06)}
@@ -643,7 +578,6 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-trust-label{font-size:15px;font-weight:700}
 .tc-trust-sub{font-size:13px;opacity:.6;margin-top:2px}
 
-/* ── TESTIMONIALS ── */
 .tc-testimonials{padding:56px 40px}
 .tc-testimonials-grid{display:grid;gap:14px;margin-top:28px}
 .tc-testimonial{background:#fff;border-radius:12px;padding:22px;border:1px solid var(--border);transition:box-shadow .2s var(--ease)}
@@ -654,7 +588,6 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-t-avatar{width:34px;height:34px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
 .tc-t-name{font-size:14.5px;font-weight:600}
 
-/* ── NEWSLETTER ── */
 .tc-newsletter{padding:64px 40px;text-align:center}
 .tc-newsletter h2{font-family:var(--font-display);font-size:30px;font-weight:400;letter-spacing:-.02em;margin-bottom:10px}
 .tc-newsletter p{margin-bottom:28px;font-size:16px;line-height:1.7;opacity:.7}
@@ -668,7 +601,6 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-newsletter-dark .tc-newsletter-input:focus{border-color:rgba(255,255,255,.5);box-shadow:0 0 0 3px rgba(255,255,255,.08)}
 .tc-newsletter-dark p{color:#fff}
 
-/* ── FOOTER ── */
 .tc-footer{padding:56px 40px 32px;border-top:1px solid rgba(0,0,0,.08)}
 .tc-footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:40px}
 .tc-footer-logo{font-family:var(--font-display);font-size:19px;font-weight:400;margin-bottom:7px;cursor:pointer}
@@ -684,7 +616,6 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-social-btn{width:32px;height:32px;border-radius:8px;background:rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;text-decoration:none;transition:background .15s}
 .tc-social-btn:hover{background:rgba(0,0,0,.1)}
 
-/* ── VIDEO / COUNTDOWN / GALLERY / FAQ etc ── */
 .tc-video-section{padding:56px 40px}
 .tc-video-section-hd{margin-bottom:20px;text-align:center}
 .tc-video-box{border-radius:14px;min-height:340px;overflow:hidden;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;border:1px solid var(--border)}
@@ -768,7 +699,6 @@ body.cart-bar-open{padding-bottom:66px}
 .contact-field input:focus,.contact-field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,0,0,.05)}
 .contact-field textarea{resize:vertical;min-height:110px}
 
-/* ── RESPONSIVE ── */
 @media(max-width:1200px){
   :root{--cols:3}
   .hdr-inner,.tc-navbar,.tc-section,.tc-trust-section,.tc-newsletter,.tc-promo-banner,.tc-footer,
@@ -779,7 +709,6 @@ body.cart-bar-open{padding-bottom:66px}
 }
 @media(max-width:768px){
   :root{--navbar-h:54px;--card-gap:8px}
-  /* On mobile: 2-col grid — logo | cart (links hidden) */
   .tc-navbar{padding:0 16px;gap:0}
   .hdr-inner{padding:0 16px;gap:12px}
   .hdr-nav,.nav-links{display:none}
@@ -833,8 +762,6 @@ body.cart-bar-open{padding-bottom:66px}
     <nav class="hdr-nav" id="hdrNav"></nav>
     <div class="hdr-right">
       <div id="payBadge">⚡ Pay Online</div>
-
-      <!-- Account button: guest → login page, logged in → account page -->
       <div class="acct-wrap" id="acctWrap">
         <button class="acct-btn-guest" id="acctBtnGuest" onclick="location.href=storeUrl('customer-login.html')">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -845,7 +772,6 @@ body.cart-bar-open{padding-bottom:66px}
           <span class="acct-name-text" id="acctName">Account</span>
         </button>
       </div>
-
       <button class="hdr-cart-btn" onclick="gotoCart()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span class="cart-label" id="cartLabel">Cart</span>
@@ -885,13 +811,12 @@ body.cart-bar-open{padding-bottom:66px}
 /* ═══════════════════════════════════════════
    CONFIG
 ═══════════════════════════════════════════ */
-// ── Slug resolution: ?store= param OR custom domain hostname ──
 function resolveSlug() {
   const fromParam = new URLSearchParams(location.search).get('store')
   if (fromParam) return fromParam
   const hostname = location.hostname
   const ownDomains = ['ai-ekart-storefront.pages.dev', 'ekarts.aasaitech.in', 'ekart.aasaitech.in', 'localhost', '127.0.0.1']
-  if (!ownDomains.some(d => hostname.includes(d))) return hostname // custom merchant domain
+  if (!ownDomains.some(d => hostname.includes(d))) return hostname
   return null
 }
 const slug = resolveSlug()
@@ -908,7 +833,6 @@ const sectionFilters  = {}
 
 const ALL_CARD_STYLES = new Set(['classic','minimal','bold','elevated','compact','list','magazine','overlay'])
 
-/* ── Card size tokens ── */
 const CARD_SIZE_VARS = {
   small:{
     '--card-aspect':'1/1','--card-name-fs':'16px','--card-price-fs':'18px',
@@ -965,12 +889,10 @@ const smoothScroll = () => {
   if(el){ const nb=document.querySelector('.tc-navbar')||document.getElementById('origHeader'); window.scrollTo({top:el.getBoundingClientRect().top+scrollY-(nb?nb.offsetHeight+12:70),behavior:'smooth'}) }
 }
 const scrollToEl = id => { const el=document.getElementById(id); if(!el)return; const nb=document.querySelector('.tc-navbar')||document.getElementById('origHeader'); window.scrollTo({top:el.getBoundingClientRect().top+scrollY-(nb?nb.offsetHeight+12:70),behavior:'smooth'}) }
-// ── URL helper: on custom domain omit ?store= param ──
 const isCustomDomain = !new URLSearchParams(location.search).get('store') && slug !== null
 const storeUrl = (page, extra='') => isCustomDomain ? `${page}${extra ? '?'+extra : ''}` : `${page}?store=${slug}${extra ? '&'+extra : ''}`
 const gotoCart = () => location.href = storeUrl('cart.html')
 
-// ── Smart account button ──
 function initAccountButton() {
   const tok   = localStorage.getItem(`cust_token_${slug}`)
   const name  = localStorage.getItem(`cust_name_${slug}`)
@@ -1371,7 +1293,6 @@ function buildSec(sec,isMobile){
       return `<nav class="tc-navbar" id="themeNavbar" style="${navStyle}"><div class="nav-logo"${logoColor ? ` style="color:${logoColor}"` : ''} onclick="scrollTop()">${logoInner}</div>${navLinks}${navCart}</nav>`
     }
 
-
     case 'hero':{
       const pads={compact:isMobile?'44px 5% 36px':'64px 5% 52px',normal:isMobile?'56px 5% 48px':'96px 5% 80px',tall:isMobile?'80px 5% 64px':'144px 5% 112px',fullscreen:isMobile?'96px 5%':'168px 5%'}
       const pad=pads[d.size]||pads.normal
@@ -1714,6 +1635,14 @@ function applySettings(s){
   if(navBg) R.style.setProperty('--navbar-bg',navBg)
   document.body.style.background=bg
 
+  // ── Save resolved theme to sessionStorage so other pages load instantly ──
+  try {
+    sessionStorage.setItem(`ekart_theme_${slug}`, JSON.stringify({
+      primary, bg, text, radius, btnR, font,
+      cardBg, priceColor: globalCardSettings.priceColor
+    }))
+  } catch(e) {}
+
   if(font&&font!=='DM Sans'&&font!=='system-ui'){
     const fid='gf-'+font.replace(/\s+/g,'-')
     if(!document.getElementById(fid)){const l=document.createElement('link');l.id=fid;l.rel='stylesheet';l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@400;500;600;700;800&display=swap`;document.head.appendChild(l)}
@@ -1750,7 +1679,6 @@ function renderSections(sections){
   tmpl.innerHTML = allHtml
   page.appendChild(tmpl.content)
 
-  // Move the account button into the theme navbar inject slot
   const injectSlot = document.getElementById('navAcctInject')
   const acctWrap   = document.getElementById('acctWrap')
   if (injectSlot && acctWrap) injectSlot.appendChild(acctWrap)
