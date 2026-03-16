@@ -6,14 +6,12 @@
 <title>Order Confirmed!</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* default fallback – will be overridden by theme variables */
   :root { --accent: #6c63ff; --bg: #f8f9fc; --surface: #ffffff; --border: #e8eaf0; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8; --green: #16a34a; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 40px 20px; }
 
   .success-card { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 48px 40px; max-width: 560px; width: 100%; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.06); }
 
-  /* checkmark — green for COD, purple for paid online */
   .checkmark { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 36px; animation: pop .4s cubic-bezier(0.175,0.885,0.32,1.275); }
   .checkmark.cod  { background: linear-gradient(135deg, #22c55e, #16a34a); }
   .checkmark.paid { background: linear-gradient(135deg, var(--accent), #a78bfa); }
@@ -26,7 +24,6 @@
   .order-number label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); display: block; margin-bottom: 6px; }
   .order-number span { font-size: 22px; font-weight: 800; color: var(--accent); font-family: monospace; letter-spacing: 0.03em; }
 
-  /* payment method badge */
   .pay-method-badge { display: inline-flex; align-items: center; gap: 7px; border-radius: 10px; padding: 9px 16px; margin-bottom: 20px; font-size: 13px; font-weight: 700; }
   .pay-method-badge.online { background: rgba(108,99,255,0.1); border: 1.5px solid rgba(108,99,255,0.25); color: var(--accent); }
   .pay-method-badge.cod    { background: #f0fdf4; border: 1.5px solid #bbf7d0; color: var(--green); }
@@ -62,7 +59,6 @@
   .info-box.cod p    { color: #15803d; }
   .info-box.online p { color: var(--text); }
 
-  /* Razorpay transaction ID */
   .txn-chip { display: inline-flex; align-items: center; gap: 6px; background: white; border: 1px solid rgba(108,99,255,0.2); border-radius: 7px; padding: 4px 10px; font-size: 11.5px; font-family: monospace; color: var(--accent); margin-top: 8px; word-break: break-all; }
 
   .btn-shop { display: inline-block; padding: 13px 28px; background: var(--accent); color: white; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14.5px; transition: background .15s; }
@@ -85,7 +81,6 @@
 </div>
 
 <script>
-// ── Helper functions ─────────────────────────────────────────────────
 function readKey(obj,...keys){ if(!obj)return undefined; for(const k of keys){ const v=obj[k]; if(v!==undefined&&v!==null&&v!=='')return v } return undefined }
 
 function resolveSlug() {
@@ -116,40 +111,66 @@ const STATUS_STEPS = [
   { key: 'delivered',  label: 'Delivered',       desc: 'Enjoy your purchase!' }
 ]
 
-// ── Theme loader ─────────────────────────────────────────────────────
+// ── Theme: sessionStorage cache first, API fallback ──────────────────
 async function applyTheme() {
   if (!slug) return
+
+  const cached = sessionStorage.getItem(`ekart_theme_${slug}`)
+  if (cached) {
+    try {
+      const t = JSON.parse(cached)
+      const root = document.documentElement
+      root.style.setProperty('--accent',  t.primary || '#6c63ff')
+      root.style.setProperty('--primary', t.primary || '#6c63ff')
+      root.style.setProperty('--bg',      t.bg      || '#f8f9fc')
+      root.style.setProperty('--text',    t.text    || '#1a1a2e')
+      root.style.setProperty('--text2',   '#64748b')
+      root.style.setProperty('--text3',   '#94a3b8')
+      root.style.setProperty('--radius',  t.radius  || '24px')
+      root.style.setProperty('--btn-r',   t.btnR    || '12px')
+      root.style.setProperty('--font',    `'${t.font || 'Outfit'}', sans-serif`)
+      if (t.font && !['Outfit','DM Sans','system-ui'].includes(t.font)) {
+        const l = document.createElement('link'); l.rel = 'stylesheet'
+        l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(t.font)}:wght@300;400;500;600;700;800&display=swap`
+        document.head.appendChild(l)
+      }
+      return // ✅ instant — no API call
+    } catch(e) {}
+  }
+
+  // Fallback: fetch from API
   try {
     const res = await fetch(`${API}/shop/${slug}/theme`)
     if (!res.ok) return
     const raw = await res.json()
     const doc = raw.published || raw.draft || raw
     const settings = doc.settings || doc
-    const primary = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
-    const bg = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#f8f9fc'
-    const text = readKey(settings, 'accent_color', 'textColor') || '#1a1a2e'
+    const primary   = readKey(settings, 'primary_color', 'primaryColor') || '#6c63ff'
+    const bg        = readKey(settings, 'secondary_color', 'bgColor', 'bg_color') || '#f8f9fc'
+    const text      = readKey(settings, 'accent_color', 'textColor') || '#1a1a2e'
     const radiusRaw = readKey(settings, 'radius', 'border_radius') || '24px'
-    const radius = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
-    const font = readKey(settings, 'font_heading', 'font') || 'Outfit'
-    const btnStyle = readKey(settings, 'button_style') || 'rounded'
-    const btnR = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
+    const radius    = typeof radiusRaw === 'number' ? `${radiusRaw}px` : radiusRaw
+    const font      = readKey(settings, 'font_heading', 'font') || 'Outfit'
+    const btnStyle  = readKey(settings, 'button_style') || 'rounded'
+    const btnR      = btnStyle === 'pill' ? '999px' : btnStyle === 'square' ? '4px' : radius
 
     const root = document.documentElement
-    root.style.setProperty('--accent', primary)
+    root.style.setProperty('--accent',  primary)
     root.style.setProperty('--primary', primary)
-    root.style.setProperty('--bg', bg)
-    root.style.setProperty('--text', text)
-    root.style.setProperty('--text2', '#64748b')
-    root.style.setProperty('--radius', radius)
-    root.style.setProperty('--btn-r', btnR)
-    root.style.setProperty('--font', `'${font}', sans-serif`)
+    root.style.setProperty('--bg',      bg)
+    root.style.setProperty('--text',    text)
+    root.style.setProperty('--text2',   '#64748b')
+    root.style.setProperty('--text3',   '#94a3b8')
+    root.style.setProperty('--radius',  radius)
+    root.style.setProperty('--btn-r',   btnR)
+    root.style.setProperty('--font',    `'${font}', sans-serif`)
 
     if (font && !['Outfit','DM Sans','system-ui'].includes(font)) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
+      const link = document.createElement('link'); link.rel = 'stylesheet'
       link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font)}:wght@300;400;500;600;700;800&display=swap`
       document.head.appendChild(link)
     }
+    try { sessionStorage.setItem(`ekart_theme_${slug}`, JSON.stringify({ primary, bg, text, radius, btnR, font })) } catch(e) {}
   } catch(e) { console.warn('Theme load failed, using defaults') }
 }
 
@@ -172,11 +193,11 @@ function render(order) {
   const statusIdx = STATUS_STEPS.findIndex(s => s.key === order.status)
 
   const timelineHtml = STATUS_STEPS.map((step, i) => {
-    const isDone    = i < statusIdx
-    const isActive  = i === statusIdx
-    const dotClass  = isDone ? 'done' : isActive ? 'active' : 'upcoming'
-    const dotContent= isDone ? '✓' : isActive ? '●' : ''
-    const isLast    = i === STATUS_STEPS.length - 1
+    const isDone     = i < statusIdx
+    const isActive   = i === statusIdx
+    const dotClass   = isDone ? 'done' : isActive ? 'active' : 'upcoming'
+    const dotContent = isDone ? '✓' : isActive ? '●' : ''
+    const isLast     = i === STATUS_STEPS.length - 1
     return `<div class="t-step">
       <div class="t-dot-col">
         <div class="t-dot ${dotClass}">${dotContent}</div>
