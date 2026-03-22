@@ -329,7 +329,8 @@ a{color:inherit;text-decoration:none}
 
 [data-style="magazine"].products-grid{gap:12px}
 [data-style="magazine"] .product-card:first-child{grid-column:span 2;grid-row:span 2}
-[data-style="magazine"] .product-card:first-child .product-img{aspect-ratio:16/10}
+[data-style="magazine"] .product-card:first-child .card-link{flex:1;min-height:0}
+[data-style="magazine"] .product-card:first-child .product-img{flex:1;min-height:100px;aspect-ratio:unset}
 [data-style="magazine"] .product-card:first-child .product-name{font-size:calc(var(--card-name-fs) * 1.3);-webkit-line-clamp:3}
 [data-style="magazine"] .product-card:first-child .product-price{font-size:calc(var(--card-price-fs) * 1.2)}
 [data-style="magazine"] .product-card:first-child .cart-controls-wrap{padding:8px 16px 16px}
@@ -729,7 +730,8 @@ body.cart-bar-open{padding-bottom:66px}
   [data-style="list"] .product-info{border-left:none;border-top:1px solid var(--border)}
   [data-style="list"] .cart-controls-wrap{width:100%;border-left:none;border-top:1px solid var(--border);padding:8px 12px}
   [data-style="magazine"] .product-card:first-child{grid-column:span 1;grid-row:span 1}
-  [data-style="magazine"] .product-card:first-child .product-img{aspect-ratio:var(--card-aspect)}
+  [data-style="magazine"] .product-card:first-child .card-link{flex:unset;min-height:unset}
+  [data-style="magazine"] .product-card:first-child .product-img{flex:none;min-height:unset;aspect-ratio:var(--card-aspect)}
   .tc-newsletter-form{flex-direction:column}
   .tc-newsletter-input{min-width:unset;width:100%}
   .about-grid,.imagetext-grid,.contact-grid{grid-template-columns:1fr;gap:28px}
@@ -1225,7 +1227,7 @@ function gd(sec){
     videoUrl:str('videoUrl','video_url'),playBtnText:str('playBtnText')||'Watch Video',
     targetDate:str('targetDate','endDate','target_date'),accentColor:str('accentColor','accent_color'),subtext:str('subtext'),
     imgAspect:str('imgAspect')||'square',img1:str('img1'),img2:str('img2'),img3:str('img3'),img4:str('img4'),img5:str('img5'),img6:str('img6'),
-    couponCode:str('couponCode','coupon_code'),badgeText:str('badgeText','badge_text','badge'),closable:str('closable'),
+    couponCode:str('couponCode','coupon_code'),badgeText:str('badgeText','badge_text','badge'),closable:str('closable'),bold:str('bold')||'no',
     linkText:str('linkText','link_text'),linkUrl:str('linkUrl','link_url'),
     body:str('body','content','aboutBody','bodyText','richContent'),
     imageUrl:str('imageUrl','image','image_url','aboutImage'),
@@ -1249,6 +1251,13 @@ function gd(sec){
     link3Text:str('link3Text')||'Categories',link3Url:str('link3Url')||'#',
     link4Text:str('link4Text')||'',link4Url:str('link4Url')||'#',
     link5Text:str('link5Text')||'',link5Url:str('link5Url')||'#',
+    boxBgColor:str('boxBgColor','box_bg_color'),
+    boxTextColor:str('boxTextColor','box_text_color'),
+    ctaBgColor:str('ctaBgColor','cta_bg_color','ctaColor','cta_color'),
+    cardBgColor:str('cardBgColor','card_bg_color'),
+    itemBgColor:str('itemBgColor','item_bg_color'),
+    playBtnColor:str('playBtnColor','play_btn_color'),
+    starColor:str('starColor','star_color'),
   }
 }
 
@@ -1266,8 +1275,9 @@ function buildSec(sec,isMobile){
   switch(sec.type){
 
     case 'announcement':{
-      const sz=d.size==='large'?'14px':d.size==='small'?'11px':'12px'
-      return`<div class="announcement-bar" style="${bgS}${tcS}font-size:${sz}"><span>${esc(d.text||'✨ Free shipping on orders above ₹999')}</span>${d.linkText?`<a class="ann-link" href="${esc(d.linkUrl||'#')}">${esc(d.linkText)}</a>`:''}${d.closable==='yes'?`<button class="ann-close" onclick="this.closest('.announcement-bar').remove()">✕</button>`:''}</div>`
+      const sz=d.size==='large'?'14px':d.size==='small'?'11px':'13.5px'
+      const fw=d.bold==='yes'?'700':'500'
+      return`<div class="announcement-bar" style="${bgS}${tcS}font-size:${sz};font-weight:${fw}"><span>${esc(d.text||'✨ Free shipping on orders above ₹999')}</span>${d.linkText?`<a class="ann-link" href="${esc(d.linkUrl||'#')}">${esc(d.linkText)}</a>`:''}${d.closable==='yes'?`<button class="ann-close" onclick="this.closest('.announcement-bar').remove()">✕</button>`:''}</div>`
     }
 
     case 'navbar':{
@@ -1322,6 +1332,9 @@ function buildSec(sec,isMobile){
       const heroDark=hasBg||(d.bgColor&&isColorDark(d.bgColor))
       const contentColor=d.textColor||(heroDark?'#ffffff':null)
       const heroClass=`tc-hero${heroDark&&!d.textColor?' hero-dark':''}`
+      const primaryBtnStyle=d.ctaBgColor?`background:${d.ctaBgColor};color:#fff`:(heroDark&&!contentColor?'background:#fff;color:var(--p)':'background:var(--primary);color:#fff')
+      const heroCTAhref=d.ctaLink&&d.ctaLink!=='#'?esc(d.ctaLink):'javascript:void(0)'
+      const heroCTAclick=d.ctaLink&&d.ctaLink!=='#'?'':'smoothScroll()'
       return`<section class="${heroClass}" style="${secBg}padding:${pad};text-align:${align}">
         ${hasBg?`<div class="hero-bg-img" style="background-image:url('${esc(d.bgImage)}')"></div><div class="hero-ov" style="background:${esc(d.overlayColor)};opacity:${ovOp}"></div>`:''}
         <div class="hero-content" style="${contentColor?'color:'+contentColor:''}">
@@ -1329,7 +1342,7 @@ function buildSec(sec,isMobile){
           <h1>${esc(d.heading||'Welcome to our Store').replace(/(store|shop)/gi,m=>`<em>${m}</em>`)}</h1>
           <p>${esc(d.subheading||'Discover amazing products at the best prices.')}</p>
           <div class="hero-btns" style="justify-content:${justMap[align]||'center'}">
-            <a class="btn-cta" href="javascript:void(0)" onclick="smoothScroll()" style="${heroDark&&!contentColor?'background:#fff;color:var(--p)':'background:var(--primary);color:#fff'}">${esc(d.ctaText||'Shop now')} →</a>
+            <a class="btn-cta" href="${heroCTAhref}" onclick="${heroCTAclick}" style="${primaryBtnStyle}">${esc(d.ctaText||'Shop now')} →</a>
             ${d.cta2Text?`<a class="btn-cta btn-cta-ghost" href="${esc(d.cta2Link)}">${esc(d.cta2Text)}</a>`:''}
           </div>
         </div>
@@ -1348,13 +1361,15 @@ function buildSec(sec,isMobile){
       const secSizeStyle=Object.entries(secSizeVars).map(([k,v])=>k+':'+v).join(';')
       const cardOpts={btnLabel:d.btnText,cardBg:d.cardBg,priceColor:d.priceColor,showOriginal:d.showOriginalPrice,showBadge:d.showProductBadge,cardStyle:secStyle,cardSize:secCardSize}
       setTimeout(()=>fillFeatured(sid,d.count||1000,cardOpts),0)
+      const vaHref=d.viewAllLink&&d.viewAllLink!=='#'?esc(d.viewAllLink):'javascript:void(0)'
+      const vaClick=d.viewAllLink&&d.viewAllLink!=='#'?'':'smoothScroll()'
       return`<section class="tc-section featured-section" id="${sid}" style="${bgS}${tcS}${colsStyle}${secSizeStyle}">
         <div class="tc-section-hd">
           <div>
             <div class="tc-section-title">${esc(d.title||'Featured Products')}</div>
             ${d.subtitle?`<div class="tc-section-subtitle">${esc(d.subtitle)}</div>`:''}
           </div>
-          <a href="javascript:void(0)" onclick="smoothScroll()" class="tc-view-all">${esc(d.viewAllText)}</a>
+          <a href="${vaHref}" onclick="${vaClick}" class="tc-view-all">${esc(d.viewAllText)}</a>
         </div>
         <div class="products-toolbar" id="${sid}-toolbar"></div>
         <div class="products-grid" id="${sid}-grid" data-style="${secStyle}">
@@ -1402,9 +1417,10 @@ function buildSec(sec,isMobile){
       const badges=[[d.badge1Icon,d.badge1,d.badge1sub],[d.badge2Icon,d.badge2,d.badge2sub],[d.badge3Icon,d.badge3,d.badge3sub],[d.badge4Icon,d.badge4,d.badge4sub]]
       const trustBg=d.bgColor||''
       const trustTcS=d.textColor&&d.textColor!=='#ececf3'?`color:${d.textColor};`:autoContrastText(trustBg,'')
+      const itemBg=d.itemBgColor?`background:${d.itemBgColor};`:''
       return`<section class="tc-trust-section" style="${trustBg?'background:'+trustBg+';':''}${trustTcS}">
         <div class="tc-trust-grid" style="grid-template-columns:repeat(${gridCols},1fr)">
-          ${badges.map(([icon,label,sub])=>`<div class="tc-trust-item"><span class="tc-trust-icon">${esc(icon)}</span><div><div class="tc-trust-label">${esc(label)}</div><div class="tc-trust-sub">${esc(sub)}</div></div></div>`).join('')}
+          ${badges.map(([icon,label,sub])=>`<div class="tc-trust-item" style="${itemBg}"><span class="tc-trust-icon">${esc(icon)}</span><div><div class="tc-trust-label">${esc(label)}</div><div class="tc-trust-sub">${esc(sub)}</div></div></div>`).join('')}
         </div>
       </section>`
     }
@@ -1412,13 +1428,15 @@ function buildSec(sec,isMobile){
     case 'testimonials':{
       const tCols=isMobile?1:(parseInt(d.columns)||3)
       const ts=[[d.t1name,d.t1text,d.t1stars],[d.t2name,d.t2text,d.t2stars],[d.t3name,d.t3text,d.t3stars]]
+      const cardBg=d.cardBgColor?`background:${d.cardBgColor};`:''
+      const starClr=d.starColor||'#f59e0b'
       return`<section class="tc-testimonials" style="${bgS}${tcS}">
         <div class="tc-section-hd" style="margin-bottom:0">
           <div class="tc-section-title">${esc(d.title||"What Customers Say")}</div>
           ${d.subtitle?`<div class="tc-section-subtitle">${esc(d.subtitle)}</div>`:''}
         </div>
         <div class="tc-testimonials-grid" style="grid-template-columns:repeat(${tCols},1fr)">
-          ${ts.map(([n,t,stars])=>`<div class="tc-testimonial"><div class="tc-t-stars">${'★'.repeat(stars||5)}${'☆'.repeat(5-(stars||5))}</div><div class="tc-t-text">"${esc(t)}"</div><div class="tc-t-author"><div class="tc-t-avatar">${(n||'?')[0]}</div><div class="tc-t-name">${esc(n)}</div></div></div>`).join('')}
+          ${ts.map(([n,t,stars])=>`<div class="tc-testimonial" style="${cardBg}"><div class="tc-t-stars" style="color:${starClr}">${'★'.repeat(stars||5)}${'☆'.repeat(5-(stars||5))}</div><div class="tc-t-text">"${esc(t)}"</div><div class="tc-t-author"><div class="tc-t-avatar">${(n||'?')[0]}</div><div class="tc-t-name">${esc(n)}</div></div></div>`).join('')}
         </div>
       </section>`
     }
@@ -1468,12 +1486,15 @@ function buildSec(sec,isMobile){
       </footer>`
     }
 
-    case 'video':return`<section class="tc-video-section" style="${bgS}${tcS}"><div class="tc-video-section-hd"><div class="tc-section-title">${esc(d.heading||'Our Story')}</div>${d.subtext?`<div class="tc-section-subtitle">${esc(d.subtext)}</div>`:''}</div><div class="tc-video-box">${d.videoUrl?`<iframe src="${esc(d.videoUrl)}" allowfullscreen></iframe>`:`<div class="tc-play-circle">▶</div><div class="tc-play-label">${esc(d.playBtnText)}</div>`}</div></section>`
+    case 'video':return`<section class="tc-video-section" style="${bgS}${tcS}"><div class="tc-video-section-hd"><div class="tc-section-title">${esc(d.heading||'Our Story')}</div>${d.subtext?`<div class="tc-section-subtitle">${esc(d.subtext)}</div>`:''}</div><div class="tc-video-box">${d.videoUrl?`<iframe src="${esc(d.videoUrl)}" allowfullscreen></iframe>`:`<div class="tc-play-circle" style="${d.playBtnColor?'background:'+d.playBtnColor:''}" >▶</div><div class="tc-play-label">${esc(d.playBtnText)}</div>`}</div></section>`
 
     case 'countdown':{
       const endDate=d.targetDate||new Date(Date.now()+7*24*3600*1000).toISOString()
       const accentColor=d.accentColor||'var(--primary)'
-      return`<section class="tc-countdown-section" style="${bgS}${tcS}" data-countdown="${esc(endDate)}"><div class="tc-section-title">${esc(d.heading||'Deal Ends In')}</div>${d.subtext?`<div class="tc-section-subtitle">${esc(d.subtext)}</div>`:''}<div class="tc-countdown-row">${[['cd-days','Days'],['cd-hrs','Hours'],['cd-min','Mins'],['cd-sec','Secs']].map(([cls,lbl])=>`<div class="tc-cd-unit"><div class="tc-cd-num ${cls}" style="color:${accentColor}">00</div><div class="tc-cd-label">${lbl}</div></div>`).join('')}</div>${d.ctaText?`<div class="tc-countdown-cta"><a href="${esc(d.ctaLink||'#')}" class="btn-cta">${esc(d.ctaText)}</a></div>`:''}</section>`
+      const boxBg=d.boxBgColor?`background:${d.boxBgColor};`:''
+      const boxTc=d.boxTextColor?`color:${d.boxTextColor};`:''
+      const ctaBg=d.ctaBgColor||'var(--primary)'
+      return`<section class="tc-countdown-section" style="${bgS}${tcS}" data-countdown="${esc(endDate)}"><div class="tc-section-title">${esc(d.heading||'Deal Ends In')}</div>${d.subtext?`<div class="tc-section-subtitle">${esc(d.subtext)}</div>`:''}<div class="tc-countdown-row">${[['cd-days','Days'],['cd-hrs','Hours'],['cd-min','Mins'],['cd-sec','Secs']].map(([cls,lbl])=>`<div class="tc-cd-unit" style="${boxBg}"><div class="tc-cd-num ${cls}" style="color:${accentColor}">00</div><div class="tc-cd-label" style="${boxTc}">${lbl}</div></div>`).join('')}</div>${d.ctaText?`<div class="tc-countdown-cta"><a href="${esc(d.ctaLink||'#')}" class="btn-cta" style="background:${ctaBg}">${esc(d.ctaText)}</a></div>`:''}</section>`
     }
 
     case 'gallery':{
@@ -1495,7 +1516,7 @@ function buildSec(sec,isMobile){
       const layout=d.imagePosition||d.layout||'image-right'
       const hasStats=d.stat1num||d.stat2num||d.stat3num
       const imgSide=layout!=='no-image'?`<div class="about-img-wrap">${d.imageUrl?`<img src="${esc(d.imageUrl)}" alt="About us">`:'<span>🏪</span>'}</div>`:''
-      const textSide=`<div><h2 class="about-heading">${esc(d.heading||d.title||'Our Story')}</h2>${d.subtitle?`<p class="about-subheading">${esc(d.subtitle)}</p>`:''}<p class="about-body">${esc(d.body||'We started with a simple mission: to bring quality products to every household.')}</p>${d.ctaText?`<a href="${esc(d.ctaLink||'#')}" class="btn-cta">${esc(d.ctaText)}</a>`:''}</div>`
+      const textSide=`<div><h2 class="about-heading">${esc(d.heading||d.title||'Our Story')}</h2>${d.subtitle?`<p class="about-subheading">${esc(d.subtitle)}</p>`:''}<p class="about-body">${esc(d.body||'We started with a simple mission: to bring quality products to every household.')}</p>${d.ctaText?`<a href="${esc(d.ctaLink||'#')}" class="btn-cta" style="${d.ctaBgColor?'background:'+d.ctaBgColor+';color:#fff':''}">${esc(d.ctaText)}</a>`:''}</div>`
       const gridCols=layout==='no-image'||isMobile?'1fr':'1fr 1fr'
       return`<section class="tc-about-section" style="${bgS}${tcS}"><div class="about-grid" style="grid-template-columns:${gridCols}">${layout==='image-right'?textSide+imgSide:imgSide+textSide}</div>${hasStats?`<div class="about-stats">${d.stat1num?`<div><div class="about-stat-num">${esc(d.stat1num)}</div><div class="about-stat-label">${esc(d.stat1label||'')}</div></div>`:''}${d.stat2num?`<div><div class="about-stat-num">${esc(d.stat2num)}</div><div class="about-stat-label">${esc(d.stat2label||'')}</div></div>`:''}${d.stat3num?`<div><div class="about-stat-num">${esc(d.stat3num)}</div><div class="about-stat-label">${esc(d.stat3label||'')}</div></div>`:''}</div>`:''}</section>`
     }
@@ -1503,14 +1524,14 @@ function buildSec(sec,isMobile){
     case 'richtext':{
       const maxWidths={narrow:'460px',normal:'680px',wide:'920px',full:'100%'}
       const mw=maxWidths[d.maxWidth]||'680px'
-      return`<section class="tc-richtext-section" style="${bgS}${tcS}"><div class="richtext-inner" style="max-width:${mw};text-align:${d.align};margin-inline:auto">${d.title?`<h2 class="richtext-title">${esc(d.title)}</h2>`:''} ${d.body?`<div class="richtext-body">${esc(d.body).replace(/\n/g,'<br>')}</div>`:''} ${d.ctaText?`<div style="margin-top:28px"><a href="${esc(d.ctaLink||'#')}" class="btn-cta">${esc(d.ctaText)}</a></div>`:''}</div></section>`
+      return`<section class="tc-richtext-section" style="${bgS}${tcS}"><div class="richtext-inner" style="max-width:${mw};text-align:${d.align};margin-inline:auto">${d.title?`<h2 class="richtext-title">${esc(d.title)}</h2>`:''} ${d.body?`<div class="richtext-body">${esc(d.body).replace(/\n/g,'<br>')}</div>`:''} ${d.ctaText?`<div style="margin-top:28px"><a href="${esc(d.ctaLink||'#')}" class="btn-cta" style="background:${d.ctaBgColor||'var(--primary)'};color:#fff">${esc(d.ctaText)}</a></div>`:''}</div></section>`
     }
 
     case 'imagetext':{
       const layout=d.imagePosition||d.layout||'image-right'
       const bullets=[d.bullet1,d.bullet2,d.bullet3].filter(Boolean)
       const imgSide=`<div class="imagetext-img-wrap">${d.imageUrl?`<img src="${esc(d.imageUrl)}" alt="${esc(d.title||'')}">`:'<span>🖼️</span>'}</div>`
-      const textSide=`<div><h2 class="imagetext-heading">${esc(d.heading||d.title||'Why Choose Us')}</h2>${d.subtitle?`<p style="font-size:14.5px;color:var(--primary);font-weight:700;margin-bottom:12px;line-height:1.6">${esc(d.subtitle)}</p>`:''} ${d.body?`<p class="imagetext-body">${esc(d.body)}</p>`:''} ${bullets.length?`<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">${bullets.map(b=>`<div class="imagetext-bullet">${esc(b)}</div>`).join('')}</div>`:''} ${d.ctaText?`<a href="${esc(d.ctaLink||'#')}" class="btn-cta">${esc(d.ctaText)}</a>`:''}</div>`
+      const textSide=`<div><h2 class="imagetext-heading">${esc(d.heading||d.title||'Why Choose Us')}</h2>${d.subtitle?`<p style="font-size:14.5px;color:var(--primary);font-weight:700;margin-bottom:12px;line-height:1.6">${esc(d.subtitle)}</p>`:''} ${d.body?`<p class="imagetext-body">${esc(d.body)}</p>`:''} ${bullets.length?`<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">${bullets.map(b=>`<div class="imagetext-bullet">${esc(b)}</div>`).join('')}</div>`:''} ${d.ctaText?`<a href="${esc(d.ctaLink||'#')}" class="btn-cta" style="background:${d.ctaBgColor||'var(--primary)'};color:#fff">${esc(d.ctaText)}</a>`:''}</div>`
       return`<section class="tc-imagetext-section" style="${bgS}${tcS}"><div class="imagetext-grid" style="grid-template-columns:${isMobile?'1fr':'1fr 1fr'}">${layout==='image-right'?textSide+imgSide:imgSide+textSide}</div></section>`
     }
 
