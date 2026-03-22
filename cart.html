@@ -307,7 +307,8 @@ function resolveSlug() {
   const SERVICE = ['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
   if (h.endsWith('.aasaitech.in')) {
     const sub = h.slice(0, h.indexOf('.aasaitech.in'))
-    if (!SERVICE.includes(sub)) return sub
+    const firstPart = sub.split('.')[0]
+    if (!SERVICE.includes(firstPart)) return firstPart
     return null
   }
   if (!SERVICE.some(d => h.includes(d))) return h
