@@ -6,7 +6,7 @@
  */
 
 const EKART_API = 'https://apiv2.aasaitech.in'
-const OWN_DOMAINS = ['ai-ekart-storefront.pages.dev','ekarts.aasaitech.in','ekart.aasaitech.in','localhost','127.0.0.1']
+const SERVICE_DOMAINS = ['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
 
 /* ── Slug resolution ── */
 function resolveSlug() {
@@ -15,7 +15,12 @@ function resolveSlug() {
   const fromParam = new URLSearchParams(location.search).get('store')
   if (fromParam) return fromParam
   const h = location.hostname
-  if (!OWN_DOMAINS.some(d => h.includes(d))) return h
+  if (h.endsWith('.aasaitech.in')) {
+    const sub = h.slice(0, h.indexOf('.aasaitech.in'))
+    if (!SERVICE_DOMAINS.includes(sub)) return sub
+    return null
+  }
+  if (!SERVICE_DOMAINS.some(d => h.includes(d))) return h
   return null
 }
 
