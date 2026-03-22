@@ -843,19 +843,19 @@ const CARD_SIZE_VARS = {
     '--card-aspect':'1/1','--card-name-fs':'16px','--card-price-fs':'18px',
     '--card-info-pad':'7px 9px 3px','--card-btn-pad':'4px 9px 9px',
     '--card-btn-h':'32px','--card-btn-fs':'12px','--card-cat-fs':'11.5px',
-    '--card-gap':'8px','--card-radius':'10px',
+    '--card-gap':'8px',
   },
   medium:{
     '--card-aspect':'3/4','--card-name-fs':'16px','--card-price-fs':'18px',
     '--card-info-pad':'10px 12px 5px','--card-btn-pad':'6px 12px 12px',
     '--card-btn-h':'38px','--card-btn-fs':'13px','--card-cat-fs':'11px',
-    '--card-gap':'14px','--card-radius':'12px',
+    '--card-gap':'14px',
   },
   large:{
     '--card-aspect':'4/5','--card-name-fs':'16px','--card-price-fs':'18px',
     '--card-info-pad':'14px 16px 7px','--card-btn-pad':'8px 14px 14px',
     '--card-btn-h':'44px','--card-btn-fs':'14px','--card-cat-fs':'11.5px',
-    '--card-gap':'18px','--card-radius':'14px',
+    '--card-gap':'18px',
   }
 }
 
@@ -1283,7 +1283,7 @@ function buildSec(sec,isMobile){
   switch(sec.type){
 
     case 'announcement':{
-      const sz=d.size==='large'?'14px':d.size==='small'?'11px':'13.5px'
+      const sz=d.size==='large'?'15px':d.size==='small'?'11px':'13px'
       const fw=d.bold==='no'?'500':'700'
       return`<div class="announcement-bar" style="${bgS}${tcS}font-size:${sz};font-weight:${fw}"><span>${esc(d.text||'✨ Free shipping on orders above ₹999')}</span>${d.linkText?`<a class="ann-link" href="${esc(d.linkUrl||'#')}">${esc(d.linkText)}</a>`:''}${d.closable==='yes'?`<button class="ann-close" onclick="this.closest('.announcement-bar').remove()">✕</button>`:''}</div>`
     }
