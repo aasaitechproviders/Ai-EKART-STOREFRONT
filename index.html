@@ -403,7 +403,7 @@ body.cart-bar-open{padding-bottom:66px}
   min-height:var(--navbar-h);
   max-height:var(--navbar-h);
   overflow:hidden;
-  background:rgba(250,250,250,.97);
+  background:var(--navbar-bg,rgba(250,250,250,.97));
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
   border-bottom:1px solid rgba(0,0,0,.07);
@@ -1284,7 +1284,7 @@ function buildSec(sec,isMobile){
 
     case 'announcement':{
       const sz=d.size==='large'?'14px':d.size==='small'?'11px':'13.5px'
-      const fw=d.bold==='yes'?'700':'500'
+      const fw=d.bold==='no'?'500':'700'
       return`<div class="announcement-bar" style="${bgS}${tcS}font-size:${sz};font-weight:${fw}"><span>${esc(d.text||'✨ Free shipping on orders above ₹999')}</span>${d.linkText?`<a class="ann-link" href="${esc(d.linkUrl||'#')}">${esc(d.linkText)}</a>`:''}${d.closable==='yes'?`<button class="ann-close" onclick="this.closest('.announcement-bar').remove()">✕</button>`:''}</div>`
     }
 
@@ -1657,6 +1657,13 @@ function applySettings(s){
   const cardBg   = readKey(s,'card_bg','cardBg','card_background')||'#ffffff'
   const navBg    = readKey(s,'nav_bg','navBg')
 
+  // ── Read announcement_bar from global settings ──────────────────────────
+  // Both builders save announcement_bar:{enabled,text,bg_color,text_color}
+  // as part of theme settings. Store it so renderSections can inject it
+  // as a fallback when no explicit announcement section exists.
+  const annBar=s.announcement_bar||{}
+  applySettings._annBar=(annBar.enabled&&annBar.text)?annBar:null
+
   globalCardSettings = {
     cardBg,
     priceColor: readKey(s,'price_color','priceColor')||primary,
@@ -1677,7 +1684,11 @@ function applySettings(s){
   R.style.setProperty('--card-price-color',globalCardSettings.priceColor)
   R.style.setProperty('--font',`'${font}',system-ui,sans-serif`)
   R.style.setProperty('--cols',String(parseInt(cols)||4))
-  if(navBg) R.style.setProperty('--navbar-bg',navBg)
+  if(navBg){
+    R.style.setProperty('--navbar-bg',navBg)
+    const navEl=document.getElementById('themeNavbar')
+    if(navEl) navEl.style.background=navBg
+  }
   document.body.style.background=bg
 
   try {
@@ -1709,6 +1720,23 @@ function renderSections(sections){
     .sort((a,b)=>(a.order||0)-(b.order||0))
   if(!visible.length) return
 
+  // ── Inject announcement_bar from global settings if no announcement section ──
+  // Builders save announcement_bar:{enabled,text,bg_color,text_color} in global
+  // theme settings. If the sections list has no announcement section but the
+  // global bar is enabled, synthesise a virtual section so it renders correctly.
+  const hasAnnSection=visible.some(s=>s.type==='announcement')
+  if(!hasAnnSection&&applySettings._annBar){
+    const ann=applySettings._annBar
+    visible.unshift({
+      type:'announcement',
+      is_visible:true,
+      enabled:true,
+      order:-1,
+      data:{text:ann.text,bgColor:ann.bg_color,textColor:ann.text_color},
+      settings:{}
+    })
+  }
+
   const hasNavbar=visible.some(s=>s.type==='navbar')
   const hasHero=visible.some(s=>s.type==='hero')
   document.getElementById('origHeader').style.display=hasNavbar?'none':''
@@ -1727,8 +1755,6 @@ function renderSections(sections){
   const acctWrap   = document.getElementById('acctWrap')
   if (injectSlot && acctWrap) {
     injectSlot.appendChild(acctWrap)
-    // ✅ FIX: Re-apply onclick bindings after DOM move,
-    // because moving a node can orphan event listeners in some browsers.
     const guestBtn = document.getElementById('acctBtnGuest')
     const userBtn  = document.getElementById('acctBtnUser')
     if(guestBtn) guestBtn.onclick = goToLogin
