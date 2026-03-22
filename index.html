@@ -1255,6 +1255,9 @@ function gd(sec){
     link5Text:str('link5Text')||'',link5Url:str('link5Url')||'#',
     boxBgColor:str('boxBgColor','box_bg_color'),
     boxTextColor:str('boxTextColor','box_text_color'),
+    pillBgColor:str('pillBgColor','pill_bg_color'),
+    pillTextColor:str('pillTextColor','pill_text_color'),
+    pillBorderColor:str('pillBorderColor','pill_border_color'),
     ctaBgColor:str('ctaBgColor','cta_bg_color','ctaColor','cta_color'),
     cardBgColor:str('cardBgColor','card_bg_color'),
     itemBgColor:str('itemBgColor','item_bg_color'),
@@ -1539,7 +1542,7 @@ function buildSec(sec,isMobile){
 
     case 'brands':{
       const brands=[d.brand1||'Nike',d.brand2||'Adidas',d.brand3||'Apple',d.brand4||'Samsung',d.brand5||'Sony',d.brand6||'Boat'].filter(Boolean)
-      return`<section class="tc-brands-section" style="${bgS}${tcS}">${d.title?`<div style="text-align:center;margin-bottom:18px"><div class="tc-section-title">${esc(d.title)}</div></div>`:''}<div class="brands-grid">${brands.map(b=>`<div class="brand-pill">${esc(b)}</div>`).join('')}</div></section>`
+      return`<section class="tc-brands-section" style="${bgS}${tcS}">${d.title?`<div style="text-align:center;margin-bottom:18px"><div class="tc-section-title">${esc(d.title)}</div></div>`:''}<div class="brands-grid">${brands.map(b=>`<div class="brand-pill" style="${d.pillBgColor?'background:'+d.pillBgColor+';':''}${d.pillTextColor?'color:'+d.pillTextColor+';':''}${d.pillBorderColor?'border-color:'+d.pillBorderColor+';':''}">${esc(b)}</div>`).join('')}</div></section>`
     }
 
     case 'offers':{
