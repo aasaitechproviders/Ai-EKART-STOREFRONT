@@ -77,7 +77,7 @@ a{color:inherit;text-decoration:none}
   z-index:100;
   display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
 }
-.ann-close{background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:14px;padding:0 4px;line-height:1;flex-shrink:0;position:absolute;right:16px;transition:color .15s}
+.ann-close{background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:16px;padding:0 8px;line-height:1;margin-left:auto;flex-shrink:0;transition:color .15s}
 .ann-close:hover{color:#fff}
 .ann-link{color:rgba(255,255,255,.75);text-decoration:underline;font-size:11.5px;white-space:nowrap}
 
@@ -310,9 +310,9 @@ a{color:inherit;text-decoration:none}
 [data-style="compact"] .qty-value{font-size:11.5px}
 
 [data-style="list"].products-grid{gap:10px}
-[data-style="list"] .product-card{flex-direction:row;height:calc(var(--card-btn-h,38px) * 3.7);min-height:120px;max-height:180px;align-items:stretch;border-radius:12px}
+[data-style="list"] .product-card{flex-direction:row;height:120px;min-height:120px;max-height:180px;align-items:stretch;border-radius:12px}
 [data-style="list"] .card-link{flex-direction:row;flex:1;min-width:0}
-[data-style="list"] .product-img{width:calc(var(--card-btn-h,38px) * 3.7);min-width:calc(var(--card-btn-h,38px) * 3.7);max-width:180px;height:100%;aspect-ratio:unset;border-radius:0;flex-shrink:0}
+[data-style="list"] .product-img{width:120px;min-width:120px;max-width:180px;height:100%;aspect-ratio:unset;border-radius:0;flex-shrink:0}
 [data-style="list"] .product-info{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--border);min-width:0}
 [data-style="list"] .product-info .product-name{font-size:var(--card-name-fs,14px);-webkit-line-clamp:2;white-space:normal}
 [data-style="list"] .product-info .product-price{font-size:var(--card-price-fs,14px)}
@@ -1329,7 +1329,7 @@ function buildSec(sec,isMobile){
     }
 
     case 'hero':{
-      const pads={compact:isMobile?'44px 5% 36px':'64px 5% 52px',normal:isMobile?'56px 5% 48px':'96px 5% 80px',tall:isMobile?'80px 5% 64px':'144px 5% 112px',fullscreen:isMobile?'96px 5%':'168px 5%'}
+      const pads={compact:isMobile?'32px 5% 28px':'48px 5% 40px',normal:isMobile?'48px 5% 40px':'80px 5% 72px',tall:isMobile?'72px 5% 60px':'120px 5% 100px',fullscreen:isMobile?'80px 5%':'160px 5%'}
       const pad=pads[d.size]||pads.normal
       const hasBg=!!d.bgImage
       const secBgColor=d.bgColor||'var(--bg2)'
@@ -1525,7 +1525,7 @@ case 'newsletter':{
     }
 
     case 'richtext':{
-      const maxWidths={narrow:'460px',normal:'680px',wide:'920px',full:'100%'}
+      const maxWidths={narrow:'480px',normal:'680px',wide:'900px',full:'100%'}
       const mw=maxWidths[d.maxWidth]||'680px'
       return`<section class="tc-richtext-section" style="${bgS}${tcS}"><div class="richtext-inner" style="max-width:${mw};text-align:${d.align};margin-inline:auto">${d.title?`<h2 class="richtext-title">${esc(d.title)}</h2>`:''} ${d.body?`<div class="richtext-body">${esc(d.body).replace(/\n/g,'<br>')}</div>`:''} ${d.ctaText?`<div style="margin-top:28px"><a href="${esc(d.ctaLink||'#')}" class="btn-cta" style="background:${d.ctaBgColor||'var(--primary)'};color:#fff">${esc(d.ctaText)}</a></div>`:''}</div></section>`
     }
