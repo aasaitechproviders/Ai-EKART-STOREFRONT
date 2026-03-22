@@ -1258,6 +1258,9 @@ function gd(sec){
     pillBgColor:str('pillBgColor','pill_bg_color'),
     pillTextColor:str('pillTextColor','pill_text_color'),
     pillBorderColor:str('pillBorderColor','pill_border_color'),
+    sectionImage:str('sectionImage','section_image'),
+    imageAlign:str('imageAlign','image_align')||'center',
+    imageWidth:str('imageWidth','image_width')||'40%',
     ctaBgColor:str('ctaBgColor','cta_bg_color','ctaColor','cta_color'),
     cardBgColor:str('cardBgColor','card_bg_color'),
     itemBgColor:str('itemBgColor','item_bg_color'),
@@ -1435,30 +1438,19 @@ function buildSec(sec,isMobile){
       const ts=[[d.t1name,d.t1text,d.t1stars],[d.t2name,d.t2text,d.t2stars],[d.t3name,d.t3text,d.t3stars]]
       const cardBg=d.cardBgColor?`background:${d.cardBgColor};`:''
       const starClr=d.starColor||'#f59e0b'
-      return`<section class="tc-testimonials" style="${bgS}${tcS}">
-        <div class="tc-section-hd" style="margin-bottom:0">
-          <div class="tc-section-title">${esc(d.title||"What Customers Say")}</div>
-          ${d.subtitle?`<div class="tc-section-subtitle">${esc(d.subtitle)}</div>`:''}
-        </div>
-        <div class="tc-testimonials-grid" style="grid-template-columns:repeat(${tCols},1fr)">
-          ${ts.map(([n,t,stars])=>`<div class="tc-testimonial" style="${cardBg}"><div class="tc-t-stars" style="color:${starClr}">${'★'.repeat(stars||5)}${'☆'.repeat(5-(stars||5))}</div><div class="tc-t-text">"${esc(t)}"</div><div class="tc-t-author"><div class="tc-t-avatar">${(n||'?')[0]}</div><div class="tc-t-name">${esc(n)}</div></div></div>`).join('')}
-        </div>
-      </section>`
+      const tsGrid=`<div><div class="tc-section-hd" style="margin-bottom:0"><div class="tc-section-title">${esc(d.title||"What Customers Say")}</div>${d.subtitle?`<div class="tc-section-subtitle">${esc(d.subtitle)}</div>`:''}</div><div class="tc-testimonials-grid" style="grid-template-columns:repeat(${tCols},1fr)">${ts.map(([n,t,stars])=>`<div class="tc-testimonial" style="${cardBg}"><div class="tc-t-stars" style="color:${starClr}">${'★'.repeat(stars||5)}${'☆'.repeat(5-(stars||5))}</div><div class="tc-t-text">"${esc(t)}"</div><div class="tc-t-author"><div class="tc-t-avatar">${(n||'?')[0]}</div><div class="tc-t-name">${esc(n)}</div></div></div>`).join('')}</div></div>`
+      const tsImg=d.sectionImage&&d.imageAlign!=='center'?`<img src="${esc(d.sectionImage)}" alt="" style="width:100%;border-radius:var(--radius);object-fit:cover;display:block">`:'';
+      const tsInner=tsImg&&!isMobile?`<div style="display:grid;grid-template-columns:${d.imageAlign==='left'?d.imageWidth+' 1fr':'1fr '+d.imageWidth};gap:48px;align-items:start">${d.imageAlign==='left'?tsImg+tsGrid:tsGrid+tsImg}</div>`:tsGrid
+      return`<section class="tc-testimonials" style="${bgS}${tcS}">${tsInner}</section>`
     }
-
-    case 'newsletter':{
+case 'newsletter':{
       const isDark=d.bgColor&&isColorDark(d.bgColor)
       const cls=isDark?'tc-newsletter tc-newsletter-dark':'tc-newsletter'
       const btnBg=d.btnColor||'var(--primary)'
-      return`<section class="${cls}" style="${bgS}${tcS}">
-        <h2>${esc(d.heading||'Stay in the loop')}</h2>
-        <p>${esc(d.subtext||'Get exclusive deals and offers straight to your inbox.')}</p>
-        <div class="tc-newsletter-form">
-          <input class="tc-newsletter-input" type="email" placeholder="${esc(d.inputPlaceholder)}">
-          <button class="btn-cta" style="background:${btnBg};white-space:nowrap" onclick="subscribeNL(this.previousElementSibling)">${esc(d.btnText2)} →</button>
-        </div>
-        ${d.privacyText?`<div class="tc-nl-note">${esc(d.privacyText)}</div>`:''}
-      </section>`
+      const nlContent=`<h2>${esc(d.heading||'Stay in the loop')}</h2><p>${esc(d.subtext||'Get exclusive deals and offers straight to your inbox.')}</p><div class="tc-newsletter-form"><input class="tc-newsletter-input" type="email" placeholder="${esc(d.inputPlaceholder)}"><button class="btn-cta" style="background:${btnBg};white-space:nowrap" onclick="subscribeNL(this.previousElementSibling)">${esc(d.btnText2)} →</button></div>${d.privacyText?`<div class="tc-nl-note">${esc(d.privacyText)}</div>`:''}`
+      const nlImg=d.sectionImage&&d.imageAlign!=='center'?`<img src="${esc(d.sectionImage)}" alt="" style="width:100%;border-radius:var(--radius);object-fit:cover;display:block">`:'';
+      const nlInner=nlImg&&!isMobile?`<div style="display:grid;grid-template-columns:${d.imageAlign==='left'?d.imageWidth+' 1fr':'1fr '+d.imageWidth};gap:48px;align-items:center">${d.imageAlign==='left'?nlImg+nlContent:nlContent+nlImg}</div>`:(nlImg&&isMobile?nlContent+`<div style="margin-top:24px">${nlImg}</div>`:nlContent)
+      return`<section class="${cls}" style="${bgS}${tcS}">${nlInner}</section>`
     }
 
     case 'footer':{
@@ -1499,7 +1491,10 @@ function buildSec(sec,isMobile){
       const boxBg=d.boxBgColor?`background:${d.boxBgColor};`:''
       const boxTc=d.boxTextColor?`color:${d.boxTextColor};`:''
       const ctaBg=d.ctaBgColor||'var(--primary)'
-      return`<section class="tc-countdown-section" style="${bgS}${tcS}" data-countdown="${esc(endDate)}"><div class="tc-section-title">${esc(d.heading||'Deal Ends In')}</div>${d.subtext?`<div class="tc-section-subtitle">${esc(d.subtext)}</div>`:''}<div class="tc-countdown-row">${[['cd-days','Days'],['cd-hrs','Hours'],['cd-min','Mins'],['cd-sec','Secs']].map(([cls,lbl])=>`<div class="tc-cd-unit" style="${boxBg}"><div class="tc-cd-num ${cls}" style="color:${accentColor}">00</div><div class="tc-cd-label" style="${boxTc}">${lbl}</div></div>`).join('')}</div>${d.ctaText?`<div class="tc-countdown-cta"><a href="${esc(d.ctaLink||'#')}" class="btn-cta" style="background:${ctaBg}">${esc(d.ctaText)}</a></div>`:''}</section>`
+      const cdContent=`<div><div class="tc-section-title">${esc(d.heading||'Deal Ends In')}</div>${d.subtext?`<div class="tc-section-subtitle">${esc(d.subtext)}</div>`:''}<div class="tc-countdown-row">${[['cd-days','Days'],['cd-hrs','Hours'],['cd-min','Mins'],['cd-sec','Secs']].map(([cls,lbl])=>`<div class="tc-cd-unit" style="${boxBg}"><div class="tc-cd-num ${cls}" style="color:${accentColor}">00</div><div class="tc-cd-label" style="${boxTc}">${lbl}</div></div>`).join('')}</div>${d.ctaText?`<div class="tc-countdown-cta"><a href="${esc(d.ctaLink||'#')}" class="btn-cta" style="background:${ctaBg}">${esc(d.ctaText)}</a></div>`:''}</div>`
+      const cdImg=d.sectionImage&&d.imageAlign!=='center'?`<img src="${esc(d.sectionImage)}" alt="" style="width:100%;border-radius:var(--radius);object-fit:cover;display:block">`:'';
+      const cdInner=cdImg&&!isMobile?`<div style="display:grid;grid-template-columns:${d.imageAlign==='left'?d.imageWidth+' 1fr':'1fr '+d.imageWidth};gap:48px;align-items:center">${d.imageAlign==='left'?cdImg+cdContent:cdContent+cdImg}</div>`:cdContent
+      return`<section class="tc-countdown-section" style="${bgS}${tcS}" data-countdown="${esc(endDate)}">${cdInner}</section>`
     }
 
     case 'gallery':{
@@ -1514,7 +1509,10 @@ function buildSec(sec,isMobile){
     case 'faq':{
       const pairs=[[d.q1,d.a1],[d.q2,d.a2],[d.q3,d.a3],[d.q4,d.a4]].filter(([q])=>q)
       const defaults=pairs.length?pairs:[['How long does shipping take?','Typically 3-7 business days.'],['What is your return policy?','30 days hassle-free returns.'],['Do you offer Cash on Delivery?','Yes, COD available across India.']]
-      return`<section class="tc-faq-section" style="${bgS}${tcS}"><div class="tc-section-hd" style="margin-bottom:8px"><div class="tc-section-title">${esc(d.title||'Frequently Asked Questions')}</div>${d.subtitle?`<div class="tc-section-subtitle">${esc(d.subtitle)}</div>`:''}</div>${defaults.map(([q,a])=>`<div class="tc-faq-item" onclick="this.classList.toggle('open')"><div class="tc-faq-q"><span class="tc-faq-q-text">${esc(q)}</span><span class="tc-faq-icon">+</span></div><div class="tc-faq-a">${esc(a)}</div></div>`).join('')}</section>`
+      const faqList=`<div><div class="tc-section-hd" style="margin-bottom:8px"><div class="tc-section-title">${esc(d.title||'Frequently Asked Questions')}</div>${d.subtitle?`<div class="tc-section-subtitle">${esc(d.subtitle)}</div>`:''}</div>${defaults.map(([q,a])=>`<div class="tc-faq-item" onclick="this.classList.toggle('open')"><div class="tc-faq-q"><span class="tc-faq-q-text">${esc(q)}</span><span class="tc-faq-icon">+</span></div><div class="tc-faq-a">${esc(a)}</div></div>`).join('')}</div>`
+      const faqImg=d.sectionImage&&d.imageAlign!=='center'?`<img src="${esc(d.sectionImage)}" alt="" style="width:100%;border-radius:var(--radius);object-fit:cover;display:block">`:'';
+      const faqInner=faqImg&&!isMobile?`<div style="display:grid;grid-template-columns:${d.imageAlign==='left'?d.imageWidth+' 1fr':'1fr '+d.imageWidth};gap:48px;align-items:start">${d.imageAlign==='left'?faqImg+faqList:faqList+faqImg}</div>`:faqList
+      return`<section class="tc-faq-section" style="${bgS}${tcS}">${faqInner}</section>`
     }
 
     case 'about':{
@@ -1542,16 +1540,20 @@ function buildSec(sec,isMobile){
 
     case 'brands':{
       const brands=[d.brand1||'Nike',d.brand2||'Adidas',d.brand3||'Apple',d.brand4||'Samsung',d.brand5||'Sony',d.brand6||'Boat'].filter(Boolean)
-      return`<section class="tc-brands-section" style="${bgS}${tcS}">${d.title?`<div style="text-align:center;margin-bottom:18px"><div class="tc-section-title">${esc(d.title)}</div></div>`:''}<div class="brands-grid">${brands.map(b=>`<div class="brand-pill" style="${d.pillBgColor?'background:'+d.pillBgColor+';':''}${d.pillTextColor?'color:'+d.pillTextColor+';':''}${d.pillBorderColor?'border-color:'+d.pillBorderColor+';':''}">${esc(b)}</div>`).join('')}</div></section>`
+      const brContent=`<div>${d.title?`<div style="text-align:center;margin-bottom:18px"><div class="tc-section-title">${esc(d.title)}</div></div>`:''}<div class="brands-grid">${brands.map(b=>`<div class="brand-pill" style="${d.pillBgColor?'background:'+d.pillBgColor+';':''}${d.pillTextColor?'color:'+d.pillTextColor+';':''}${d.pillBorderColor?'border-color:'+d.pillBorderColor+';':''}">${esc(b)}</div>`).join('')}</div></div>`
+      const brImg=d.sectionImage&&d.imageAlign!=='center'?`<img src="${esc(d.sectionImage)}" alt="" style="width:100%;border-radius:var(--radius);object-fit:cover;display:block">`:'';
+      const brInner=brImg&&!isMobile?`<div style="display:grid;grid-template-columns:${d.imageAlign==='left'?d.imageWidth+' 1fr':'1fr '+d.imageWidth};gap:48px;align-items:center">${d.imageAlign==='left'?brImg+brContent:brContent+brImg}</div>`:brContent
+      return`<section class="tc-brands-section" style="${bgS}${tcS}">${brInner}</section>`
     }
-
-    case 'offers':{
+case 'offers':{
       const oCols=isMobile?1:(parseInt(d.columns)||3)
       const offers=[{title:d.offer1title||'Flat 30% Off',desc:d.offer1desc||'On all Electronics',code:d.offer1code||'ELEC30',bg:d.offer1bg||'#5b5cf6'},{title:d.offer2title||'Buy 2 Get 1 Free',desc:d.offer2desc||'On selected Fashion',code:d.offer2code||'B2G1',bg:d.offer2bg||'#ec4899'},{title:d.offer3title||'Free Delivery',desc:d.offer3desc||'On orders above ₹499',code:d.offer3code||'FREEDEL',bg:d.offer3bg||'#10b981'}].filter(o=>o.title)
-      return`<section class="tc-offers-section" style="${bgS}${tcS}"><div class="tc-section-hd"><div class="tc-section-title">${esc(d.title||'Hot Deals')}</div></div><div class="offers-grid" style="grid-template-columns:repeat(${oCols},1fr)">${offers.map(o=>`<div class="offer-card" style="background:${o.bg}"><div class="offer-card-inner"><div class="offer-title">${esc(o.title)}</div><div class="offer-desc">${esc(o.desc)}</div>${o.code?`<div class="offer-code-wrap">🎫 ${esc(o.code)}</div>`:''}</div></div>`).join('')}</div></section>`
+      const ofGrid=`<div><div class="tc-section-hd"><div class="tc-section-title">${esc(d.title||'Hot Deals')}</div></div><div class="offers-grid" style="grid-template-columns:repeat(${oCols},1fr)">${offers.map(o=>`<div class="offer-card" style="background:${o.bg}"><div class="offer-card-inner"><div class="offer-title">${esc(o.title)}</div><div class="offer-desc">${esc(o.desc)}</div>${o.code?`<div class="offer-code-wrap">🎫 ${esc(o.code)}</div>`:''}</div></div>`).join('')}</div></div>`
+      const ofImg=d.sectionImage&&d.imageAlign!=='center'?`<img src="${esc(d.sectionImage)}" alt="" style="width:100%;border-radius:var(--radius);object-fit:cover;display:block">`:'';
+      const ofInner=ofImg&&!isMobile?`<div style="display:grid;grid-template-columns:${d.imageAlign==='left'?d.imageWidth+' 1fr':'1fr '+d.imageWidth};gap:48px;align-items:center">${d.imageAlign==='left'?ofImg+ofGrid:ofGrid+ofImg}</div>`:ofGrid
+      return`<section class="tc-offers-section" style="${bgS}${tcS}">${ofInner}</section>`
     }
-
-    case 'team':{
+case 'team':{
       const tCols=isMobile?2:(parseInt(d.columns)||3)
       const members=[[d.m1name,d.m1role,d.m1img],[d.m2name,d.m2role,d.m2img],[d.m3name,d.m3role,d.m3img]].filter(([n])=>n)
       return`<section class="tc-team-section" style="${bgS}${tcS}"><div class="tc-section-hd"><div class="tc-section-title">${esc(d.title||'Meet Our Team')}</div></div><div class="team-grid" style="grid-template-columns:repeat(${tCols},1fr)">${members.map(([n,r,img])=>`<div class="team-card"><div class="team-avatar">${img?`<img src="${esc(img)}" alt="${esc(n)}">`:esc((n||'?')[0])}</div><div class="team-info"><div class="team-name">${esc(n)}</div><div class="team-role">${esc(r||'')}</div></div></div>`).join('')}</div></section>`
