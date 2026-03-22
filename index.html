@@ -548,7 +548,7 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-cats-grid{display:grid;gap:12px}
 .tc-cat-card{background:#fff;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;border:1px solid var(--border);transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s}
 .tc-cat-card:hover{border-color:#d0d0d0;box-shadow:var(--sh1);transform:translateY(-2px)}
-.tc-cat-img-wrap{aspect-ratio:1/1;overflow:hidden;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:30px;position:relative}
+.tc-cat-img-wrap{aspect-ratio:1/1;max-height:220px;overflow:hidden;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:30px;position:relative}
 .tc-cat-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s var(--ease)}
 .tc-cat-card:hover .tc-cat-img{transform:scale(1.05)}
 .tc-cat-footer{padding:10px 12px;background:#fff;display:flex;align-items:center;justify-content:space-between}
@@ -557,7 +557,7 @@ body.cart-bar-open{padding-bottom:66px}
 .tc-cats-grid.cats-circle{gap:20px}
 .tc-cats-grid.cats-circle .tc-cat-card{background:transparent;border:none;box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 4px;border-radius:0}
 .tc-cats-grid.cats-circle .tc-cat-card:hover{transform:translateY(-3px);box-shadow:none;border:none}
-.tc-cats-grid.cats-circle .tc-cat-img-wrap{width:100%;border-radius:50%;border:3px solid transparent;box-shadow:0 2px 10px rgba(0,0,0,.07);transition:border-color .2s,box-shadow .2s}
+.tc-cats-grid.cats-circle .tc-cat-img-wrap{width:100%;max-width:140px;aspect-ratio:1/1;border-radius:50%;border:3px solid transparent;box-shadow:0 2px 10px rgba(0,0,0,.07);transition:border-color .2s,box-shadow .2s}
 .tc-cats-grid.cats-circle .tc-cat-card:hover .tc-cat-img-wrap{border-color:var(--primary);box-shadow:0 6px 20px rgba(0,0,0,.12)}
 .tc-cats-grid.cats-circle .tc-cat-footer{background:transparent;padding:0;flex-direction:column;align-items:center;gap:2px;width:100%}
 .tc-cats-grid.cats-circle .tc-cat-name{font-size:13px;font-weight:700;text-align:center}
@@ -572,8 +572,8 @@ body.cart-bar-open{padding-bottom:66px}
 .btn-solid-white:hover{opacity:.92;transform:translateY(-1px)}
 
 .tc-trust-section{padding:24px 40px;border-top:1px solid rgba(0,0,0,.06);border-bottom:1px solid rgba(0,0,0,.06)}
-.tc-trust-grid{display:grid;gap:0}
-.tc-trust-item{display:flex;align-items:center;gap:12px;padding:16px 24px;border-right:1px solid rgba(0,0,0,.06)}
+.tc-trust-grid{display:grid;gap:12px}
+.tc-trust-item{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--card-bg);border-radius:var(--radius);border:1px solid var(--border)}
 .tc-trust-item:last-child{border-right:none}
 .tc-trust-icon{font-size:22px;flex-shrink:0}
 .tc-trust-label{font-size:15px;font-weight:700}
@@ -721,7 +721,7 @@ body.cart-bar-open{padding-bottom:66px}
   .tc-section-title{font-size:24px}
   .tc-footer-grid{grid-template-columns:1fr;gap:24px}
   .tc-trust-grid{grid-template-columns:repeat(2,1fr)}
-  .tc-trust-item{border-right:none;border-bottom:1px solid rgba(0,0,0,.06)}
+  .tc-trust-item{border-right:none}
   .tc-testimonials-grid{grid-template-columns:1fr}
   .products-grid:not([data-style="list"]){grid-template-columns:repeat(2,1fr);gap:8px}
   [data-style="list"] .product-card{height:auto;min-height:unset;max-height:unset;flex-direction:column}
@@ -746,6 +746,8 @@ body.cart-bar-open{padding-bottom:66px}
   .ptb-search{width:120px}
   .ptb-search:focus{width:145px}
   .cbar-meta{display:none}
+  .tc-cats-grid.cats-circle .tc-cat-img-wrap{max-width:90px}
+  .tc-cat-img-wrap{max-height:160px}
 }
 </style>
 </head>
@@ -1417,7 +1419,7 @@ function buildSec(sec,isMobile){
       const badges=[[d.badge1Icon,d.badge1,d.badge1sub],[d.badge2Icon,d.badge2,d.badge2sub],[d.badge3Icon,d.badge3,d.badge3sub],[d.badge4Icon,d.badge4,d.badge4sub]]
       const trustBg=d.bgColor||''
       const trustTcS=d.textColor&&d.textColor!=='#ececf3'?`color:${d.textColor};`:autoContrastText(trustBg,'')
-      const itemBg=d.itemBgColor?`background:${d.itemBgColor};`:''
+      const itemBg=d.itemBgColor?`background:${d.itemBgColor};border:none;`:''
       return`<section class="tc-trust-section" style="${trustBg?'background:'+trustBg+';':''}${trustTcS}">
         <div class="tc-trust-grid" style="grid-template-columns:repeat(${gridCols},1fr)">
           ${badges.map(([icon,label,sub])=>`<div class="tc-trust-item" style="${itemBg}"><span class="tc-trust-icon">${esc(icon)}</span><div><div class="tc-trust-label">${esc(label)}</div><div class="tc-trust-sub">${esc(sub)}</div></div></div>`).join('')}
