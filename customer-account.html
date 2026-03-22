@@ -254,8 +254,13 @@ const _params = new URLSearchParams(location.search)
 function resolveSlug() {
   const p = _params.get('store'); if (p) return p
   const h = location.hostname
-  const own = ['ai-ekart-storefront.pages.dev','ekarts.aasaitech.in','ekart.aasaitech.in','localhost','127.0.0.1']
-  if (!own.some(d => h.includes(d))) return h
+  const SERVICE = ['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
+  if (h.endsWith('.aasaitech.in')) {
+    const sub = h.slice(0, h.indexOf('.aasaitech.in'))
+    if (!SERVICE.includes(sub)) return sub
+    return null
+  }
+  if (!SERVICE.some(d => h.includes(d))) return h
   return null
 }
 const slug = resolveSlug()
