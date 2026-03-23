@@ -1216,7 +1216,7 @@ body.cart-bar-open{padding-bottom:64px}
   <div style="padding:80px 40px;max-width:1440px;margin:0 auto;text-align:center">
     <h1 id="heroTitle" style="font-family:var(--font-display);font-size:clamp(28px,5vw,56px);font-weight:400;letter-spacing:-.03em;margin-bottom:12px;line-height:1.08">Welcome</h1>
     <p id="heroTagline" style="font-size:15px;color:var(--p2);max-width:420px;margin:0 auto 28px;line-height:1.75">Discover amazing products</p>
-    <button class="hero-cta" onclick="smoothScroll()">Shop Now →</button>
+    <button class="hero-cta" onclick="location.href=storeUrl('products.html')">Shop Now →</button>
   </div>
 </div>
 
@@ -1841,8 +1841,8 @@ function buildSec(sec,isMobile){
       const secSizeStyle=Object.entries(secSizeVars).map(([k,v])=>k+':'+v).join(';')
       const cardOpts={btnLabel:d.btnText,cardBg:d.cardBg,priceColor:d.priceColor,showOriginal:d.showOriginalPrice,showBadge:d.showProductBadge,cardStyle:secStyle,cardSize:secCardSize}
       setTimeout(()=>fillFeatured(sid,d.count||1000,cardOpts),0)
-      const vaHref=d.viewAllLink&&d.viewAllLink!=='#'?esc(d.viewAllLink):'javascript:void(0)'
-      const vaClick=d.viewAllLink&&d.viewAllLink!=='#'?'':'smoothScroll()'
+      const vaHref=d.viewAllLink&&d.viewAllLink!=='#'?esc(d.viewAllLink):storeUrl('products.html')
+      const vaClick=''
       return`<section class="tc-section featured-section" id="${sid}" style="${bgS}${tcS}${colsStyle}${secSizeStyle}">
         <div class="tc-section-hd">
           <div>
@@ -2084,10 +2084,12 @@ async function fillCats(secId,cols,d,catStyle){
     grid.innerHTML=list.map(c=>{
       const emoji=c.icon||getEmoji(c.name)
       const count=showCount&&c.product_count!=null?`${c.product_count}+`:''
-      if(isCircle){ const imgContent=c.image_url?`<img class="tc-cat-img" src="${esc(c.image_url)}" alt="${esc(c.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<span style=\\'font-size:40px\\'>${emoji}</span>'">`:''; return`<div class="tc-cat-card"><div class="tc-cat-img-wrap">${imgContent||`<span style="font-size:40px">${emoji}</span>`}</div><div class="tc-cat-footer"><span class="tc-cat-name">${esc(c.name)}</span>${count?`<span class="tc-cat-count">${count}</span>`:''}</div></div>` }
-      if(c.image_url) return`<div class="tc-cat-card"><div class="tc-cat-img-wrap"><img class="tc-cat-img" src="${esc(c.image_url)}" alt="${esc(c.name)}" loading="lazy"></div><div class="tc-cat-footer"><span class="tc-cat-name">${esc(c.name)}</span>${count?`<span class="tc-cat-count">${count}</span>`:''}</div></div>`
+      const catHref=storeUrl('products.html',`category=${encodeURIComponent(c.name)}`)
+      const catClick=`onclick="location.href='${catHref}'"`
+      if(isCircle){ const imgContent=c.image_url?`<img class="tc-cat-img" src="${esc(c.image_url)}" alt="${esc(c.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<span style=\\'font-size:40px\\'>${emoji}</span>'">`:''; return`<div class="tc-cat-card" ${catClick}><div class="tc-cat-img-wrap">${imgContent||`<span style="font-size:40px">${emoji}</span>`}</div><div class="tc-cat-footer"><span class="tc-cat-name">${esc(c.name)}</span>${count?`<span class="tc-cat-count">${count}</span>`:''}</div></div>` }
+      if(c.image_url) return`<div class="tc-cat-card" ${catClick}><div class="tc-cat-img-wrap"><img class="tc-cat-img" src="${esc(c.image_url)}" alt="${esc(c.name)}" loading="lazy"></div><div class="tc-cat-footer"><span class="tc-cat-name">${esc(c.name)}</span>${count?`<span class="tc-cat-count">${count}</span>`:''}</div></div>`
       const bgColor=bg1[(c.name||'?').charCodeAt(0)%bg1.length]
-      return`<div class="tc-cat-card"><div class="tc-cat-img-wrap" style="background:${bgColor}"><span style="font-size:44px">${emoji}</span></div><div class="tc-cat-footer"><span class="tc-cat-name">${esc(c.name)}</span>${count?`<span class="tc-cat-count">${count}</span>`:''}</div></div>`
+      return`<div class="tc-cat-card" ${catClick}><div class="tc-cat-img-wrap" style="background:${bgColor}"><span style="font-size:44px">${emoji}</span></div><div class="tc-cat-footer"><span class="tc-cat-name">${esc(c.name)}</span>${count?`<span class="tc-cat-count">${count}</span>`:''}</div></div>`
     }).join('')
   }catch(e){ console.warn('[cats]',e.message); const s=document.getElementById(secId); if(s)s.style.display='none' }
 }
