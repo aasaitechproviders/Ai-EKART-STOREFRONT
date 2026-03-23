@@ -7,183 +7,270 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --accent:   #111111;
-  --primary:  #111111;
-  --bg:       #ffffff;
-  --text:     #111827;
-  --text2:    #6b7280;
-  --text3:    #9ca3af;
-  --border:   #e5e7eb;
-  --surface:  #f9fafb;
-  --surface2: #f3f4f6;
-  --red:      #ef4444;
-  --green:    #10b981;
-  --yellow:   #f59e0b;
-  --radius:   12px;
-  --btn-r:    10px;
-  --font:     'DM Sans',system-ui,sans-serif;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#111111;--primary:#111111;
+  --bg:#f7f7f5;--text:#0f0f0f;--text2:#5c5c5c;--text3:#a0a0a0;
+  --border:#e8e5de;--surface:#ffffff;--surface2:#f0ede8;
+  --red:#d63a3a;--green:#1a8a57;--yellow:#d97706;
+  --radius:16px;--btn-r:10px;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --shadow-sm:0 1px 4px rgba(0,0,0,.06);
+  --shadow-md:0 6px 24px rgba(0,0,0,.08);
 }
-body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
 
-/* ── NAV ── */
-.page-nav {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 24px; height: 60px;
-  background: var(--navbar-bg, #fff);
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100; gap: 12px;
+/* ─── NAV ─── */
+.page-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;
+  background:rgba(247,247,245,.92);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;gap:16px;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
 }
-.nav-logo { font-size: 18px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 8px;  flex-shrink: 0; min-width: 0; }
-.nav-logo #navLogoText { display: none; font-size: 18px; font-weight: 800; line-height: 1; white-space: nowrap; }
-.nav-logo img { height: 28px; border-radius: 5px; object-fit: contain; }
-.nav-logo-accent { color: var(--accent); }
-.nav-store { font-size: 14px; font-weight: 600; color: var(--text2); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.nav-actions { display: flex; gap: 10px; flex-shrink: 0; }
-.btn-nav {
-  padding: 7px 14px; border-radius: calc(var(--btn-r) - 2px); font-size: 13px;
-  font-weight: 700; cursor: pointer; font-family: var(--font); text-decoration: none; transition: all .15s;
+.nav-logo{
+  font-family:var(--font-display);font-size:20px;font-weight:500;
+  text-decoration:none;color:var(--text);letter-spacing:-.01em;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
 }
-.btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text2); }
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-.btn-accent { background: var(--accent); border: 1.5px solid var(--accent); color: #fff; }
-.btn-accent:hover { opacity: .88; }
-
-/* ── LAYOUT ── */
-.page-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 24px 60px; }
-.page-header { margin-bottom: 28px; }
-.page-header h1 { font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
-.page-header p { font-size: 14px; color: var(--text2); margin-top: 4px; }
-
-.account-layout { display: grid; grid-template-columns: 210px 1fr; gap: 24px; align-items: start; }
-
-/* ── SIDEBAR ── */
-.sidebar {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 8px; position: sticky; top: 76px;
+.nav-logo #navLogoText{display:none;font-size:20px;white-space:nowrap}
+.nav-logo img{height:30px;border-radius:7px;object-fit:contain}
+.nav-logo-accent{color:var(--accent)}
+.nav-store{font-size:13px;font-weight:500;color:var(--text3);flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-actions{display:flex;gap:10px;flex-shrink:0}
+.btn-nav{
+  padding:9px 18px;border-radius:var(--btn-r);font-size:13px;font-weight:700;
+  cursor:pointer;font-family:var(--font);text-decoration:none;
+  transition:all .2s var(--ease-out);display:inline-flex;align-items:center;gap:6px;
 }
-.nav-item {
-  display: flex; align-items: center; gap: 10px; padding: 11px 14px;
-  border-radius: calc(var(--radius) - 3px); font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: all .15s; color: var(--text2);
+.btn-ghost{background:var(--surface);border:1.5px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn-accent{background:var(--accent);border:1.5px solid var(--accent);color:#fff}
+.btn-accent:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+
+/* ─── PAGE WRAP ─── */
+.page-wrap{max-width:1060px;margin:0 auto;padding:36px 28px 80px}
+.page-header{margin-bottom:32px}
+.page-title{font-family:var(--font-display);font-size:clamp(26px,4vw,36px);font-weight:400;letter-spacing:-.03em;margin-bottom:6px}
+.page-subtitle{font-size:14px;color:var(--text2);font-weight:400;line-height:1.5}
+
+/* ─── LAYOUT ─── */
+.account-layout{display:grid;grid-template-columns:220px 1fr;gap:26px;align-items:start}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:10px;
+  position:sticky;top:84px;
+  box-shadow:var(--shadow-sm);
 }
-.nav-item:hover { background: var(--bg); color: var(--text); }
-.nav-item.active { background: var(--bg); color: var(--accent); box-shadow: 0 1px 8px rgba(0,0,0,.07); }
-.nav-item .icon { font-size: 16px; width: 22px; text-align: center; }
-.logout-item { color: var(--red) !important; margin-top: 4px; }
-
-/* ── CONTENT ── */
-.content-panel { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
-.section-title { font-size: 16px; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; letter-spacing: -.01em; }
-
-/* ── PROFILE ── */
-.form-row { margin-bottom: 14px; }
-.form-row label { display: block; font-size: 11.5px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
-.form-input {
-  width: 100%; padding: 10px 13px; background: var(--surface); border: 1.5px solid var(--border);
-  border-radius: calc(var(--btn-r) - 2px); color: var(--text); font-family: var(--font); font-size: 14px;
-  outline: none; transition: border-color .2s;
+.nav-item{
+  display:flex;align-items:center;gap:11px;padding:12px 16px;
+  border-radius:calc(var(--radius) - 4px);font-size:13.5px;font-weight:600;
+  cursor:pointer;transition:all .2s var(--ease-out);color:var(--text2);
 }
-.form-input:focus { border-color: var(--accent); background: var(--bg); }
-.form-input:read-only { color: var(--text2); cursor: default; }
-.btn-save {
-  padding: 10px 22px; background: var(--accent); color: #fff;
-  border: none; border-radius: var(--btn-r); font-size: 14px; font-weight: 700;
-  cursor: pointer; font-family: var(--font); transition: opacity .15s;
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:var(--bg);color:var(--accent);box-shadow:var(--shadow-sm)}
+.nav-item .icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.nav-divider{height:1px;background:var(--border);margin:6px 10px}
+.logout-item{color:var(--red)!important;margin-top:2px}
+.logout-item:hover{background:rgba(214,58,58,.06)!important;color:var(--red)!important}
+
+/* ─── CONTENT PANEL ─── */
+.content-panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:28px;
+  box-shadow:var(--shadow-sm);
+  min-height:400px;
 }
-.btn-save:hover:not(:disabled) { opacity: .88; }
-.btn-save:disabled { opacity: .5; }
-
-/* ── ORDERS ── */
-.order-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
-.order-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 16px; background: var(--surface); flex-wrap: wrap; gap: 8px; cursor: pointer;
+.section-title{
+  font-family:var(--font-display);font-size:22px;font-weight:400;
+  margin-bottom:22px;letter-spacing:-.02em;
+  display:flex;align-items:center;gap:12px;
 }
-.order-num { font-size: 14px; font-weight: 800; font-family: 'DM Mono', monospace; }
-.order-date { font-size: 12px; color: var(--text2); }
-.order-total { font-size: 15px; font-weight: 900; font-family: 'DM Mono', monospace; color: var(--accent); }
-.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-.badge-green  { background: rgba(16,185,129,.1); color: var(--green); }
-.badge-yellow { background: rgba(245,158,11,.1); color: var(--yellow); }
-.badge-red    { background: rgba(239,68,68,.1); color: var(--red); }
-.badge-gray   { background: var(--surface2); color: var(--text2); }
-.badge-blue   { background: rgba(108,99,255,.1); color: #6c63ff; }
-.order-body { display: none; padding: 14px 16px; border-top: 1px solid var(--border); }
-.order-body.open { display: block; }
-.order-item-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-.order-item-row:last-child { border-bottom: none; }
-.order-item-img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--surface2); flex-shrink: 0; }
-.order-item-img-ph { width: 44px; height: 44px; border-radius: 8px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-.order-item-name { flex: 1; font-size: 13px; font-weight: 600; }
-.order-item-qty  { font-size: 12px; color: var(--text2); }
-.order-item-price { font-size: 13px; font-weight: 700; font-family: 'DM Mono', monospace; }
-.order-address { font-size: 13px; color: var(--text2); line-height: 1.6; padding: 10px 0; border-top: 1px solid var(--border); margin-top: 8px; }
-.tracking-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: rgba(16,185,129,.06); border: 1px solid rgba(16,185,129,.2); border-radius: 8px; margin-top: 8px; font-size: 13px; }
-.tracking-id { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--green); }
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ── ADDRESSES ── */
-.address-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
-.address-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; position: relative; }
-.address-card.default { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 4%, white); }
-.address-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px; }
-.address-name  { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.address-lines { font-size: 13px; color: var(--text2); line-height: 1.6; }
-.address-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-.btn-sm { padding: 5px 10px; border-radius: calc(var(--btn-r) - 3px); font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: var(--bg); font-family: var(--font); transition: all .15s; }
-.btn-sm:hover { border-color: var(--accent); color: var(--accent); }
-.btn-sm.danger:hover { border-color: var(--red); color: var(--red); }
-.default-badge { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 700; background: color-mix(in srgb, var(--accent) 12%, white); color: var(--accent); padding: 2px 7px; border-radius: 20px; }
-.add-address-card {
-  border: 2px dashed var(--border); border-radius: var(--radius); padding: 14px;
-  display: flex; align-items: center; justify-content: center; cursor: pointer;
-  min-height: 120px; font-size: 13px; font-weight: 700; color: var(--text2); transition: all .15s;
+/* ─── PROFILE FORM ─── */
+.form-row{margin-bottom:16px}
+.form-row label{
+  display:block;font-size:10.5px;font-weight:800;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;
 }
-.add-address-card:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 3%, white); }
-
-/* ── MODAL ── */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
-  z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px;
+.form-input{
+  width:100%;padding:11px 15px;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--btn-r);color:var(--text);font-family:var(--font);font-size:14px;
+  outline:none;transition:border-color .2s,box-shadow .2s;font-weight:500;
 }
-.modal-overlay.open { display: flex; }
-.modal { background: var(--bg); border-radius: var(--radius); padding: 26px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
-.modal-title { font-size: 17px; font-weight: 800; margin-bottom: 18px; letter-spacing: -.01em; }
-.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-.btn-cancel { padding: 9px 18px; background: transparent; border: 1.5px solid var(--border); border-radius: calc(var(--btn-r) - 2px); font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); color: var(--text2); transition: all .15s; }
-.btn-cancel:hover { border-color: var(--text); color: var(--text); }
-
-/* ── STATS ── */
-.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
-.stat-card { background: var(--surface); border-radius: var(--radius); padding: 16px; text-align: center; border: 1px solid var(--border); }
-.stat-num { font-size: 24px; font-weight: 900; font-family: 'DM Mono', monospace; color: var(--accent); }
-.stat-label { font-size: 12px; color: var(--text2); margin-top: 4px; font-weight: 600; }
-
-/* ── EMPTY / SKEL ── */
-.empty { text-align: center; padding: 50px 20px; color: var(--text2); }
-.empty-icon { font-size: 44px; margin-bottom: 14px; }
-.empty h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.skel { background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; }
-@keyframes shimmer { to { background-position: -200% 0; } }
-
-.toast {
-  position: fixed; bottom: 30px; left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--text); color: white; border-radius: var(--radius);
-  padding: 12px 20px; font-size: 14px; font-weight: 600;
-  opacity: 0; transition: all .3s; z-index: 600; white-space: nowrap; pointer-events: none;
+.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(17,17,17,.05);background:#fff}
+.form-input:read-only{color:var(--text3);cursor:default;background:var(--surface2)}
+.form-input::placeholder{color:var(--text3);font-weight:400}
+.btn-save{
+  padding:12px 24px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--btn-r);font-size:14px;font-weight:700;
+  cursor:pointer;font-family:var(--font);
+  transition:opacity .2s,transform .2s var(--ease-spring),box-shadow .2s;letter-spacing:.01em;
 }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.btn-save:hover:not(:disabled){opacity:.88;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.btn-save:disabled{opacity:.45}
 
-@media(max-width:700px) {
-  .account-layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; display: flex; flex-wrap: wrap; gap: 4px; }
-  .nav-item { flex: 1; min-width: 100px; justify-content: center; }
-  .nav-store { display: none; }
-  .stats-grid { grid-template-columns: repeat(3,1fr); }
+/* ─── ORDERS ─── */
+.order-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;transition:box-shadow .2s}
+.order-card:hover{box-shadow:var(--shadow-md)}
+.order-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;background:var(--bg);flex-wrap:wrap;gap:10px;
+  cursor:pointer;transition:background .15s;
+}
+.order-header:hover{background:var(--surface2)}
+.order-num{font-size:14.5px;font-weight:800;letter-spacing:.01em}
+.order-date{font-size:12px;color:var(--text3);margin-top:3px;font-weight:500}
+.order-total{font-size:16px;font-weight:800;color:var(--accent)}
+.badge{
+  display:inline-flex;align-items:center;padding:4px 10px;
+  border-radius:100px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+}
+.badge-green{background:rgba(26,138,87,.1);color:var(--green)}
+.badge-yellow{background:rgba(217,119,6,.1);color:var(--yellow)}
+.badge-red{background:rgba(214,58,58,.1);color:var(--red)}
+.badge-gray{background:var(--surface2);color:var(--text3)}
+.badge-blue{background:rgba(59,130,246,.1);color:#3b82f6}
+.order-body{display:none;padding:18px 20px;border-top:1px solid var(--border)}
+.order-body.open{display:block}
+.order-item-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+.order-item-row:last-of-type{border-bottom:none}
+.order-item-img{width:46px;height:46px;border-radius:10px;object-fit:cover;background:var(--surface2);flex-shrink:0}
+.order-item-img-ph{width:46px;height:46px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.order-item-name{flex:1;font-size:13.5px;font-weight:700;letter-spacing:-.01em}
+.order-item-qty{font-size:12px;color:var(--text3);font-weight:600}
+.order-item-price{font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.order-address{font-size:13px;color:var(--text2);line-height:1.7;padding:12px 0;border-top:1px solid var(--border);margin-top:6px;font-weight:400}
+.tracking-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--btn-r);
+  margin-top:10px;font-size:13px;font-weight:600;
+}
+.tracking-id{font-variant-numeric:tabular-nums;font-weight:800;color:var(--green)}
+
+/* ─── ADDRESSES ─── */
+.address-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:14px}
+.address-card{
+  border:1px solid var(--border);border-radius:var(--radius);padding:16px;
+  position:relative;transition:box-shadow .2s;background:var(--surface);
+}
+.address-card:hover{box-shadow:var(--shadow-md)}
+.address-card.default{border-color:var(--accent);background:rgba(17,17,17,.02)}
+.address-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:7px}
+.address-name{font-size:14px;font-weight:800;margin-bottom:5px;letter-spacing:-.01em}
+.address-lines{font-size:13px;color:var(--text2);line-height:1.7;font-weight:400}
+.address-actions{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.btn-sm{
+  padding:6px 12px;border-radius:var(--btn-r);font-size:12px;font-weight:700;
+  cursor:pointer;border:1.5px solid var(--border);background:var(--bg);
+  font-family:var(--font);transition:all .2s var(--ease-out);
+}
+.btn-sm:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn-sm.danger:hover{border-color:var(--red);color:var(--red)}
+.default-badge{
+  position:absolute;top:12px;right:12px;
+  font-size:10px;font-weight:800;
+  background:rgba(17,17,17,.08);color:var(--accent);
+  padding:3px 8px;border-radius:100px;letter-spacing:.06em;
+}
+.add-address-card{
+  border:2px dashed var(--border);border-radius:var(--radius);
+  padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;min-height:130px;
+  font-size:13px;font-weight:700;color:var(--text3);
+  transition:all .2s var(--ease-out);gap:8px;
+}
+.add-address-card:hover{border-color:var(--accent);color:var(--accent);background:rgba(17,17,17,.02)}
+.add-address-card .plus{font-size:28px;font-weight:300;line-height:1}
+
+/* ─── STATS GRID ─── */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+  margin-top:28px;padding-top:28px;border-top:1px solid var(--border);
+}
+.stat-card{
+  background:var(--bg);border-radius:var(--radius);padding:20px;
+  text-align:center;border:1px solid var(--border);transition:box-shadow .2s,transform .2s var(--ease-out);
+}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.stat-num{font-size:26px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat-label{font-size:12px;color:var(--text2);margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+
+/* ─── EMPTY STATE ─── */
+.empty{text-align:center;padding:56px 20px;color:var(--text2)}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:.7;display:block}
+.empty h3{font-family:var(--font-display);font-size:22px;font-weight:400;color:var(--text);margin-bottom:8px;letter-spacing:-.02em}
+.empty p{font-size:14px;line-height:1.6}
+
+/* ─── SKELETON ─── */
+.skel{
+  background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%);
+  background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite;border-radius:10px;
+}
+@keyframes shimmer{to{background-position:-200% 0}}
+
+/* ─── MODAL ─── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  backdrop-filter:blur(8px);z-index:500;display:none;
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--surface);border-radius:var(--radius);padding:30px;width:100%;max-width:440px;
+  box-shadow:0 24px 80px rgba(0,0,0,.2);border:1px solid var(--border);
+  animation:popIn .3s var(--ease-spring);
+}
+@keyframes popIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.modal-title{
+  font-family:var(--font-display);font-size:22px;font-weight:400;
+  margin-bottom:22px;letter-spacing:-.02em;
+}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:22px}
+.btn-cancel{
+  padding:10px 20px;background:transparent;border:1.5px solid var(--border);
+  border-radius:var(--btn-r);font-size:14px;font-weight:700;cursor:pointer;
+  font-family:var(--font);color:var(--text2);transition:all .2s var(--ease-out);
+}
+.btn-cancel:hover{border-color:var(--text);color:var(--text)}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:#0f0f0f;color:#fff;border-radius:100px;
+  padding:11px 24px;font-size:13.5px;font-weight:600;
+  opacity:0;transition:all .3s var(--ease-out);z-index:600;
+  white-space:nowrap;pointer-events:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);letter-spacing:.01em;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:720px){
+  .account-layout{grid-template-columns:1fr}
+  .sidebar{position:static;display:flex;flex-wrap:wrap;gap:5px}
+  .nav-item{flex:1;min-width:100px;justify-content:center;font-size:12.5px}
+  .nav-divider{display:none}
+  .nav-store{display:none}
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:480px){
+  .page-wrap{padding:24px 20px 80px}
+  .page-nav{padding:0 20px}
+  .content-panel{padding:20px}
 }
 </style>
 </head>
@@ -203,20 +290,21 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 
 <div class="page-wrap">
   <div class="page-header">
-    <h1>My Account</h1>
-    <p id="welcomeMsg">Loading…</p>
+    <h1 class="page-title">My Account</h1>
+    <p class="page-subtitle" id="welcomeMsg">Loading…</p>
   </div>
   <div class="account-layout">
     <div class="sidebar">
       <div class="nav-item active" onclick="showTab('orders')"    id="navOrders"><span class="icon">📋</span>My Orders</div>
       <div class="nav-item"        onclick="showTab('addresses')" id="navAddresses"><span class="icon">📍</span>Addresses</div>
       <div class="nav-item"        onclick="showTab('profile')"   id="navProfile"><span class="icon">👤</span>Profile</div>
+      <div class="nav-divider"></div>
       <div class="nav-item logout-item" onclick="logout()"><span class="icon">↩</span>Logout</div>
     </div>
     <div id="tabContent" class="content-panel">
-      <div class="skel" style="height:22px;width:120px;margin-bottom:16px;"></div>
-      <div class="skel" style="height:80px;border-radius:12px;margin-bottom:10px;"></div>
-      <div class="skel" style="height:80px;border-radius:12px;opacity:.7;"></div>
+      <div class="skel" style="height:20px;width:140px;margin-bottom:18px;"></div>
+      <div class="skel" style="height:82px;border-radius:12px;margin-bottom:12px;"></div>
+      <div class="skel" style="height:82px;border-radius:12px;opacity:.6;"></div>
     </div>
   </div>
 </div>
@@ -249,213 +337,110 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 <div class="toast" id="toast"></div>
 
 <script>
-/* ════════════════════════════════════
-   SLUG + URL
-════════════════════════════════════ */
-const _params = new URLSearchParams(location.search)
-function resolveSlug() {
-  const p = _params.get('store'); if (p) return p
-  const h = location.hostname
-  const SERVICE = ['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
-  if (h.endsWith('.aasaitech.in')) {
-    const sub = h.slice(0, h.indexOf('.aasaitech.in'))
-    const firstPart = sub.split('.')[0]
-    if (!SERVICE.includes(firstPart)) return firstPart
-    return null
-  }
-  if (!SERVICE.some(d => h.includes(d))) return h
+const _params=new URLSearchParams(location.search)
+function resolveSlug(){
+  const p=_params.get('store');if(p)return p
+  const h=location.hostname
+  const SERVICE=['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
+  if(h.endsWith('.aasaitech.in')){const sub=h.slice(0,h.indexOf('.aasaitech.in'));const firstPart=sub.split('.')[0];if(!SERVICE.includes(firstPart))return firstPart;return null}
+  if(!SERVICE.some(d=>h.includes(d)))return h
   return null
 }
-const slug = resolveSlug()
-const _isCustom = !_params.get('store') && slug !== null
-const storeUrl = (page, extra='') => _isCustom ? `${page}${extra?'?'+extra:''}` : `${page}?store=${slug}${extra?'&'+extra:''}`
-const API = 'https://apiv2.aasaitech.in'
-const token = localStorage.getItem(`cust_token_${slug}`)
-let customer = null, currency = '₹'
+const slug=resolveSlug()
+const _isCustom=!_params.get('store')&&slug!==null
+const storeUrl=(page,extra='')=>_isCustom?`${page}${extra?'?'+extra:''}`:`${page}?store=${slug}${extra?'&'+extra:''}`
+const API='https://apiv2.aasaitech.in'
+const token=localStorage.getItem(`cust_token_${slug}`)
+let customer=null,currency='₹'
 
-if (!token) location.href = storeUrl('customer-login.html', `redirect=${encodeURIComponent(location.href)}`)
+if(!token)location.href=storeUrl('customer-login.html',`redirect=${encodeURIComponent(location.href)}`)
 
-/* ════════════════════════════════════
-   THEME
-════════════════════════════════════ */
-
-/* ── Nav logo renderer ── */
-function renderNavLogo(cfg) {
-  const imgEl = document.getElementById('navLogoImg')
-  const txtEl = document.getElementById('navLogoText')
-  if (!imgEl && !txtEl) return
-  if (cfg.logo_url) {
-    // Logo image available — show image, hide text
-    if (imgEl) imgEl.innerHTML = `<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:130px;border-radius:6px;object-fit:contain;display:block;">`
-    if (txtEl) txtEl.style.display = 'none'
-  } else {
-    // No logo — show store name as styled text
-    if (imgEl) imgEl.innerHTML = ''
-    if (txtEl) {
-      const name = cfg.name || ''
-      if (name) {
-        txtEl.innerHTML = `<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`
-      } else {
-        txtEl.textContent = 'Store'
-      }
-      txtEl.style.display = 'inline-flex'
-      txtEl.style.alignItems = 'center'
-    }
+function renderNavLogo(cfg){
+  const imgEl=document.getElementById('navLogoImg'),txtEl=document.getElementById('navLogoText')
+  if(!imgEl&&!txtEl)return
+  if(cfg.logo_url){
+    if(imgEl)imgEl.innerHTML=`<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:130px;border-radius:6px;object-fit:contain;display:block;">`
+    if(txtEl)txtEl.style.display='none'
+  }else{
+    if(imgEl)imgEl.innerHTML=''
+    if(txtEl){const name=cfg.name||'';if(name){txtEl.innerHTML=`<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`}else{txtEl.textContent='Store'};txtEl.style.display='inline-flex';txtEl.style.alignItems='center'}
   }
 }
-function isColorDark(hex) {
-  const c = (hex||'').replace('#','')
-  if (c.length !== 6) return false
-  const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16)
-  return (r*299+g*587+b*114)/1000 < 145
+function isColorDark(hex){const c=(hex||'').replace('#','');if(c.length!==6)return false;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);return(r*299+g*587+b*114)/1000<145}
+function parseThemeSettings(raw){
+  if(!raw||typeof raw!=='object')return{}
+  let doc=raw
+  if(raw.published&&typeof raw.published==='object')doc=raw.published
+  else if(raw.draft&&typeof raw.draft==='object')doc=raw.draft
+  const s=doc.settings||doc
+  let navBgFromSection=null,navTextFromSection=null
+  const sections=doc.sections||[]
+  for(const sec of sections){const t=(sec.type||'').toLowerCase();if(t==='navbar'||t==='navigation'||t==='nav'||t==='header'){const sd=sec.data||sec.settings||{};navBgFromSection=sd.bgColor||sd.bg_color||sd.background||null;navTextFromSection=sd.textColor||sd.text_color||sd.linkColor||sd.link_color||null;break}}
+  return{primaryColor:s.primary_color||s.primaryColor||null,bgColor:s.secondary_color||s.bgColor||s.bg_color||null,textColor:s.accent_color||s.textColor||null,font:s.font_heading||s.fontHeading||s.font||null,radius:s.radius||s.border_radius||null,buttonStyle:s.button_style||s.buttonStyle||null,navBg:s.nav_bg||s.navBg||navBgFromSection||null,navTextColor:s.nav_text_color||s.navTextColor||navTextFromSection||null}
 }
-function parseThemeSettings(raw) {
-  if (!raw || typeof raw !== 'object') return {}
-  let doc = raw
-  if (raw.published && typeof raw.published === 'object') doc = raw.published
-  else if (raw.draft && typeof raw.draft === 'object') doc = raw.draft
-  const s = doc.settings || doc
-  // Scan sections[] for a navbar section to get its bgColor
-  let navBgFromSection = null, navTextFromSection = null
-  const sections = doc.sections || []
-  for (const sec of sections) {
-    const t = (sec.type || '').toLowerCase()
-    if (t === 'navbar' || t === 'navigation' || t === 'nav' || t === 'header') {
-      const sd = sec.data || sec.settings || {}
-      navBgFromSection   = sd.bgColor || sd.bg_color || sd.background || null
-      navTextFromSection = sd.textColor || sd.text_color || sd.linkColor || sd.link_color || null
-      break
-    }
-  }
-  return {
-    primaryColor: s.primary_color || s.primaryColor || null,
-    bgColor:      s.secondary_color || s.bgColor || s.bg_color || null,
-    textColor:    s.accent_color || s.textColor || null,
-    font:         s.font_heading || s.fontHeading || s.font || null,
-    radius:       s.radius || s.border_radius || null,
-    buttonStyle:  s.button_style || s.buttonStyle || null,
-    navBg:        s.nav_bg || s.navBg || navBgFromSection || null,
-    navTextColor: s.nav_text_color || s.navTextColor || navTextFromSection || null,
-  }
-}
-function applyCSSVars(cfg, theme) {
-  const R = document.documentElement
-  const primary = theme.primaryColor || cfg.brand_color || null
-  if (primary) {
-    R.style.setProperty('--accent', primary); R.style.setProperty('--primary', primary)
-    const accentText = document.getElementById('navAccentText')
-    // keep logo text style in sync
-  }
-  if (theme.bgColor) { R.style.setProperty('--bg', theme.bgColor); document.body.style.background = theme.bgColor }
-  if (theme.textColor) R.style.setProperty('--text', theme.textColor)
-  if (theme.radius) {
-    const r = typeof theme.radius === 'number' ? `${theme.radius}px` : String(theme.radius).includes('px') ? theme.radius : `${theme.radius}px`
-    R.style.setProperty('--radius', r)
-    const btnR = theme.buttonStyle === 'pill' ? '999px' : theme.buttonStyle === 'square' ? '4px' : r
-    R.style.setProperty('--btn-r', btnR)
-  }
-  if (theme.font && theme.font !== 'DM Sans' && theme.font !== 'system-ui') {
-    const fid = 'gf-' + theme.font.replace(/\s+/g,'-')
-    if (!document.getElementById(fid)) {
-      const l = document.createElement('link'); l.id = fid; l.rel = 'stylesheet'
-      l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`
-      document.head.appendChild(l)
-    }
-    R.style.setProperty('--font', `'${theme.font}', 'DM Sans',system-ui,sans-serif`)
-    document.body.style.fontFamily = `'${theme.font}', 'DM Sans',system-ui,sans-serif`
-  }
-  if (theme.navBg) {
-    const R2 = document.documentElement
-    R2.style.setProperty('--navbar-bg', theme.navBg)
-    const nav = document.getElementById('pageNav')
-    if (nav) {
-      nav.style.background = theme.navBg
-      nav.style.borderBottomColor = isColorDark(theme.navBg) ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)'
-      const isDark = isColorDark(theme.navBg)
-      const textCol = theme.navTextColor || (isDark ? '#ffffff' : '')
-      if (textCol) {
-        nav.style.color = textCol
-        // Cascade to direct text children that have explicit inline colors
-        nav.querySelectorAll('a, span, button').forEach(el => {
-          if (!el.style.color) el.style.color = textCol
-        })
-      }
-    }
-  }
+function applyCSSVars(cfg,theme){
+  const R=document.documentElement
+  const primary=theme.primaryColor||cfg.brand_color||null
+  if(primary){R.style.setProperty('--accent',primary);R.style.setProperty('--primary',primary)}
+  if(theme.bgColor){R.style.setProperty('--bg',theme.bgColor);document.body.style.background=theme.bgColor}
+  if(theme.textColor)R.style.setProperty('--text',theme.textColor)
+  if(theme.radius){const r=typeof theme.radius==='number'?`${theme.radius}px`:String(theme.radius).includes('px')?theme.radius:`${theme.radius}px`;R.style.setProperty('--radius',r);const btnR=theme.buttonStyle==='pill'?'999px':theme.buttonStyle==='square'?'4px':r;R.style.setProperty('--btn-r',btnR)}
+  if(theme.font&&theme.font!=='Plus Jakarta Sans'&&theme.font!=='system-ui'){const fid='gf-'+theme.font.replace(/\s+/g,'-');if(!document.getElementById(fid)){const l=document.createElement('link');l.id=fid;l.rel='stylesheet';l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`;document.head.appendChild(l)};R.style.setProperty('--font',`'${theme.font}', 'Plus Jakarta Sans',system-ui,sans-serif`);document.body.style.fontFamily=`'${theme.font}', 'Plus Jakarta Sans',system-ui,sans-serif`}
+  if(theme.navBg){R.style.setProperty('--navbar-bg',theme.navBg);const nav=document.getElementById('pageNav');if(nav){nav.style.background=theme.navBg;nav.style.borderBottomColor=isColorDark(theme.navBg)?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.07)';const isDark=isColorDark(theme.navBg);const textCol=theme.navTextColor||(isDark?'#ffffff':'');if(textCol){nav.style.color=textCol;nav.querySelectorAll('a, span, button').forEach(el=>{if(!el.style.color)el.style.color=textCol})}}}
 }
 
-/* ════════════════════════════════════
-   INIT
-════════════════════════════════════ */
-async function init() {
-  // Nav links
-  document.getElementById('navLogo').href = storeUrl('index.html')
-  document.getElementById('navShop').href = storeUrl('index.html')
-  document.getElementById('navCart').href = storeUrl('cart.html')
-
-  try {
-    const [cfgRes, themeRes] = await Promise.allSettled([
-      fetch(`${API}/shop/${slug}/config`).then(r => r.json()),
-      fetch(`${API}/shop/${slug}/theme`).then(r => r.json()),
-    ])
-    let cfg = {}
-    if (cfgRes.status === 'fulfilled' && !cfgRes.value.error) {
-      cfg = cfgRes.value
-      document.getElementById('navStoreName').textContent = cfg.name || ''
-      document.title = `My Account — ${cfg.name || 'Store'}`
-      if (cfg.brand_color) document.documentElement.style.setProperty('--accent', cfg.brand_color)
-      if (cfg.currency === 'USD') currency = '$'; else if (cfg.currency === 'EUR') currency = '€'
-      
+async function init(){
+  document.getElementById('navLogo').href=storeUrl('index.html')
+  document.getElementById('navShop').href=storeUrl('index.html')
+  document.getElementById('navCart').href=storeUrl('cart.html')
+  try{
+    const[cfgRes,themeRes]=await Promise.allSettled([fetch(`${API}/shop/${slug}/config`).then(r=>r.json()),fetch(`${API}/shop/${slug}/theme`).then(r=>r.json())])
+    let cfg={}
+    if(cfgRes.status==='fulfilled'&&!cfgRes.value.error){
+      cfg=cfgRes.value
+      document.getElementById('navStoreName').textContent=cfg.name||''
+      document.title=`My Account — ${cfg.name||'Store'}`
+      if(cfg.brand_color)document.documentElement.style.setProperty('--accent',cfg.brand_color)
+      if(cfg.currency==='USD')currency='$';else if(cfg.currency==='EUR')currency='€'
       renderNavLogo(cfg)
     }
-    const theme = themeRes.status === 'fulfilled' ? parseThemeSettings(themeRes.value) : {}
-    applyCSSVars(cfg, theme)
-  } catch(e) { console.warn('[account theme]', e.message) }
-
-  // Load customer profile
-  try {
-    const res = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() })
-    if (res.status === 401) { logout(); return }
-    customer = await res.json()
-    document.getElementById('welcomeMsg').textContent = `Welcome back, ${customer.name}! 👋`
-  } catch { document.getElementById('welcomeMsg').textContent = 'Welcome back!' }
-
+    const theme=themeRes.status==='fulfilled'?parseThemeSettings(themeRes.value):{}
+    applyCSSVars(cfg,theme)
+  }catch(e){console.warn('[account theme]',e.message)}
+  try{
+    const res=await fetch(`${API}/shop/${slug}/customers/me`,{headers:authHeaders()})
+    if(res.status===401){logout();return}
+    customer=await res.json()
+    document.getElementById('welcomeMsg').textContent=`Welcome back, ${customer.name}! 👋`
+  }catch{document.getElementById('welcomeMsg').textContent='Welcome back!'}
   showTab('orders')
 }
 
-function authHeaders() {
-  return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+function authHeaders(){return{'Content-Type':'application/json','Authorization':'Bearer '+token}}
+
+function showTab(tab){
+  document.querySelectorAll('.nav-item[id^="nav"]').forEach(el=>el.classList.remove('active'))
+  const map={orders:'navOrders',addresses:'navAddresses',profile:'navProfile'}
+  if(map[tab])document.getElementById(map[tab])?.classList.add('active')
+  const content=document.getElementById('tabContent')
+  if(tab==='orders')renderOrders(content)
+  if(tab==='addresses')renderAddresses(content)
+  if(tab==='profile')renderProfile(content)
 }
 
-/* ════════════════════════════════════
-   TABS
-════════════════════════════════════ */
-function showTab(tab) {
-  document.querySelectorAll('.nav-item[id^="nav"]').forEach(el => el.classList.remove('active'))
-  const map = { orders:'navOrders', addresses:'navAddresses', profile:'navProfile' }
-  if (map[tab]) document.getElementById(map[tab])?.classList.add('active')
-  const content = document.getElementById('tabContent')
-  if (tab === 'orders')    renderOrders(content)
-  if (tab === 'addresses') renderAddresses(content)
-  if (tab === 'profile')   renderProfile(content)
-}
-
-/* ════════════════════════════════════
-   ORDERS
-════════════════════════════════════ */
-async function renderOrders(el) {
-  el.innerHTML = `<div class="section-title">📋 My Orders</div><div class="skel" style="height:80px;border-radius:12px;margin-bottom:10px;"></div><div class="skel" style="height:80px;border-radius:12px;opacity:.7;"></div>`
-  try {
-    const data   = await fetch(`${API}/shop/${slug}/customers/me/orders`, { headers: authHeaders() }).then(r => r.json())
-    const orders = data.orders || []
-    if (!orders.length) {
-      el.innerHTML = `<div class="section-title">📋 My Orders</div><div class="empty"><div class="empty-icon">📦</div><h3>No orders yet</h3><p>Start shopping and your orders will appear here.</p><a href="${storeUrl('index.html')}" style="display:inline-block;margin-top:16px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:var(--btn-r);text-decoration:none;font-weight:700;">Browse Products</a></div>`; return
+async function renderOrders(el){
+  el.innerHTML=`<div class="section-title">My Orders</div><div class="skel" style="height:82px;border-radius:12px;margin-bottom:12px;"></div><div class="skel" style="height:82px;border-radius:12px;opacity:.6;"></div>`
+  try{
+    const data=await fetch(`${API}/shop/${slug}/customers/me/orders`,{headers:authHeaders()}).then(r=>r.json())
+    const orders=data.orders||[]
+    if(!orders.length){
+      el.innerHTML=`<div class="section-title">My Orders</div><div class="empty"><span class="empty-icon">📦</span><h3>No orders yet</h3><p>Start shopping and your orders will appear here.</p><a href="${storeUrl('index.html')}" style="display:inline-block;margin-top:20px;padding:12px 28px;background:var(--accent);color:#fff;border-radius:var(--btn-r);text-decoration:none;font-weight:700;font-size:14px">Browse Products →</a></div>`;return
     }
-    const statusBadge = s => {
-      const m = { pending:'badge-yellow', confirmed:'badge-blue', shipped:'badge-blue', delivered:'badge-green', cancelled:'badge-red', returned:'badge-gray' }
-      return `<span class="badge ${m[s]||'badge-gray'}">${s}</span>`
+    const statusBadge=s=>{
+      const m={pending:'badge-yellow',confirmed:'badge-blue',shipped:'badge-blue',delivered:'badge-green',cancelled:'badge-red',returned:'badge-gray'}
+      return`<span class="badge ${m[s]||'badge-gray'}">${s}</span>`
     }
-    el.innerHTML = `<div class="section-title">📋 My Orders</div>` + orders.map(o => `
+    el.innerHTML=`<div class="section-title">My Orders</div>`+orders.map(o=>`
       <div class="order-card">
         <div class="order-header" onclick="toggleOrder('ord-${o._id}')">
           <div>
@@ -465,158 +450,152 @@ async function renderOrders(el) {
           <div style="display:flex;align-items:center;gap:10px;">
             ${statusBadge(o.status)}
             <div class="order-total">${currency}${o.total?.toFixed(2)}</div>
-            <span style="color:var(--text3);font-size:12px;">▾</span>
+            <span style="color:var(--text3);font-size:12px">▾</span>
           </div>
         </div>
         <div class="order-body" id="ord-${o._id}">
-          ${(o.items||[]).map(i => `
+          ${(o.items||[]).map(i=>`
             <div class="order-item-row">
-              ${i.image ? `<img class="order-item-img" src="${i.image}" alt="">` : `<div class="order-item-img-ph">📦</div>`}
-              <div class="order-item-name">${esc(i.name)}${i.variant?`<br><span style="font-size:11px;color:var(--text2);">${esc(i.variant)}</span>`:''}</div>
+              ${i.image?`<img class="order-item-img" src="${i.image}" alt="">`:`<div class="order-item-img-ph">📦</div>`}
+              <div class="order-item-name">${esc(i.name)}${i.variant?`<br><span style="font-size:11px;color:var(--text3)">${esc(i.variant)}</span>`:''}</div>
               <div class="order-item-qty">×${i.qty}</div>
               <div class="order-item-price">${currency}${(i.price*i.qty).toFixed(2)}</div>
             </div>`).join('')}
           <div class="order-address"><strong>Ship to:</strong> ${esc(o.shipping_address?.line1)}, ${esc(o.shipping_address?.city)}, ${esc(o.shipping_address?.state)} — ${esc(o.shipping_address?.pincode)}</div>
-          ${o.tracking_number ? `<div class="tracking-row">🚚 Tracking: <span class="tracking-id">${esc(o.tracking_number)}</span></div>` : ''}
+          ${o.tracking_number?`<div class="tracking-row">🚚 Tracking: <span class="tracking-id">${esc(o.tracking_number)}</span></div>`:''}
         </div>
       </div>`).join('')
-  } catch(e) {
-    el.innerHTML = `<div class="section-title">📋 My Orders</div><div style="color:var(--red);font-size:14px;">Failed to load orders: ${e.message}</div>`
+  }catch(e){
+    el.innerHTML=`<div class="section-title">My Orders</div><div style="color:var(--red);font-size:14px;font-weight:600">Failed to load orders: ${e.message}</div>`
   }
 }
-function toggleOrder(id) { document.getElementById(id)?.classList.toggle('open') }
+function toggleOrder(id){document.getElementById(id)?.classList.toggle('open')}
 
-/* ════════════════════════════════════
-   ADDRESSES
-════════════════════════════════════ */
-async function renderAddresses(el) {
-  if (!customer) { el.innerHTML = '<div class="section-title">📍 Addresses</div><div style="color:var(--text2)">Loading…</div>'; return }
-  const addrs = customer.addresses || []
-  el.innerHTML = `
-    <div class="section-title">📍 My Addresses</div>
+async function renderAddresses(el){
+  if(!customer){el.innerHTML='<div class="section-title">Addresses</div><div style="color:var(--text2)">Loading…</div>';return}
+  const addrs=customer.addresses||[]
+  el.innerHTML=`
+    <div class="section-title">My Addresses</div>
     <div class="address-grid">
-      ${addrs.map(a => `
-        <div class="address-card ${a.is_default ? 'default' : ''}">
-          ${a.is_default ? '<span class="default-badge">Default</span>' : ''}
-          <div class="address-label">${esc(a.label || 'Home')}</div>
-          <div class="address-name">${esc(a.name || '')}</div>
-          <div class="address-lines">${esc(a.line1)}${a.line2?',<br>'+esc(a.line2):''}<br>${esc(a.city)}, ${esc(a.state)} — ${esc(a.pincode)}<br>${esc(a.country || 'India')}</div>
-          ${a.phone ? `<div style="font-size:12px;color:var(--text2);margin-top:4px;">📞 ${esc(a.phone)}</div>` : ''}
+      ${addrs.map(a=>`
+        <div class="address-card ${a.is_default?'default':''}">
+          ${a.is_default?'<span class="default-badge">Default</span>':''}
+          <div class="address-label">${esc(a.label||'Home')}</div>
+          <div class="address-name">${esc(a.name||'')}</div>
+          <div class="address-lines">${esc(a.line1)}${a.line2?', '+esc(a.line2):''}<br>${esc(a.city)}, ${esc(a.state)} — ${esc(a.pincode)}<br>${esc(a.country||'India')}</div>
+          ${a.phone?`<div style="font-size:12px;color:var(--text3);margin-top:5px;font-weight:600">📞 ${esc(a.phone)}</div>`:''}
           <div class="address-actions">
             <button class="btn-sm" onclick="editAddress('${a._id}')">✏️ Edit</button>
-            ${!a.is_default ? `<button class="btn-sm" onclick="setDefaultAddress('${a._id}')">⭐ Default</button>` : ''}
+            ${!a.is_default?`<button class="btn-sm" onclick="setDefaultAddress('${a._id}')">⭐ Default</button>`:''}
             <button class="btn-sm danger" onclick="deleteAddress('${a._id}')">🗑</button>
           </div>
         </div>`).join('')}
-      <div class="add-address-card" onclick="openAddAddr()">+ Add Address</div>
+      <div class="add-address-card" onclick="openAddAddr()">
+        <span class="plus">+</span>
+        Add Address
+      </div>
     </div>`
 }
 
-function openAddAddr() {
-  document.getElementById('addrModalTitle').textContent = 'Add Address'
-  document.getElementById('addrEditId').value = ''
-  ;['addrLabel','addrName','addrPhone','addrLine1','addrLine2','addrCity','addrState','addrPincode'].forEach(id => document.getElementById(id).value = '')
-  document.getElementById('addrCountry').value = 'India'
+function openAddAddr(){
+  document.getElementById('addrModalTitle').textContent='Add Address'
+  document.getElementById('addrEditId').value=''
+  ;['addrLabel','addrName','addrPhone','addrLine1','addrLine2','addrCity','addrState','addrPincode'].forEach(id=>document.getElementById(id).value='')
+  document.getElementById('addrCountry').value='India'
   document.getElementById('addrModal').classList.add('open')
 }
-function editAddress(id) {
-  const a = customer.addresses?.find(x => String(x._id) === String(id)); if (!a) return
-  document.getElementById('addrModalTitle').textContent = 'Edit Address'
-  document.getElementById('addrEditId').value   = a._id
-  document.getElementById('addrLabel').value    = a.label || ''
-  document.getElementById('addrName').value     = a.name || ''
-  document.getElementById('addrPhone').value    = a.phone || ''
-  document.getElementById('addrLine1').value    = a.line1 || ''
-  document.getElementById('addrLine2').value    = a.line2 || ''
-  document.getElementById('addrCity').value     = a.city || ''
-  document.getElementById('addrState').value    = a.state || ''
-  document.getElementById('addrPincode').value  = a.pincode || ''
-  document.getElementById('addrCountry').value  = a.country || 'India'
+function editAddress(id){
+  const a=customer.addresses?.find(x=>String(x._id)===String(id));if(!a)return
+  document.getElementById('addrModalTitle').textContent='Edit Address'
+  document.getElementById('addrEditId').value=a._id
+  document.getElementById('addrLabel').value=a.label||''
+  document.getElementById('addrName').value=a.name||''
+  document.getElementById('addrPhone').value=a.phone||''
+  document.getElementById('addrLine1').value=a.line1||''
+  document.getElementById('addrLine2').value=a.line2||''
+  document.getElementById('addrCity').value=a.city||''
+  document.getElementById('addrState').value=a.state||''
+  document.getElementById('addrPincode').value=a.pincode||''
+  document.getElementById('addrCountry').value=a.country||'India'
   document.getElementById('addrModal').classList.add('open')
 }
-function closeAddrModal() { document.getElementById('addrModal').classList.remove('open') }
+function closeAddrModal(){document.getElementById('addrModal').classList.remove('open')}
 
-async function saveAddress() {
-  const editId  = document.getElementById('addrEditId').value
-  const line1   = document.getElementById('addrLine1').value.trim()
-  const city    = document.getElementById('addrCity').value.trim()
-  const pincode = document.getElementById('addrPincode').value.trim()
-  if (!line1 || !city || !pincode) { toast('Line 1, city and pincode are required'); return }
-  const body = { label: document.getElementById('addrLabel').value.trim()||'Home', name: document.getElementById('addrName').value.trim(), phone: document.getElementById('addrPhone').value.trim(), line1, line2: document.getElementById('addrLine2').value.trim(), city, state: document.getElementById('addrState').value.trim(), pincode, country: document.getElementById('addrCountry').value.trim()||'India' }
-  try {
-    const url = editId ? `${API}/shop/${slug}/customers/me/addresses/${editId}` : `${API}/shop/${slug}/customers/me/addresses`
-    await fetch(url, { method: editId?'PUT':'POST', headers: authHeaders(), body: JSON.stringify(body) })
-    toast(editId ? 'Address updated!' : 'Address added!'); closeAddrModal()
-    customer = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() }).then(r => r.json())
+async function saveAddress(){
+  const editId=document.getElementById('addrEditId').value
+  const line1=document.getElementById('addrLine1').value.trim()
+  const city=document.getElementById('addrCity').value.trim()
+  const pincode=document.getElementById('addrPincode').value.trim()
+  if(!line1||!city||!pincode){toast('Line 1, city and pincode are required');return}
+  const body={label:document.getElementById('addrLabel').value.trim()||'Home',name:document.getElementById('addrName').value.trim(),phone:document.getElementById('addrPhone').value.trim(),line1,line2:document.getElementById('addrLine2').value.trim(),city,state:document.getElementById('addrState').value.trim(),pincode,country:document.getElementById('addrCountry').value.trim()||'India'}
+  try{
+    const url=editId?`${API}/shop/${slug}/customers/me/addresses/${editId}`:`${API}/shop/${slug}/customers/me/addresses`
+    await fetch(url,{method:editId?'PUT':'POST',headers:authHeaders(),body:JSON.stringify(body)})
+    toast(editId?'Address updated!':'Address added!');closeAddrModal()
+    customer=await fetch(`${API}/shop/${slug}/customers/me`,{headers:authHeaders()}).then(r=>r.json())
     renderAddresses(document.getElementById('tabContent'))
-  } catch { toast('Failed to save address') }
+  }catch{toast('Failed to save address')}
 }
-async function deleteAddress(id) {
-  if (!confirm('Delete this address?')) return
-  try {
-    await fetch(`${API}/shop/${slug}/customers/me/addresses/${id}`, { method:'DELETE', headers: authHeaders() })
-    customer = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() }).then(r => r.json())
-    renderAddresses(document.getElementById('tabContent')); toast('Address deleted')
-  } catch { toast('Failed to delete') }
+async function deleteAddress(id){
+  if(!confirm('Delete this address?'))return
+  try{
+    await fetch(`${API}/shop/${slug}/customers/me/addresses/${id}`,{method:'DELETE',headers:authHeaders()})
+    customer=await fetch(`${API}/shop/${slug}/customers/me`,{headers:authHeaders()}).then(r=>r.json())
+    renderAddresses(document.getElementById('tabContent'));toast('Address deleted')
+  }catch{toast('Failed to delete')}
 }
-async function setDefaultAddress(id) {
-  try {
-    await fetch(`${API}/shop/${slug}/customers/me/addresses/${id}/default`, { method:'POST', headers: authHeaders() })
-    customer = await fetch(`${API}/shop/${slug}/customers/me`, { headers: authHeaders() }).then(r => r.json())
-    renderAddresses(document.getElementById('tabContent')); toast('Default address updated!')
-  } catch { toast('Failed') }
+async function setDefaultAddress(id){
+  try{
+    await fetch(`${API}/shop/${slug}/customers/me/addresses/${id}/default`,{method:'POST',headers:authHeaders()})
+    customer=await fetch(`${API}/shop/${slug}/customers/me`,{headers:authHeaders()}).then(r=>r.json())
+    renderAddresses(document.getElementById('tabContent'));toast('Default address updated!')
+  }catch{toast('Failed')}
 }
 
-/* ════════════════════════════════════
-   PROFILE
-════════════════════════════════════ */
-function renderProfile(el) {
-  if (!customer) { el.innerHTML = '<div class="section-title">👤 Profile</div><div style="color:var(--text2)">Loading…</div>'; return }
-  el.innerHTML = `
-    <div class="section-title">👤 Profile</div>
+function renderProfile(el){
+  if(!customer){el.innerHTML='<div class="section-title">Profile</div><div style="color:var(--text2)">Loading…</div>';return}
+  el.innerHTML=`
+    <div class="section-title">Profile</div>
     <div class="form-row"><label>Full Name</label><input class="form-input" id="profName" value="${esc(customer.name||'')}"></div>
     <div class="form-row"><label>Email</label><input class="form-input" id="profEmail" value="${esc(customer.email||'')}" readonly></div>
     <div class="form-row"><label>Phone</label><input class="form-input" id="profPhone" value="${esc(customer.phone||'')}" placeholder="+91 98765 43210"></div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;">
-      <input type="checkbox" id="profMktEmail" style="width:16px;height:16px;accent-color:var(--accent);" ${customer.marketing_consent?.email ? 'checked' : ''}>
-      <label for="profMktEmail" style="font-size:13px;color:var(--text2);cursor:pointer;">Receive promotional emails</label>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;">
+      <input type="checkbox" id="profMktEmail" style="width:16px;height:16px;accent-color:var(--accent);" ${customer.marketing_consent?.email?'checked':''}>
+      <label for="profMktEmail" style="font-size:13.5px;color:var(--text2);cursor:pointer;font-weight:500">Receive promotional emails &amp; exclusive offers</label>
     </div>
     <button class="btn-save" id="btnSaveProfile" onclick="saveProfile()">Save Changes</button>
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-num">${customer.order_count || 0}</div><div class="stat-label">Orders</div></div>
+      <div class="stat-card"><div class="stat-num">${customer.order_count||0}</div><div class="stat-label">Orders</div></div>
       <div class="stat-card"><div class="stat-num">${currency}${(customer.total_spend||0).toFixed(0)}</div><div class="stat-label">Total Spent</div></div>
-      <div class="stat-card"><div class="stat-num">${customer.addresses?.length || 0}</div><div class="stat-label">Addresses</div></div>
+      <div class="stat-card"><div class="stat-num">${customer.addresses?.length||0}</div><div class="stat-label">Addresses</div></div>
     </div>`
 }
-async function saveProfile() {
-  const name  = document.getElementById('profName').value.trim()
-  const phone = document.getElementById('profPhone').value.trim()
-  const mkt   = document.getElementById('profMktEmail').checked
-  if (!name) { toast('Name is required'); return }
-  const btn = document.getElementById('btnSaveProfile'); btn.disabled = true; btn.textContent = 'Saving…'
-  try {
-    const res  = await fetch(`${API}/shop/${slug}/customers/me`, { method:'PUT', headers: authHeaders(), body: JSON.stringify({name, phone, marketing_consent:{email:mkt, sms:false}}) })
-    const data = await res.json(); if (!res.ok) throw new Error(data.error)
-    customer   = data.customer
-    localStorage.setItem(`cust_name_${slug}`, name)
-    document.getElementById('welcomeMsg').textContent = `Welcome back, ${name}! 👋`
+async function saveProfile(){
+  const name=document.getElementById('profName').value.trim()
+  const phone=document.getElementById('profPhone').value.trim()
+  const mkt=document.getElementById('profMktEmail').checked
+  if(!name){toast('Name is required');return}
+  const btn=document.getElementById('btnSaveProfile');btn.disabled=true;btn.textContent='Saving…'
+  try{
+    const res=await fetch(`${API}/shop/${slug}/customers/me`,{method:'PUT',headers:authHeaders(),body:JSON.stringify({name,phone,marketing_consent:{email:mkt,sms:false}})})
+    const data=await res.json();if(!res.ok)throw new Error(data.error)
+    customer=data.customer
+    localStorage.setItem(`cust_name_${slug}`,name)
+    document.getElementById('welcomeMsg').textContent=`Welcome back, ${name}! 👋`
     toast('Profile updated! ✅')
-  } catch(e) { toast(e.message || 'Failed to save') }
-  finally { btn.disabled = false; btn.textContent = 'Save Changes' }
+  }catch(e){toast(e.message||'Failed to save')}
+  finally{btn.disabled=false;btn.textContent='Save Changes'}
 }
 
-function logout() {
+function logout(){
   localStorage.removeItem(`cust_token_${slug}`)
   localStorage.removeItem(`cust_name_${slug}`)
   localStorage.removeItem(`cust_email_${slug}`)
-  location.href = storeUrl('index.html')
+  location.href=storeUrl('index.html')
 }
 
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-function toast(msg) {
-  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show')
-  setTimeout(() => t.classList.remove('show'), 2500)
-}
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
 init()
 </script>
