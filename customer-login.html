@@ -6,118 +6,342 @@
 <title>Login</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --accent:#111111;--primary:#111111;
-  --bg:#ffffff;--text:#111827;--text2:#6b7280;--text3:#9ca3af;
-  --border:#e5e7eb;--surface:#f9fafb;
-  --red:#ef4444;--green:#10b981;
-  --radius:12px;--btn-r:8px;
-  --font:'DM Sans',system-ui,sans-serif;
-  --font-display:'DM Serif Display',serif;
+  --bg:#fafaf8;--text:#0f0f0f;--text2:#5c5c5c;--text3:#a3a3a3;
+  --border:#e5e2db;--surface:#ffffff;--surface2:#f5f4f0;
+  --red:#d63a3a;--green:#1a8a57;
+  --radius:16px;--btn-r:10px;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-display:'Cormorant Garamond',Georgia,serif;
   --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 20px rgba(0,0,0,.08),0 1px 4px rgba(0,0,0,.04);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.12),0 4px 16px rgba(0,0,0,.06);
 }
-body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
 
-/* ── NAV ── */
+/* ─── NOISE OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* ─── NAV ─── */
 .page-nav{
-  background:var(--navbar-bg,rgba(255,255,255,.97));
+  background:rgba(250,250,248,.9);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;height:62px;
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  padding:0 32px;height:64px;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  position:relative;z-index:10;
 }
 .nav-logo{
-  font-family:var(--font-display);font-size:19px;font-weight:400;
-  text-decoration:none;color:var(--text);
-  display:flex;align-items:center;gap:8px;flex-shrink:0;letter-spacing:-.02em;
+  font-family:var(--font-display);font-size:20px;font-weight:500;
+  text-decoration:none;color:var(--text);letter-spacing:-.01em;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
 }
-.nav-logo #navLogoText{display:none;font-size:19px;white-space:nowrap}
-.nav-logo img{height:28px;border-radius:5px;object-fit:contain}
+.nav-logo #navLogoText{display:none;font-size:20px;white-space:nowrap}
+.nav-logo img{height:30px;border-radius:7px;object-fit:contain}
 .nav-logo-text{color:var(--accent)}
-.nav-link{font-size:13px;font-weight:600;color:var(--text2);text-decoration:none;transition:color .15s}
-.nav-link:hover{color:var(--accent)}
+.nav-link{
+  font-size:13px;font-weight:600;color:var(--text2);
+  display:flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:var(--btn-r);
+  border:1px solid var(--border);background:var(--surface);
+  transition:all .2s var(--ease-out);
+}
+.nav-link:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
 
-/* ── AUTH CARD ── */
-.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+/* ─── MAIN LAYOUT ─── */
+.auth-wrap{
+  flex:1;display:grid;grid-template-columns:1fr 1fr;
+  position:relative;z-index:1;
+}
+
+/* ─── LEFT PANEL ─── */
+.auth-brand{
+  position:relative;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  padding:60px 48px;
+  background:linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 40%, #262626 100%);
+  overflow:hidden;
+}
+.auth-brand::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 20%, rgba(var(--accent-rgb,17,17,17),.15) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(255,255,255,.03) 0%, transparent 60%);
+}
+.auth-brand::after{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+.brand-content{position:relative;z-index:1;text-align:center;max-width:360px}
+.brand-logo-wrap{margin-bottom:40px}
+.brand-logo-wrap img{
+  height:72px;border-radius:16px;object-fit:contain;
+  display:block;margin:0 auto;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+}
+.brand-logo-icon{
+  width:72px;height:72px;border-radius:16px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+.brand-tagline{
+  font-family:var(--font-display);
+  font-size:clamp(28px,3vw,38px);
+  font-weight:300;line-height:1.2;
+  color:rgba(255,255,255,.95);
+  letter-spacing:-.01em;
+  margin-bottom:16px;
+}
+.brand-tagline em{font-style:italic;color:rgba(255,255,255,.6)}
+.brand-sub{
+  font-size:14px;font-weight:400;
+  color:rgba(255,255,255,.4);line-height:1.7;
+}
+.brand-features{
+  margin-top:40px;display:flex;flex-direction:column;gap:14px;text-align:left;
+}
+.brand-feature{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;
+  backdrop-filter:blur(10px);
+}
+.brand-feature-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.brand-feature-text{font-size:13px;color:rgba(255,255,255,.6);font-weight:500}
+.brand-feature-text strong{color:rgba(255,255,255,.88);display:block;font-weight:600;margin-bottom:1px}
+
+/* Floating orbs */
+.brand-orb{
+  position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;
+}
+.brand-orb-1{
+  width:300px;height:300px;
+  top:-80px;right:-80px;
+  background:radial-gradient(circle,rgba(255,255,255,.04),transparent);
+}
+.brand-orb-2{
+  width:200px;height:200px;
+  bottom:-50px;left:-50px;
+  background:radial-gradient(circle,rgba(255,255,255,.03),transparent);
+}
+
+/* ─── RIGHT PANEL ─── */
+.auth-form-side{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:48px 40px;background:var(--bg);
+  overflow-y:auto;
+}
 .auth-card{
-  width:100%;max-width:420px;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--radius);
-  padding:36px;box-shadow:0 4px 32px rgba(0,0,0,.06);
+  width:100%;max-width:420px;
+  animation:fadeUp .5s var(--ease-out) both;
 }
-.auth-logo{text-align:center;margin-bottom:26px}
-.auth-logo .logo-icon{font-size:40px;margin-bottom:10px;line-height:1}
-.auth-logo img{height:58px;border-radius:calc(var(--radius) - 2px);object-fit:contain;margin-bottom:10px;display:block;margin-inline:auto}
-.auth-logo h1{font-family:var(--font-display);font-size:22px;font-weight:400;letter-spacing:-.02em}
-.auth-logo p{font-size:14px;color:var(--text2);margin-top:4px;line-height:1.5}
-.store-accent{color:var(--accent)}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
 
-/* ── TABS ── */
-.tabs{display:flex;background:#f1f3f6;border-radius:calc(var(--radius) - 2px);padding:4px;margin-bottom:24px}
-.tab{flex:1;padding:9px;text-align:center;border-radius:calc(var(--radius) - 4px);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--text2)}
-.tab.active{background:#fff;color:var(--accent);box-shadow:0 1px 6px rgba(0,0,0,.08)}
+.auth-header{margin-bottom:36px}
+.auth-title{
+  font-family:var(--font-display);
+  font-size:30px;font-weight:400;
+  letter-spacing:-.02em;color:var(--text);
+  margin-bottom:8px;line-height:1.1;
+}
+.auth-title em{font-style:italic;color:var(--accent)}
+.auth-subtitle{font-size:14px;color:var(--text2);line-height:1.6;font-weight:400}
 
-/* ── FORMS ── */
-.form-row{margin-bottom:14px}
-.form-row label{display:block;font-size:10.5px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px}
+/* ─── TABS ─── */
+.tabs{
+  display:flex;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:calc(var(--radius) - 2px);
+  padding:4px;margin-bottom:28px;
+  gap:4px;
+}
+.tab{
+  flex:1;padding:10px 12px;text-align:center;
+  border-radius:calc(var(--radius) - 6px);
+  font-size:13.5px;font-weight:600;cursor:pointer;
+  transition:all .2s var(--ease-out);
+  color:var(--text2);letter-spacing:.01em;
+}
+.tab.active{
+  background:var(--surface);
+  color:var(--accent);
+  box-shadow:var(--shadow-sm);
+}
+
+/* ─── FORM ─── */
+.form-row{margin-bottom:18px;position:relative}
+.form-row label{
+  display:block;font-size:11px;font-weight:700;
+  color:var(--text3);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:7px;
+}
 .form-input{
-  width:100%;padding:11px 14px;background:var(--bg);border:1.5px solid var(--border);
-  border-radius:var(--btn-r);color:var(--text);font-family:var(--font);font-size:14px;
-  outline:none;transition:border-color .2s,box-shadow .2s;
+  width:100%;padding:12px 16px;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:var(--btn-r);
+  color:var(--text);font-family:var(--font);font-size:14.5px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+  font-weight:400;
 }
-.form-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(17,17,17,.05)}
+.form-input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 4px rgba(17,17,17,.06);
+  background:#fff;
+}
 .form-input.error{border-color:var(--red)}
-.field-err{font-size:12px;color:var(--red);margin-top:4px;display:none}
-.field-err.show{display:block}
+.form-input::placeholder{color:var(--text3)}
+.field-err{font-size:12px;color:var(--red);margin-top:5px;display:none;font-weight:500}
+.field-err.show{display:flex;align-items:center;gap:4px}
+.field-err::before{content:'·';font-size:18px;line-height:0;position:relative;top:1px}
 
-/* ── SUBMIT ── */
+/* ─── SUBMIT BTN ─── */
 .btn-submit{
-  width:100%;padding:13px;background:var(--accent);color:#fff;
-  border:none;border-radius:var(--btn-r);font-size:14.5px;font-weight:700;
-  cursor:pointer;font-family:var(--font);margin-top:6px;
+  width:100%;padding:14px 20px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:var(--btn-r);
+  font-size:14.5px;font-weight:700;letter-spacing:.01em;
+  cursor:pointer;font-family:var(--font);
+  margin-top:4px;
   display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:opacity .15s,transform .15s var(--ease-spring);
+  position:relative;overflow:hidden;
+  transition:opacity .2s,transform .2s var(--ease-spring),box-shadow .2s;
 }
-.btn-submit:hover:not(:disabled){opacity:.88;transform:translateY(-1px)}
-.btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-submit::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),transparent);
+  pointer-events:none;
+}
+.btn-submit:hover:not(:disabled){
+  opacity:.9;transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.btn-submit:active:not(:disabled){transform:translateY(0)}
+.btn-submit:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
-/* ── MISC ── */
-.forgot-link{text-align:right;margin-bottom:14px}
-.forgot-link a{font-size:12px;color:var(--accent);text-decoration:none}
-.forgot-link a:hover{text-decoration:underline}
-.alert{padding:12px 14px;border-radius:var(--btn-r);font-size:13px;font-weight:600;margin-bottom:14px;display:none}
-.alert.error{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.22);color:var(--red);display:block}
-.alert.success{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.22);color:var(--green);display:block}
-.consent-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.consent-row input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer}
-.consent-row label{font-size:13px;color:var(--text2);cursor:pointer}
-.spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+/* ─── DIVIDER ─── */
+.form-divider{
+  display:flex;align-items:center;gap:14px;
+  margin:22px 0 0;color:var(--text3);font-size:12px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;
+}
+.form-divider::before,.form-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* ─── MISC ─── */
+.forgot-link{text-align:right;margin-bottom:18px}
+.forgot-link a{
+  font-size:12.5px;color:var(--accent);font-weight:600;
+  opacity:.7;transition:opacity .15s;
+}
+.forgot-link a:hover{opacity:1}
+.alert{
+  padding:13px 16px;border-radius:var(--btn-r);
+  font-size:13px;font-weight:600;margin-bottom:18px;
+  display:none;line-height:1.5;
+}
+.alert.error{
+  background:rgba(214,58,58,.06);
+  border:1px solid rgba(214,58,58,.2);
+  color:var(--red);display:block;
+}
+.alert.success{
+  background:rgba(26,138,87,.06);
+  border:1px solid rgba(26,138,87,.2);
+  color:var(--green);display:block;
+}
+.consent-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:18px}
+.consent-row input{
+  width:16px;height:16px;accent-color:var(--accent);
+  cursor:pointer;flex-shrink:0;margin-top:2px;
+}
+.consent-row label{font-size:13px;color:var(--text2);cursor:pointer;line-height:1.5}
+
+/* ─── SPINNER ─── */
+.spinner{
+  width:18px;height:18px;
+  border:2px solid rgba(255,255,255,.35);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .65s linear infinite;
+  flex-shrink:0;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── FORGOT PANEL ── */
+/* ─── PANELS ─── */
 .panel{display:none}
 .panel.active{display:block}
-.back-link{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);cursor:pointer;margin-bottom:18px;font-weight:600;transition:color .15s}
-.back-link:hover{color:var(--accent)}
+.back-link{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;color:var(--text2);cursor:pointer;
+  margin-bottom:22px;font-weight:600;
+  transition:color .15s;
+  padding:8px 14px;border-radius:var(--btn-r);
+  border:1px solid var(--border);background:var(--surface);
+}
+.back-link:hover{color:var(--accent);border-color:var(--accent)}
+.forgot-title{
+  font-family:var(--font-display);
+  font-size:22px;font-weight:400;
+  margin-bottom:6px;letter-spacing:-.02em;
+}
+.forgot-sub{font-size:13.5px;color:var(--text2);margin-bottom:22px;line-height:1.6}
 
-/* ── TOAST ── */
+/* ─── TOAST ─── */
 .toast{
-  position:fixed;bottom:30px;left:50%;
-  transform:translateX(-50%) translateY(16px);
-  background:rgba(10,10,10,.94);color:#fff;border-radius:100px;
-  padding:9px 22px;font-size:13.5px;font-weight:500;
-  opacity:0;transition:all .25s;z-index:400;white-space:nowrap;pointer-events:none;
-  box-shadow:0 8px 28px rgba(0,0,0,.2);
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:#0f0f0f;color:#fff;
+  border-radius:100px;padding:11px 24px;
+  font-size:13.5px;font-weight:600;
+  opacity:0;transition:all .3s var(--ease-out);
+  z-index:400;white-space:nowrap;pointer-events:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  letter-spacing:.01em;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* ─── RESPONSIVE ─── */
+@media(max-width:860px){
+  .auth-wrap{grid-template-columns:1fr}
+  .auth-brand{display:none}
+}
 @media(max-width:480px){
-  .page-nav{padding:0 16px}
-  .auth-card{padding:28px 20px}
+  .page-nav{padding:0 20px}
+  .auth-form-side{padding:32px 24px}
+  .auth-card{max-width:100%}
 }
 </style>
 </head>
@@ -132,75 +356,124 @@ button{font-family:inherit}
 </nav>
 
 <div class="auth-wrap">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <div id="authLogoWrap"><div class="logo-icon">🛍️</div></div>
-      <h1><span class="store-accent" id="storeNameTitle">My Store</span></h1>
-      <p>Sign in to your account or create a new one</p>
-    </div>
 
-    <div id="panelAuth" class="panel active">
-      <div class="tabs">
-        <div class="tab active" id="tabLogin" onclick="switchTab('login')">Sign In</div>
-        <div class="tab" id="tabRegister" onclick="switchTab('register')">Register</div>
+  <!-- LEFT BRAND PANEL -->
+  <div class="auth-brand">
+    <div class="brand-orb brand-orb-1"></div>
+    <div class="brand-orb brand-orb-2"></div>
+    <div class="brand-content">
+      <div class="brand-logo-wrap">
+        <div id="brandLogoWrap">
+          <div class="brand-logo-icon">🛍️</div>
+        </div>
       </div>
-      <div id="alertBox" class="alert"></div>
-
-      <div id="formLogin">
-        <div class="form-row">
-          <label>Email</label>
-          <input class="form-input" id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email">
-          <div class="field-err" id="errLoginEmail">Enter a valid email</div>
-        </div>
-        <div class="form-row">
-          <label>Password</label>
-          <input class="form-input" id="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password">
-          <div class="field-err" id="errLoginPassword">Enter your password</div>
-        </div>
-        <div class="forgot-link"><a href="#" onclick="showForgot()">Forgot password?</a></div>
-        <button class="btn-submit" id="btnLogin" onclick="doLogin()">Sign In</button>
+      <div class="brand-tagline">
+        Your <em>style</em>,<br>delivered.
       </div>
-
-      <div id="formRegister" style="display:none">
-        <div class="form-row">
-          <label>Full Name</label>
-          <input class="form-input" id="regName" type="text" placeholder="John Doe" autocomplete="name">
-          <div class="field-err" id="errRegName">Enter your name</div>
+      <p class="brand-sub">Sign in to access your orders,<br>wishlist, and exclusive offers.</p>
+      <div class="brand-features">
+        <div class="brand-feature">
+          <div class="brand-feature-icon">🔒</div>
+          <div class="brand-feature-text">
+            <strong>Secure Checkout</strong>
+            SSL-encrypted payments
+          </div>
         </div>
-        <div class="form-row">
-          <label>Email</label>
-          <input class="form-input" id="regEmail" type="email" placeholder="you@example.com" autocomplete="email">
-          <div class="field-err" id="errRegEmail">Enter a valid email</div>
+        <div class="brand-feature">
+          <div class="brand-feature-icon">📦</div>
+          <div class="brand-feature-text">
+            <strong>Order Tracking</strong>
+            Real-time delivery updates
+          </div>
         </div>
-        <div class="form-row">
-          <label>Phone (optional)</label>
-          <input class="form-input" id="regPhone" type="tel" placeholder="+91 98765 43210" autocomplete="tel">
+        <div class="brand-feature">
+          <div class="brand-feature-icon">🎁</div>
+          <div class="brand-feature-text">
+            <strong>Exclusive Offers</strong>
+            Member-only deals & rewards
+          </div>
         </div>
-        <div class="form-row">
-          <label>Password</label>
-          <input class="form-input" id="regPassword" type="password" placeholder="Min 6 characters" autocomplete="new-password">
-          <div class="field-err" id="errRegPassword">Password must be at least 6 characters</div>
-        </div>
-        <div class="consent-row">
-          <input type="checkbox" id="mktEmail">
-          <label for="mktEmail">Send me order updates &amp; offers by email</label>
-        </div>
-        <button class="btn-submit" id="btnRegister" onclick="doRegister()">Create Account</button>
       </div>
-    </div>
-
-    <div id="panelForgot" class="panel">
-      <div class="back-link" onclick="showAuth()">← Back to Sign In</div>
-      <h3 style="font-size:17px;font-weight:700;margin-bottom:6px">Reset Password</h3>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:20px">Enter your email and we'll send a reset link.</p>
-      <div id="alertForgot" class="alert"></div>
-      <div class="form-row">
-        <label>Email</label>
-        <input class="form-input" id="forgotEmail" type="email" placeholder="you@example.com">
-      </div>
-      <button class="btn-submit" id="btnForgot" onclick="doForgot()">Send Reset Link</button>
     </div>
   </div>
+
+  <!-- RIGHT FORM PANEL -->
+  <div class="auth-form-side">
+    <div class="auth-card">
+
+      <div class="auth-header">
+        <h1 class="auth-title">Welcome<br><em id="storeNameTitle">back.</em></h1>
+        <p class="auth-subtitle">Sign in to your account or create a new one to get started</p>
+      </div>
+
+      <div id="panelAuth" class="panel active">
+        <div class="tabs">
+          <div class="tab active" id="tabLogin" onclick="switchTab('login')">Sign In</div>
+          <div class="tab" id="tabRegister" onclick="switchTab('register')">Create Account</div>
+        </div>
+        <div id="alertBox" class="alert"></div>
+
+        <!-- LOGIN FORM -->
+        <div id="formLogin">
+          <div class="form-row">
+            <label>Email address</label>
+            <input class="form-input" id="loginEmail" type="email" placeholder="you@example.com" autocomplete="email">
+            <div class="field-err" id="errLoginEmail">Enter a valid email</div>
+          </div>
+          <div class="form-row">
+            <label>Password</label>
+            <input class="form-input" id="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password">
+            <div class="field-err" id="errLoginPassword">Enter your password</div>
+          </div>
+          <div class="forgot-link"><a href="#" onclick="showForgot()">Forgot password?</a></div>
+          <button class="btn-submit" id="btnLogin" onclick="doLogin()">Sign In →</button>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="formRegister" style="display:none">
+          <div class="form-row">
+            <label>Full Name</label>
+            <input class="form-input" id="regName" type="text" placeholder="Jane Smith" autocomplete="name">
+            <div class="field-err" id="errRegName">Enter your name</div>
+          </div>
+          <div class="form-row">
+            <label>Email address</label>
+            <input class="form-input" id="regEmail" type="email" placeholder="you@example.com" autocomplete="email">
+            <div class="field-err" id="errRegEmail">Enter a valid email</div>
+          </div>
+          <div class="form-row">
+            <label>Phone <span style="color:var(--text3);text-transform:none;letter-spacing:0">(optional)</span></label>
+            <input class="form-input" id="regPhone" type="tel" placeholder="+91 98765 43210" autocomplete="tel">
+          </div>
+          <div class="form-row">
+            <label>Password</label>
+            <input class="form-input" id="regPassword" type="password" placeholder="Minimum 6 characters" autocomplete="new-password">
+            <div class="field-err" id="errRegPassword">Password must be at least 6 characters</div>
+          </div>
+          <div class="consent-row">
+            <input type="checkbox" id="mktEmail">
+            <label for="mktEmail">Send me order updates &amp; exclusive offers by email</label>
+          </div>
+          <button class="btn-submit" id="btnRegister" onclick="doRegister()">Create Account →</button>
+        </div>
+      </div>
+
+      <!-- FORGOT PANEL -->
+      <div id="panelForgot" class="panel">
+        <span class="back-link" onclick="showAuth()">← Back to Sign In</span>
+        <h2 class="forgot-title">Reset your password</h2>
+        <p class="forgot-sub">Enter your email and we'll send a secure reset link.</p>
+        <div id="alertForgot" class="alert"></div>
+        <div class="form-row">
+          <label>Email address</label>
+          <input class="form-input" id="forgotEmail" type="email" placeholder="you@example.com">
+        </div>
+        <button class="btn-submit" id="btnForgot" onclick="doForgot()">Send Reset Link</button>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -239,7 +512,7 @@ function applyCSSVars(cfg,theme){
   if(theme.bgColor){R.style.setProperty('--bg',theme.bgColor);document.body.style.background=theme.bgColor}
   if(theme.textColor)R.style.setProperty('--text',theme.textColor)
   if(theme.radius){const r=typeof theme.radius==='number'?`${theme.radius}px`:String(theme.radius).includes('px')?theme.radius:`${theme.radius}px`;R.style.setProperty('--radius',r);const btnR=theme.buttonStyle==='pill'?'999px':theme.buttonStyle==='square'?'4px':r;R.style.setProperty('--btn-r',btnR)}
-  if(theme.font&&theme.font!=='DM Sans'){const fid='gf-'+theme.font.replace(/\s+/g,'-');if(!document.getElementById(fid)){const l=document.createElement('link');l.id=fid;l.rel='stylesheet';l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`;document.head.appendChild(l)};R.style.setProperty('--font',`'${theme.font}',system-ui,sans-serif`)}
+  if(theme.font&&theme.font!=='Plus Jakarta Sans'){const fid='gf-'+theme.font.replace(/\s+/g,'-');if(!document.getElementById(fid)){const l=document.createElement('link');l.id=fid;l.rel='stylesheet';l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`;document.head.appendChild(l)};R.style.setProperty('--font',`'${theme.font}',system-ui,sans-serif`)}
   if(theme.navBg){R.style.setProperty('--navbar-bg',theme.navBg);const nav=document.getElementById('pageNav');if(nav){nav.style.background=theme.navBg;nav.style.borderBottomColor=isColorDark(theme.navBg)?'rgba(255,255,255,.1)':'rgba(0,0,0,.07)';const tc=theme.navTextColor||(isColorDark(theme.navBg)?'#ffffff':'');if(tc){nav.style.color=tc;nav.querySelectorAll('a,span,button').forEach(el=>{if(!el.style.color)el.style.color=tc})}}}
 }
 function renderNavLogo(cfg){
@@ -254,9 +527,12 @@ async function loadTheme(){
     let cfg={}
     if(cfgRes.status==='fulfilled'&&!cfgRes.value.error){
       cfg=cfgRes.value
-      document.getElementById('storeNameTitle').textContent=cfg.name||'My Store'
-      document.title=`Login — ${cfg.name||'Store'}`
-      if(cfg.logo_url)document.getElementById('authLogoWrap').innerHTML=`<img src="${cfg.logo_url}" alt="${esc(cfg.name||'')}" style="height:58px;border-radius:10px;object-fit:contain;display:block;margin-inline:auto;">`
+      const name=cfg.name||'My Store'
+      document.getElementById('storeNameTitle').textContent=name+'.'
+      document.title=`Login — ${name}`
+      if(cfg.logo_url){
+        document.getElementById('brandLogoWrap').innerHTML=`<img src="${cfg.logo_url}" alt="${esc(name)}" style="height:72px;border-radius:16px;object-fit:contain;display:block;margin:0 auto;box-shadow:0 8px 32px rgba(0,0,0,.5);">`
+      }
       renderNavLogo(cfg)
     }
     const theme=themeRes.status==='fulfilled'?parseThemeSettings(themeRes.value):{}
@@ -287,33 +563,33 @@ async function doLogin(){
   const email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPassword').value
   setErr('errLoginEmail',!email||!email.includes('@'));setErr('errLoginPassword',!pass)
   if(!email||!email.includes('@')||!pass)return
-  const btn=document.getElementById('btnLogin');btn.disabled=true;btn.innerHTML='<div class="spinner"></div>'
+  const btn=document.getElementById('btnLogin');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Signing in…'
   try{
     const res=await fetch(`${API}/shop/${slug}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pass})})
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Login failed')
     localStorage.setItem(`cust_token_${slug}`,data.token);localStorage.setItem(`cust_name_${slug}`,data.customer?.name||'');localStorage.setItem(`cust_email_${slug}`,data.customer?.email||email)
     toast('Welcome back! 👋');setTimeout(()=>location.href=redirect,800)
-  }catch(e){showAlert(e.message);btn.disabled=false;btn.textContent='Sign In'}
+  }catch(e){showAlert(e.message);btn.disabled=false;btn.innerHTML='Sign In →'}
 }
 async function doRegister(){
   const name=document.getElementById('regName').value.trim(),email=document.getElementById('regEmail').value.trim(),phone=document.getElementById('regPhone').value.trim(),pass=document.getElementById('regPassword').value,mkt=document.getElementById('mktEmail').checked
   setErr('errRegName',!name);setErr('errRegEmail',!email||!email.includes('@'));setErr('errRegPassword',pass.length<6)
   if(!name||!email||!email.includes('@')||pass.length<6)return
-  const btn=document.getElementById('btnRegister');btn.disabled=true;btn.innerHTML='<div class="spinner"></div>'
+  const btn=document.getElementById('btnRegister');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Creating account…'
   try{
     const res=await fetch(`${API}/shop/${slug}/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,phone,password:pass,marketing_consent:{email:mkt,sms:false}})})
     const data=await res.json();if(!res.ok)throw new Error(data.error||'Registration failed')
     localStorage.setItem(`cust_token_${slug}`,data.token);localStorage.setItem(`cust_name_${slug}`,data.customer?.name||name);localStorage.setItem(`cust_email_${slug}`,data.customer?.email||email)
     toast('Account created! Welcome 🎉');setTimeout(()=>location.href=redirect,800)
-  }catch(e){showAlert(e.message);btn.disabled=false;btn.textContent='Create Account'}
+  }catch(e){showAlert(e.message);btn.disabled=false;btn.innerHTML='Create Account →'}
 }
 async function doForgot(){
   const email=document.getElementById('forgotEmail').value.trim()
   if(!email||!email.includes('@')){showAlert('Enter a valid email','error','alertForgot');return}
-  const btn=document.getElementById('btnForgot');btn.disabled=true;btn.innerHTML='<div class="spinner"></div>'
+  const btn=document.getElementById('btnForgot');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Sending…'
   try{await fetch(`${API}/shop/${slug}/auth/forgot-password`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});showAlert('If an account exists, a reset link has been sent.','success','alertForgot')}
   catch{showAlert('Something went wrong. Try again.','error','alertForgot')}
-  finally{btn.disabled=false;btn.textContent='Send Reset Link'}
+  finally{btn.disabled=false;btn.innerHTML='Send Reset Link'}
 }
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500)}
