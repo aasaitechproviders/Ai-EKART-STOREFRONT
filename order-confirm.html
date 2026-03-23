@@ -5,148 +5,263 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order Confirmed!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --accent:  #111111;
-  --primary: #111111;
-  --bg:      #f8f9fc;
-  --surface: #ffffff;
-  --border:  #e8eaf0;
-  --text:    #1a1a2e;
-  --text2:   #64748b;
-  --text3:   #94a3b8;
-  --green:   #16a34a;
-  --red:     #ef4444;
-  --radius:  16px;
-  --btn-r:   10px;
-  --font:    'DM Sans',system-ui,sans-serif;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#111111;--primary:#111111;
+  --bg:#f7f7f5;--surface:#ffffff;--border:#e8e5de;
+  --text:#0f0f0f;--text2:#5c5c5c;--text3:#a0a0a0;
+  --green:#1a8a57;--red:#d63a3a;
+  --radius:20px;--btn-r:12px;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --shadow-md:0 8px 32px rgba(0,0,0,.09);
+  --shadow-lg:0 24px 80px rgba(0,0,0,.12);
 }
-body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none}
 
-/* ── NAV ── */
-.page-nav {
-  background: var(--navbar-bg, var(--surface));
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 24px; height: 60px; gap: 12px;
+/* ─── CONFETTI CANVAS ─── */
+#confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+
+/* ─── NAV ─── */
+.page-nav{
+  background:rgba(247,247,245,.92);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;gap:16px;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
 }
-.nav-logo { font-size: 18px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 8px;  flex-shrink: 0; min-width: 0; }
-.nav-logo #navLogoText { display: none; font-size: 18px; font-weight: 800; line-height: 1; white-space: nowrap; }
-.nav-logo img { height: 28px; border-radius: 5px; object-fit: contain; }
-.nav-logo-accent { color: var(--accent); }
-.nav-store { font-size: 14px; font-weight: 600; color: var(--text2); flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.nav-actions { display: flex; gap: 10px; flex-shrink: 0; }
-.btn-nav { padding: 7px 14px; border-radius: calc(var(--btn-r) - 2px); font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--font); text-decoration: none; transition: all .15s; }
-.btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text2); }
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-.btn-accent { background: var(--accent); border: 1.5px solid var(--accent); color: #fff; }
-.btn-accent:hover { opacity: .88; }
+.nav-logo{
+  font-family:var(--font-display);font-size:20px;font-weight:500;
+  text-decoration:none;color:var(--text);letter-spacing:-.01em;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.nav-logo #navLogoText{display:none;font-size:20px;white-space:nowrap}
+.nav-logo img{height:30px;border-radius:7px;object-fit:contain}
+.nav-logo-accent{color:var(--accent)}
+.nav-store{font-size:14px;font-weight:500;color:var(--text2);flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-actions{display:flex;gap:10px;flex-shrink:0}
+.btn-nav{
+  padding:9px 18px;border-radius:var(--btn-r);font-size:13px;font-weight:700;
+  cursor:pointer;font-family:var(--font);text-decoration:none;transition:all .2s var(--ease-out);
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.btn-accent{background:var(--accent);border:1.5px solid var(--accent);color:#fff}
+.btn-accent:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
 
-/* ── CONTENT ── */
-.page-wrap { padding: 40px 20px 80px; display: flex; flex-direction: column; align-items: center; }
-.success-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 44px 40px; max-width: 560px; width: 100%;
-  text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,.06);
+/* ─── PAGE WRAP ─── */
+.page-wrap{
+  padding:52px 20px 100px;
+  display:flex;flex-direction:column;align-items:center;
+  min-height:calc(100vh - 64px);
 }
 
-/* ── CHECKMARK ── */
-.checkmark {
-  width: 80px; height: 80px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 24px; font-size: 36px;
-  animation: pop .45s cubic-bezier(.175,.885,.32,1.275);
+/* ─── SUCCESS CARD ─── */
+.success-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);padding:52px 48px;
+  max-width:580px;width:100%;
+  text-align:center;
+  box-shadow:var(--shadow-lg);
+  animation:cardReveal .6s var(--ease-out) both;
 }
-.checkmark.cod  { background: linear-gradient(135deg, #22c55e, #16a34a); }
-.checkmark.paid { background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #a78bfa)); }
-@keyframes pop { 0%{transform:scale(0)} 100%{transform:scale(1)} }
-
-h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.02em; }
-.sub { font-size: 15px; color: var(--text2); margin-bottom: 28px; line-height: 1.65; }
-
-/* ── ORDER NUMBER ── */
-.order-number {
-  background: color-mix(in srgb, var(--accent) 6%, white);
-  border: 1.5px solid color-mix(in srgb, var(--accent) 20%, white);
-  border-radius: calc(var(--radius) - 4px); padding: 18px 24px; margin-bottom: 20px;
+@keyframes cardReveal{
+  from{opacity:0;transform:translateY(30px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
 }
-.order-number label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); display: block; margin-bottom: 6px; }
-.order-number span  { font-size: 22px; font-weight: 800; color: var(--accent); font-family: monospace; letter-spacing: .03em; }
 
-/* ── PAY BADGE ── */
-.pay-method-badge {
-  display: inline-flex; align-items: center; gap: 7px;
-  border-radius: calc(var(--btn-r) - 2px); padding: 9px 16px;
-  margin-bottom: 20px; font-size: 13px; font-weight: 700;
+/* ─── CHECKMARK ─── */
+.checkmark-wrap{
+  position:relative;display:inline-flex;align-items:center;justify-content:center;
+  width:96px;height:96px;margin:0 auto 28px;
 }
-.pay-method-badge.online { background: color-mix(in srgb, var(--accent) 8%, white); border: 1.5px solid color-mix(in srgb, var(--accent) 25%, white); color: var(--accent); }
-.pay-method-badge.cod    { background: #f0fdf4; border: 1.5px solid #bbf7d0; color: var(--green); }
-
-/* ── DETAILS ── */
-.order-details {
-  background: var(--bg); border-radius: calc(var(--radius) - 4px);
-  padding: 18px 20px; margin-bottom: 22px; text-align: left; border: 1px solid var(--border);
+.checkmark-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid transparent;
+  animation:ringExpand .6s var(--ease-out) .2s both;
 }
-.detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
-.detail-row:last-child { border-bottom: none; }
-.detail-label { color: var(--text2); font-weight: 500; }
-.detail-value { font-weight: 600; text-align: right; max-width: 60%; }
-
-/* ── TIMELINE ── */
-.status-timeline { margin: 22px 0; text-align: left; }
-.status-timeline h3 { font-size: 11px; font-weight: 700; color: var(--text3); margin-bottom: 16px; text-transform: uppercase; letter-spacing: .08em; }
-.timeline { display: flex; flex-direction: column; }
-.t-step { display: flex; gap: 14px; align-items: flex-start; }
-.t-dot-col { display: flex; flex-direction: column; align-items: center; width: 20px; flex-shrink: 0; }
-.t-dot { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
-.t-dot.done   { background: var(--green); color: white; }
-.t-dot.active { background: var(--accent); color: white; animation: pulse-dot 1.5s infinite; }
-.t-dot.upcoming { background: var(--bg); border: 2px solid var(--border); }
-@keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 40%,transparent)} 50%{box-shadow:0 0 0 6px transparent} }
-.t-line { flex: 1; width: 2px; background: var(--border); margin: 3px 0; min-height: 28px; }
-.t-content { padding: 0 0 24px; }
-.t-label { font-size: 14px; font-weight: 600; color: var(--text); }
-.t-desc  { font-size: 12.5px; color: var(--text3); margin-top: 2px; }
-
-/* ── INFO BOX ── */
-.info-box { border-radius: calc(var(--radius) - 4px); padding: 18px 20px; margin-bottom: 22px; text-align: left; }
-.info-box.cod    { background: #f0fdf4; border: 1.5px solid #bbf7d0; }
-.info-box.online { background: color-mix(in srgb, var(--accent) 5%, white); border: 1.5px solid color-mix(in srgb, var(--accent) 20%, white); }
-.info-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-.info-box.cod h3    { color: var(--green); }
-.info-box.online h3 { color: var(--accent); }
-.info-box p { font-size: 13.5px; line-height: 1.65; }
-.info-box.cod p    { color: #15803d; }
-.info-box.online p { color: var(--text2); }
-.txn-chip { display: inline-flex; align-items: center; gap: 6px; background: white; border: 1px solid color-mix(in srgb, var(--accent) 20%, white); border-radius: 7px; padding: 4px 10px; font-size: 11.5px; font-family: monospace; color: var(--accent); margin-top: 8px; word-break: break-all; }
-
-/* ── ITEMS ── */
-.items-list { text-align: left; margin-bottom: 20px; }
-.items-list h3 { font-size: 11px; font-weight: 700; color: var(--text3); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .08em; }
-.item-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-.item-row:last-child { border-bottom: none; }
-.item-img { width: 48px; height: 48px; border-radius: calc(var(--radius) - 6px); object-fit: cover; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; overflow: hidden; }
-.item-img img { width: 100%; height: 100%; object-fit: cover; }
-.item-name  { flex: 1; font-size: 13.5px; font-weight: 600; }
-.item-meta  { font-size: 12px; color: var(--text3); }
-.item-price { font-size: 14px; font-weight: 700; white-space: nowrap; color: var(--accent); }
-
-/* ── BTN ── */
-.btn-shop {
-  display: inline-block; padding: 13px 28px;
-  background: var(--accent); color: white; border-radius: var(--btn-r);
-  text-decoration: none; font-weight: 700; font-size: 14.5px; transition: opacity .15s;
+@keyframes ringExpand{
+  from{transform:scale(.6);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
-.btn-shop:hover { opacity: .88; }
+.checkmark-inner{
+  width:88px;height:88px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:38px;
+  animation:iconPop .5s var(--ease-spring) .3s both;
+  position:relative;z-index:1;
+}
+@keyframes iconPop{
+  from{transform:scale(0);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+.checkmark-inner.cod{background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 8px 32px rgba(26,138,87,.3)}
+.checkmark-inner.paid{background:linear-gradient(135deg,#1a1a1a,#444);box-shadow:0 8px 32px rgba(0,0,0,.3)}
 
-@media(max-width:540px) { .success-card { padding: 28px 20px; } h1 { font-size: 22px; } }
+/* ─── HEADING ─── */
+.confirm-title{
+  font-family:var(--font-display);
+  font-size:clamp(26px,4vw,34px);
+  font-weight:400;margin-bottom:10px;
+  letter-spacing:-.02em;line-height:1.1;
+}
+.confirm-sub{
+  font-size:14.5px;color:var(--text2);margin-bottom:32px;
+  line-height:1.7;max-width:400px;margin-inline:auto;
+}
+.confirm-sub strong{color:var(--text);font-weight:700}
+
+/* ─── ORDER NUMBER ─── */
+.order-number-box{
+  background:linear-gradient(135deg,rgba(17,17,17,.03),rgba(17,17,17,.06));
+  border:1.5px solid rgba(17,17,17,.12);
+  border-radius:calc(var(--radius) - 4px);
+  padding:20px 28px;margin-bottom:24px;
+  animation:fadeUp .4s var(--ease-out) .4s both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.order-number-box label{
+  font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text3);display:block;margin-bottom:8px;
+}
+.order-number-box span{
+  font-size:26px;font-weight:800;color:var(--accent);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+
+/* ─── PAY BADGE ─── */
+.pay-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border-radius:100px;padding:10px 20px;
+  margin-bottom:24px;font-size:13px;font-weight:700;letter-spacing:.01em;
+  animation:fadeUp .4s var(--ease-out) .5s both;
+}
+.pay-badge.online{background:rgba(17,17,17,.06);border:1.5px solid rgba(17,17,17,.15);color:var(--accent)}
+.pay-badge.cod{background:#f0fdf4;border:1.5px solid #bbf7d0;color:var(--green)}
+
+/* ─── DETAILS ─── */
+.order-details{
+  background:var(--bg);border-radius:calc(var(--radius) - 6px);
+  padding:20px 22px;margin-bottom:24px;text-align:left;
+  border:1px solid var(--border);
+  animation:fadeUp .4s var(--ease-out) .55s both;
+}
+.detail-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px;
+}
+.detail-row:last-child{border-bottom:none}
+.detail-label{color:var(--text2);font-weight:500}
+.detail-value{font-weight:700;text-align:right;max-width:62%;line-height:1.5}
+
+/* ─── ITEMS LIST ─── */
+.items-list{
+  text-align:left;margin-bottom:24px;
+  animation:fadeUp .4s var(--ease-out) .6s both;
+}
+.items-heading{
+  font-size:10px;font-weight:700;color:var(--text3);
+  margin-bottom:14px;text-transform:uppercase;letter-spacing:.1em;
+}
+.item-row{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--border)}
+.item-row:last-child{border-bottom:none}
+.item-img{
+  width:52px;height:52px;border-radius:10px;
+  background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;overflow:hidden;
+}
+.item-img img{width:100%;height:100%;object-fit:cover}
+.item-name{flex:1;font-size:13.5px;font-weight:700;letter-spacing:-.01em}
+.item-meta{font-size:11.5px;color:var(--text3);font-weight:500;margin-top:2px}
+.item-price{font-size:14.5px;font-weight:800;white-space:nowrap;color:var(--accent)}
+
+/* ─── INFO BOX ─── */
+.info-box{
+  border-radius:calc(var(--radius) - 6px);padding:20px 22px;
+  margin-bottom:24px;text-align:left;
+  animation:fadeUp .4s var(--ease-out) .65s both;
+}
+.info-box.cod{background:#f0fdf4;border:1.5px solid #bbf7d0}
+.info-box.online{background:rgba(17,17,17,.03);border:1.5px solid rgba(17,17,17,.1)}
+.info-box h3{font-size:14px;font-weight:800;margin-bottom:8px}
+.info-box.cod h3{color:var(--green)}
+.info-box.online h3{color:var(--accent)}
+.info-box p{font-size:13.5px;line-height:1.7}
+.info-box.cod p{color:#15803d}
+.info-box.online p{color:var(--text2)}
+.txn-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(255,255,255,.8);
+  border:1px solid rgba(17,17,17,.12);
+  border-radius:8px;padding:5px 11px;
+  font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;
+  color:var(--accent);margin-top:10px;word-break:break-all;
+}
+
+/* ─── TIMELINE ─── */
+.status-timeline{
+  margin:0 0 28px;text-align:left;
+  animation:fadeUp .4s var(--ease-out) .7s both;
+}
+.timeline-heading{font-size:10px;font-weight:700;color:var(--text3);margin-bottom:18px;text-transform:uppercase;letter-spacing:.1em}
+.timeline{display:flex;flex-direction:column}
+.t-step{display:flex;gap:16px;align-items:flex-start}
+.t-dot-col{display:flex;flex-direction:column;align-items:center;width:24px;flex-shrink:0}
+.t-dot{
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;
+  font-weight:800;
+}
+.t-dot.done{background:var(--green);color:#fff}
+.t-dot.active{
+  background:var(--accent);color:#fff;
+  animation:pulseDot 1.8s infinite;
+}
+@keyframes pulseDot{
+  0%,100%{box-shadow:0 0 0 0 rgba(17,17,17,.25)}
+  50%{box-shadow:0 0 0 8px rgba(17,17,17,0)}
+}
+.t-dot.upcoming{background:var(--bg);border:2px solid var(--border)}
+.t-line{flex:1;width:2px;background:var(--border);margin:4px 0;min-height:30px}
+.t-content{padding:0 0 26px}
+.t-label{font-size:14px;font-weight:700;letter-spacing:-.01em}
+.t-desc{font-size:12px;color:var(--text3);margin-top:3px;font-weight:500}
+
+/* ─── CTA ─── */
+.btn-shop-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:15px 36px;
+  background:var(--accent);color:#fff;border-radius:var(--btn-r);
+  text-decoration:none;font-weight:700;font-size:15px;letter-spacing:.01em;
+  transition:opacity .2s,transform .2s var(--ease-spring),box-shadow .2s;
+  animation:fadeUp .4s var(--ease-out) .8s both;
+}
+.btn-shop-cta:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.order-note{
+  margin-top:16px;font-size:12.5px;color:var(--text3);font-weight:500;
+  animation:fadeUp .4s var(--ease-out) .85s both;
+}
+.order-note strong{color:var(--text);font-weight:700}
+
+@media(max-width:580px){
+  .success-card{padding:36px 24px}
+  .confirm-title{font-size:24px}
+  .page-nav{padding:0 20px}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<canvas id="confetti"></canvas>
+
 <nav class="page-nav" id="pageNav">
   <a class="nav-logo" id="navLogo" href="#" data-nav-logo>
     <span id="navLogoImg"></span>
@@ -161,229 +276,178 @@ h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -.02
 
 <div class="page-wrap">
   <div class="success-card" id="card">
-    <div style="text-align:center;padding:40px;color:#94a3b8;">Loading order details…</div>
+    <div style="text-align:center;padding:48px;color:#a0a0a0">
+      <div style="width:40px;height:40px;border:3px solid #e8e5de;border-top-color:#111;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px"></div>
+      <p style="font-size:14px">Loading order details…</p>
+    </div>
   </div>
 </div>
 
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
 <script>
-/* ════════════════════════════════════
-   SLUG + URL
-════════════════════════════════════ */
-const _params = new URLSearchParams(location.search)
-function resolveSlug() {
-  const p = _params.get('store'); if (p) return p
-  const h = location.hostname
-  const SERVICE = ['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
-  if (h.endsWith('.aasaitech.in')) {
-    const sub = h.slice(0, h.indexOf('.aasaitech.in'))
-    const firstPart = sub.split('.')[0]
-    if (!SERVICE.includes(firstPart)) return firstPart
-    return null
-  }
-  if (!SERVICE.some(d => h.includes(d))) return h
+const _params=new URLSearchParams(location.search)
+function resolveSlug(){
+  const p=_params.get('store');if(p)return p
+  const h=location.hostname
+  const SERVICE=['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
+  if(h.endsWith('.aasaitech.in')){const sub=h.slice(0,h.indexOf('.aasaitech.in'));const firstPart=sub.split('.')[0];if(!SERVICE.includes(firstPart))return firstPart;return null}
+  if(!SERVICE.some(d=>h.includes(d)))return h
   return null
 }
-const slug        = resolveSlug()
-const _isCustom   = !_params.get('store') && slug !== null
-const storeUrl    = (page, extra='') => _isCustom ? `${page}${extra?'?'+extra:''}` : `${page}?store=${slug}${extra?'&'+extra:''}`
-const orderNumber = _params.get('order')
-const email       = _params.get('email')
-const isPaid      = _params.get('paid') === '1'
-let currency      = sessionStorage.getItem('ekart_currency') || '₹'
-const API         = 'https://apiv2.aasaitech.in'
+const slug=resolveSlug()
+const _isCustom=!_params.get('store')&&slug!==null
+const storeUrl=(page,extra='')=>_isCustom?`${page}${extra?'?'+extra:''}`:`${page}?store=${slug}${extra?'&'+extra:''}`
+const orderNumber=_params.get('order')
+const email=_params.get('email')
+const isPaid=_params.get('paid')==='1'
+let currency=sessionStorage.getItem('ekart_currency')||'₹'
+const API='https://apiv2.aasaitech.in'
 
-const STATUS_STEPS = [
-  { key:'pending',    label:'Order Placed',    desc:'We received your order!' },
-  { key:'confirmed',  label:'Order Confirmed', desc:'Merchant confirmed your order' },
-  { key:'processing', label:'Processing',      desc:'Your order is being packed' },
-  { key:'shipped',    label:'Shipped',         desc:'Your order is on the way' },
-  { key:'delivered',  label:'Delivered',       desc:'Enjoy your purchase!' }
+const STATUS_STEPS=[
+  {key:'pending',label:'Order Placed',desc:'We received your order!'},
+  {key:'confirmed',label:'Order Confirmed',desc:'Merchant confirmed your order'},
+  {key:'processing',label:'Processing',desc:'Your order is being packed'},
+  {key:'shipped',label:'Shipped',desc:'Your order is on the way'},
+  {key:'delivered',label:'Delivered',desc:'Enjoy your purchase!'}
 ]
 
-/* ════════════════════════════════════
-   THEME
-════════════════════════════════════ */
-
-/* ── Nav logo renderer ── */
-function renderNavLogo(cfg) {
-  const imgEl = document.getElementById('navLogoImg')
-  const txtEl = document.getElementById('navLogoText')
-  if (!imgEl && !txtEl) return
-  if (cfg.logo_url) {
-    // Logo image available — show image, hide text
-    if (imgEl) imgEl.innerHTML = `<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:130px;border-radius:6px;object-fit:contain;display:block;">`
-    if (txtEl) txtEl.style.display = 'none'
-  } else {
-    // No logo — show store name as styled text
-    if (imgEl) imgEl.innerHTML = ''
-    if (txtEl) {
-      const name = cfg.name || ''
-      if (name) {
-        txtEl.innerHTML = `<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`
-      } else {
-        txtEl.textContent = 'Store'
-      }
-      txtEl.style.display = 'inline-flex'
-      txtEl.style.alignItems = 'center'
-    }
+/* ─── CONFETTI ─── */
+function launchConfetti(){
+  const canvas=document.getElementById('confetti')
+  const ctx=canvas.getContext('2d')
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight
+  const colors=['#111111','#10b981','#f59e0b','#6366f1','#ef4444','#3b82f6']
+  const pieces=[]
+  for(let i=0;i<120;i++){
+    pieces.push({
+      x:Math.random()*canvas.width,y:-20-Math.random()*100,
+      r:Math.random()*6+3,color:colors[Math.floor(Math.random()*colors.length)],
+      vx:(Math.random()-.5)*4,vy:Math.random()*4+2,
+      rot:Math.random()*360,rotV:(Math.random()-.5)*10,
+      life:1,w:Math.random()*10+4,h:Math.random()*6+3
+    })
   }
-}
-function isColorDark(hex) {
-  const c = (hex||'').replace('#','')
-  if (c.length !== 6) return false
-  const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16)
-  return (r*299+g*587+b*114)/1000 < 145
-}
-function parseThemeSettings(raw) {
-  if (!raw || typeof raw !== 'object') return {}
-  let doc = raw
-  if (raw.published && typeof raw.published === 'object') doc = raw.published
-  else if (raw.draft && typeof raw.draft === 'object') doc = raw.draft
-  const s = doc.settings || doc
-  // Scan sections[] for a navbar section to get its bgColor
-  let navBgFromSection = null, navTextFromSection = null
-  const sections = doc.sections || []
-  for (const sec of sections) {
-    const t = (sec.type || '').toLowerCase()
-    if (t === 'navbar' || t === 'navigation' || t === 'nav' || t === 'header') {
-      const sd = sec.data || sec.settings || {}
-      navBgFromSection   = sd.bgColor || sd.bg_color || sd.background || null
-      navTextFromSection = sd.textColor || sd.text_color || sd.linkColor || sd.link_color || null
-      break
-    }
+  let frame=0
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    pieces.forEach(p=>{
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180)
+      ctx.globalAlpha=p.life;ctx.fillStyle=p.color
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h)
+      ctx.restore()
+      p.x+=p.vx;p.y+=p.vy;p.rot+=p.rotV;p.vy+=.08
+      if(frame>80)p.life=Math.max(0,p.life-.012)
+    })
+    frame++
+    if(pieces.some(p=>p.life>0))requestAnimationFrame(draw)
+    else ctx.clearRect(0,0,canvas.width,canvas.height)
   }
-  return {
-    primaryColor: s.primary_color || s.primaryColor || null,
-    bgColor:      s.secondary_color || s.bgColor || s.bg_color || null,
-    textColor:    s.accent_color || s.textColor || null,
-    font:         s.font_heading || s.fontHeading || s.font || null,
-    radius:       s.radius || s.border_radius || null,
-    buttonStyle:  s.button_style || s.buttonStyle || null,
-    navBg:        s.nav_bg || s.navBg || navBgFromSection || null,
-    navTextColor: s.nav_text_color || s.navTextColor || navTextFromSection || null,
-  }
-}
-function applyCSSVars(cfg, theme) {
-  const R = document.documentElement
-  const primary = theme.primaryColor || cfg.brand_color || null
-  if (primary) { R.style.setProperty('--accent', primary); R.style.setProperty('--primary', primary) }
-  if (theme.bgColor) { R.style.setProperty('--bg', theme.bgColor); document.body.style.background = theme.bgColor }
-  if (theme.textColor) R.style.setProperty('--text', theme.textColor)
-  if (theme.radius) {
-    const r = typeof theme.radius === 'number' ? `${theme.radius}px` : String(theme.radius).includes('px') ? theme.radius : `${theme.radius}px`
-    R.style.setProperty('--radius', r)
-    const btnR = theme.buttonStyle === 'pill' ? '999px' : theme.buttonStyle === 'square' ? '4px' : r
-    R.style.setProperty('--btn-r', btnR)
-  }
-  if (theme.font && theme.font !== 'DM Sans' && theme.font !== 'system-ui') {
-    const fid = 'gf-' + theme.font.replace(/\s+/g,'-')
-    if (!document.getElementById(fid)) {
-      const l = document.createElement('link'); l.id = fid; l.rel = 'stylesheet'
-      l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`
-      document.head.appendChild(l)
-    }
-    R.style.setProperty('--font', `'${theme.font}', 'DM Sans',system-ui,sans-serif`)
-    document.body.style.fontFamily = `'${theme.font}', 'DM Sans',system-ui,sans-serif`
-  }
-  if (theme.navBg) {
-    const R2 = document.documentElement
-    R2.style.setProperty('--navbar-bg', theme.navBg)
-    const nav = document.getElementById('pageNav')
-    if (nav) {
-      nav.style.background = theme.navBg
-      nav.style.borderBottomColor = isColorDark(theme.navBg) ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)'
-      const isDark = isColorDark(theme.navBg)
-      const textCol = theme.navTextColor || (isDark ? '#ffffff' : '')
-      if (textCol) {
-        nav.style.color = textCol
-        // Cascade to direct text children that have explicit inline colors
-        nav.querySelectorAll('a, span, button').forEach(el => {
-          if (!el.style.color) el.style.color = textCol
-        })
-      }
-    }
-  }
+  draw()
 }
 
-async function loadTheme() {
-  if (!slug) return
-  try {
-    const [cfgRes, themeRes] = await Promise.allSettled([
-      fetch(`${API}/shop/${slug}/config`).then(r => r.json()),
-      fetch(`${API}/shop/${slug}/theme`).then(r => r.json()),
-    ])
-    let cfg = {}
-    if (cfgRes.status === 'fulfilled' && !cfgRes.value.error) {
-      cfg = cfgRes.value
-      if (cfg.currency === 'USD') currency = '$'; else if (cfg.currency === 'EUR') currency = '€'
-      document.getElementById('navStoreName').textContent = cfg.name || ''
-      document.title = `Order Confirmed — ${cfg.name || 'Store'}`
-      
+/* ─── THEME ─── */
+function renderNavLogo(cfg){
+  const imgEl=document.getElementById('navLogoImg'),txtEl=document.getElementById('navLogoText')
+  if(!imgEl&&!txtEl)return
+  if(cfg.logo_url){
+    if(imgEl)imgEl.innerHTML=`<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:130px;border-radius:6px;object-fit:contain;display:block;">`
+    if(txtEl)txtEl.style.display='none'
+  }else{
+    if(imgEl)imgEl.innerHTML=''
+    if(txtEl){const name=cfg.name||'';if(name){txtEl.innerHTML=`<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`}else{txtEl.textContent='Store'};txtEl.style.display='inline-flex';txtEl.style.alignItems='center'}
+  }
+}
+function isColorDark(hex){const c=(hex||'').replace('#','');if(c.length!==6)return false;const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);return(r*299+g*587+b*114)/1000<145}
+function parseThemeSettings(raw){
+  if(!raw||typeof raw!=='object')return{}
+  let doc=raw
+  if(raw.published&&typeof raw.published==='object')doc=raw.published
+  else if(raw.draft&&typeof raw.draft==='object')doc=raw.draft
+  const s=doc.settings||doc
+  let navBgFromSection=null,navTextFromSection=null
+  const sections=doc.sections||[]
+  for(const sec of sections){const t=(sec.type||'').toLowerCase();if(t==='navbar'||t==='navigation'||t==='nav'||t==='header'){const sd=sec.data||sec.settings||{};navBgFromSection=sd.bgColor||sd.bg_color||sd.background||null;navTextFromSection=sd.textColor||sd.text_color||sd.linkColor||sd.link_color||null;break}}
+  return{primaryColor:s.primary_color||s.primaryColor||null,bgColor:s.secondary_color||s.bgColor||s.bg_color||null,textColor:s.accent_color||s.textColor||null,font:s.font_heading||s.fontHeading||s.font||null,radius:s.radius||s.border_radius||null,buttonStyle:s.button_style||s.buttonStyle||null,navBg:s.nav_bg||s.navBg||navBgFromSection||null,navTextColor:s.nav_text_color||s.navTextColor||navTextFromSection||null}
+}
+function applyCSSVars(cfg,theme){
+  const R=document.documentElement
+  const primary=theme.primaryColor||cfg.brand_color||null
+  if(primary){R.style.setProperty('--accent',primary);R.style.setProperty('--primary',primary)}
+  if(theme.bgColor){R.style.setProperty('--bg',theme.bgColor);document.body.style.background=theme.bgColor}
+  if(theme.textColor)R.style.setProperty('--text',theme.textColor)
+  if(theme.radius){const r=typeof theme.radius==='number'?`${theme.radius}px`:String(theme.radius).includes('px')?theme.radius:`${theme.radius}px`;R.style.setProperty('--radius',r);const btnR=theme.buttonStyle==='pill'?'999px':theme.buttonStyle==='square'?'4px':r;R.style.setProperty('--btn-r',btnR)}
+  if(theme.font&&theme.font!=='Plus Jakarta Sans'&&theme.font!=='system-ui'){const fid='gf-'+theme.font.replace(/\s+/g,'-');if(!document.getElementById(fid)){const l=document.createElement('link');l.id=fid;l.rel='stylesheet';l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`;document.head.appendChild(l)};R.style.setProperty('--font',`'${theme.font}', 'Plus Jakarta Sans',system-ui,sans-serif`);document.body.style.fontFamily=`'${theme.font}', 'Plus Jakarta Sans',system-ui,sans-serif`}
+  if(theme.navBg){R.style.setProperty('--navbar-bg',theme.navBg);const nav=document.getElementById('pageNav');if(nav){nav.style.background=theme.navBg;nav.style.borderBottomColor=isColorDark(theme.navBg)?'rgba(255,255,255,0.1)':'rgba(0,0,0,0.07)';const isDark=isColorDark(theme.navBg);const textCol=theme.navTextColor||(isDark?'#ffffff':'');if(textCol){nav.style.color=textCol;nav.querySelectorAll('a, span, button').forEach(el=>{if(!el.style.color)el.style.color=textCol})}}}
+}
+async function loadTheme(){
+  if(!slug)return
+  try{
+    const[cfgRes,themeRes]=await Promise.allSettled([fetch(`${API}/shop/${slug}/config`).then(r=>r.json()),fetch(`${API}/shop/${slug}/theme`).then(r=>r.json())])
+    let cfg={}
+    if(cfgRes.status==='fulfilled'&&!cfgRes.value.error){
+      cfg=cfgRes.value
+      if(cfg.currency==='USD')currency='$';else if(cfg.currency==='EUR')currency='€'
+      document.getElementById('navStoreName').textContent=cfg.name||''
+      document.title=`Order Confirmed — ${cfg.name||'Store'}`
       renderNavLogo(cfg)
     }
-    const theme = themeRes.status === 'fulfilled' ? parseThemeSettings(themeRes.value) : {}
-    applyCSSVars(cfg, theme)
-  } catch(e) { console.warn('[confirm theme]', e.message) }
+    const theme=themeRes.status==='fulfilled'?parseThemeSettings(themeRes.value):{}
+    applyCSSVars(cfg,theme)
+  }catch(e){console.warn('[confirm theme]',e.message)}
 }
 
-/* ════════════════════════════════════
-   RENDER
-════════════════════════════════════ */
-function render(order) {
-  const isOnline  = order.payment_method === 'razorpay'
-  const statusIdx = STATUS_STEPS.findIndex(s => s.key === order.status)
+/* ─── RENDER ─── */
+function render(order){
+  const isOnline=order.payment_method==='razorpay'
+  const statusIdx=STATUS_STEPS.findIndex(s=>s.key===order.status)
 
-  const timelineHtml = STATUS_STEPS.map((step, i) => {
-    const isDone   = i < statusIdx
-    const isActive = i === statusIdx
-    const dotClass = isDone ? 'done' : isActive ? 'active' : 'upcoming'
-    const dotContent = isDone ? '✓' : isActive ? '●' : ''
-    const isLast   = i === STATUS_STEPS.length - 1
+  const timelineHtml=STATUS_STEPS.map((step,i)=>{
+    const isDone=i<statusIdx,isActive=i===statusIdx
+    const dotClass=isDone?'done':isActive?'active':'upcoming'
+    const dotContent=isDone?'✓':isActive?'●':''
+    const isLast=i===STATUS_STEPS.length-1
     return `<div class="t-step">
       <div class="t-dot-col">
         <div class="t-dot ${dotClass}">${dotContent}</div>
-        ${!isLast ? '<div class="t-line"></div>' : ''}
+        ${!isLast?'<div class="t-line"></div>':''}
       </div>
       <div class="t-content">
         <div class="t-label" style="color:${isDone||isActive?'var(--text)':'var(--text3)'}">${step.label}</div>
-        <div class="t-desc">${isDone||isActive ? step.desc : 'Upcoming'}</div>
+        <div class="t-desc">${isDone||isActive?step.desc:'Upcoming'}</div>
       </div>
     </div>`
   }).join('')
 
-  const itemsHtml = (order.items||[]).map(item => `
+  const itemsHtml=(order.items||[]).map(item=>`
     <div class="item-row">
-      <div class="item-img">${item.image ? `<img src="${item.image}" alt="">` : '📦'}</div>
+      <div class="item-img">${item.image?`<img src="${item.image}" alt="">`:'📦'}</div>
       <div>
         <div class="item-name">${esc(item.name)}</div>
-        ${item.variant ? `<div class="item-meta">${esc(item.variant)}</div>` : ''}
+        ${item.variant?`<div class="item-meta">${esc(item.variant)}</div>`:''}
         <div class="item-meta">Qty: ${item.qty}</div>
       </div>
-      <div class="item-price">${currency}${(item.price * item.qty).toFixed(2)}</div>
+      <div class="item-price">${currency}${(item.price*item.qty).toFixed(2)}</div>
     </div>`).join('')
 
-  const heading = isOnline ? 'Payment Successful! 💳' : 'Order Confirmed! 🎉'
-  const subtext = isOnline
-    ? `Your payment was confirmed and order placed. A confirmation email was sent to <strong>${esc(order.customer_email)}</strong>`
-    : `Thank you for your order! A confirmation email was sent to <strong>${esc(order.customer_email)}</strong>`
+  const discountRow=order.discount>0?`<div class="detail-row"><span class="detail-label">Discount</span><span class="detail-value" style="color:var(--green)">−${currency}${order.discount?.toFixed(2)}</span></div>`:''
 
-  const payBlock = isOnline
-    ? `<div class="info-box online"><h3>💳 Payment Confirmed</h3><p>Your payment of <strong>${currency}${order.total?.toFixed(2)}</strong> was processed securely via Razorpay.</p>${order.razorpay_payment_id?`<div class="txn-chip">🔖 Txn: ${esc(order.razorpay_payment_id)}</div>`:''}</div>`
-    : `<div class="info-box cod"><h3>💰 Cash on Delivery</h3><p>Please keep <strong>${currency}${order.total?.toFixed(2)}</strong> ready when your order arrives. Our delivery partner will collect the payment at your doorstep.</p></div>`
+  const payBlock=isOnline
+    ?`<div class="info-box online"><h3>💳 Payment Confirmed</h3><p>Your payment of <strong>${currency}${order.total?.toFixed(2)}</strong> was processed securely via Razorpay.${order.razorpay_payment_id?`<br><span class="txn-chip">🔖 ${esc(order.razorpay_payment_id)}</span>`:''}</p></div>`
+    :`<div class="info-box cod"><h3>💰 Cash on Delivery</h3><p>Please keep <strong>${currency}${order.total?.toFixed(2)}</strong> ready when your order arrives. Our delivery partner will collect payment at your doorstep.</p></div>`
 
-  const discountRow = order.discount > 0
-    ? `<div class="detail-row"><span class="detail-label">Discount</span><span class="detail-value" style="color:var(--green);">−${currency}${order.discount?.toFixed(2)}</span></div>` : ''
+  document.getElementById('card').innerHTML=`
+    <div class="checkmark-wrap">
+      <div class="checkmark-inner ${isOnline?'paid':'cod'}">${isOnline?'💳':'✓'}</div>
+    </div>
+    <h1 class="confirm-title">${isOnline?'Payment Successful!':'Order Confirmed!'}</h1>
+    <p class="confirm-sub">${isOnline?`Your payment was confirmed and order placed. A confirmation email was sent to <strong>${esc(order.customer_email)}</strong>.`:`Thank you for your order! A confirmation email was sent to <strong>${esc(order.customer_email)}</strong>.`}</p>
 
-  document.getElementById('card').innerHTML = `
-    <div class="checkmark ${isOnline?'paid':'cod'}">${isOnline?'💳':'✓'}</div>
-    <h1>${heading}</h1>
-    <p class="sub">${subtext}</p>
-
-    <div class="pay-method-badge ${isOnline?'online':'cod'}">
-      ${isOnline ? '⚡ Paid Online via Razorpay' : '💰 Cash on Delivery'}
+    <div class="pay-badge ${isOnline?'online':'cod'}">
+      ${isOnline?'⚡ Paid Online via Razorpay':'💰 Cash on Delivery'}
     </div>
 
-    <div class="order-number">
+    <div class="order-number-box">
       <label>Order Number</label>
       <span>${esc(order.order_number)}</span>
     </div>
@@ -393,58 +457,52 @@ function render(order) {
       <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value">${esc(order.customer_phone)}</span></div>
       <div class="detail-row"><span class="detail-label">Deliver to</span><span class="detail-value">${esc(order.shipping_address?.line1)}, ${esc(order.shipping_address?.city)}, ${esc(order.shipping_address?.state)} ${esc(order.shipping_address?.pincode)}</span></div>
       ${discountRow}
-      <div class="detail-row"><span class="detail-label">Total</span><span class="detail-value" style="color:var(--accent);font-size:16px;">${currency}${order.total?.toFixed(2)}</span></div>
-      ${order.tracking_number ? `<div class="detail-row"><span class="detail-label">Tracking</span><span class="detail-value">${esc(order.tracking_number)}</span></div>` : ''}
+      <div class="detail-row"><span class="detail-label">Total</span><span class="detail-value" style="color:var(--accent);font-size:17px">${currency}${order.total?.toFixed(2)}</span></div>
+      ${order.tracking_number?`<div class="detail-row"><span class="detail-label">Tracking</span><span class="detail-value">${esc(order.tracking_number)}</span></div>`:''}
     </div>
 
-    <div class="items-list"><h3>Items Ordered</h3>${itemsHtml}</div>
+    <div class="items-list"><div class="items-heading">Items Ordered</div>${itemsHtml}</div>
 
     ${payBlock}
 
-    <div class="status-timeline"><h3>Order Status</h3><div class="timeline">${timelineHtml}</div></div>
+    <div class="status-timeline"><div class="timeline-heading">Order Status</div><div class="timeline">${timelineHtml}</div></div>
 
-    <a class="btn-shop" href="${storeUrl('index.html')}">Continue Shopping →</a>
-    <p style="margin-top:16px;font-size:12.5px;color:var(--text3);">Save your order number: <strong style="color:var(--text);">${esc(order.order_number)}</strong></p>
+    <a class="btn-shop-cta" href="${storeUrl('index.html')}">Continue Shopping →</a>
+    <p class="order-note">Save your order number: <strong>${esc(order.order_number)}</strong></p>
   `
+
+  // Launch confetti for new orders
+  setTimeout(launchConfetti, 300)
 }
 
-function renderFallback() {
-  const isOnline = isPaid
-  document.getElementById('card').innerHTML = `
-    <div class="checkmark ${isOnline?'paid':'cod'}">${isOnline?'💳':'✓'}</div>
-    <h1>${isOnline ? 'Payment Successful! 💳' : 'Order Placed! 🎉'}</h1>
-    <p class="sub">Your order <strong>${esc(orderNumber)}</strong> has been placed successfully!</p>
-    <div class="order-number"><label>Order Number</label><span>${esc(orderNumber)}</span></div>
-    <div class="pay-method-badge ${isOnline?'online':'cod'}">${isOnline ? '⚡ Paid Online via Razorpay' : '💰 Cash on Delivery'}</div>
-    ${!isOnline ? `<div class="info-box cod"><h3>💰 Cash on Delivery</h3><p>Please keep the amount ready when your order arrives. You'll receive a confirmation email shortly.</p></div>` : ''}
-    <a class="btn-shop" href="${storeUrl('index.html')}">Continue Shopping →</a>`
+function renderFallback(){
+  const isOnline=isPaid
+  document.getElementById('card').innerHTML=`
+    <div class="checkmark-wrap">
+      <div class="checkmark-inner ${isOnline?'paid':'cod'}">${isOnline?'💳':'✓'}</div>
+    </div>
+    <h1 class="confirm-title">${isOnline?'Payment Successful!':'Order Placed!'}</h1>
+    <p class="confirm-sub">Your order <strong>${esc(orderNumber)}</strong> has been placed successfully!</p>
+    <div class="order-number-box"><label>Order Number</label><span>${esc(orderNumber)}</span></div>
+    <div class="pay-badge ${isOnline?'online':'cod'}">${isOnline?'⚡ Paid Online via Razorpay':'💰 Cash on Delivery'}</div>
+    ${!isOnline?`<div class="info-box cod"><h3>💰 Cash on Delivery</h3><p>Please keep the amount ready when your order arrives. You'll receive a confirmation email shortly.</p></div>`:''}
+    <a class="btn-shop-cta" href="${storeUrl('index.html')}">Continue Shopping →</a>`
+  setTimeout(launchConfetti,300)
 }
 
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 
-/* ════════════════════════════════════
-   INIT
-════════════════════════════════════ */
-async function init() {
-  // Nav links
-  document.getElementById('navLogo').href = storeUrl('index.html')
-  document.getElementById('navShop').href = storeUrl('index.html')
-  document.getElementById('navCart').href = storeUrl('cart.html')
-
-  // Load theme in parallel with order fetch
-  const themePromise = loadTheme()
-
-  if (!slug || !orderNumber) {
-    await themePromise; renderFallback(); return
-  }
-  try {
-    const [, order] = await Promise.all([
-      themePromise,
-      fetch(`${API}/shop/${slug}/orders/${orderNumber}${email ? '?email='+encodeURIComponent(email) : ''}`).then(r => r.json())
-    ])
-    if (order.error) throw new Error(order.error)
+async function init(){
+  document.getElementById('navLogo').href=storeUrl('index.html')
+  document.getElementById('navShop').href=storeUrl('index.html')
+  document.getElementById('navCart').href=storeUrl('cart.html')
+  const themePromise=loadTheme()
+  if(!slug||!orderNumber){await themePromise;renderFallback();return}
+  try{
+    const[,order]=await Promise.all([themePromise,fetch(`${API}/shop/${slug}/orders/${orderNumber}${email?'?email='+encodeURIComponent(email):''}`).then(r=>r.json())])
+    if(order.error)throw new Error(order.error)
     render(order)
-  } catch(e) { renderFallback() }
+  }catch(e){renderFallback()}
 }
 init()
 </script>
