@@ -5,277 +5,277 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cart</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-:root {
-  --accent:   #111111;
-  --primary:  #111111;
-  --bg:       #f8f9fc;
-  --surface:  #ffffff;
-  --border:   #e8eaf0;
-  --text:     #1a1a2e;
-  --text2:    #64748b;
-  --text3:    #94a3b8;
-  --green:    #16a34a;
-  --red:      #ef4444;
-  --surface2: #f1f5f9;
-  --radius:   12px;
-  --btn-r:    8px;
-  --font:     'Outfit', sans-serif;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#111111;--primary:#111111;
+  --bg:#f6f7fb;--surface:#ffffff;--border:#e8eaf0;
+  --text:#1a1a2e;--text2:#64748b;--text3:#94a3b8;
+  --green:#16a34a;--red:#ef4444;--surface2:#f1f5f9;
+  --radius:12px;--btn-r:8px;
+  --font:'DM Sans',system-ui,sans-serif;
+  --font-display:'DM Serif Display',serif;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
 
 /* ── NAV ── */
-.page-nav {
-  background: var(--navbar-bg, var(--surface));
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
-  transition: background .3s, color .3s;
+.page-nav{
+  background:var(--navbar-bg,var(--surface));
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
 }
-.nav-inner {
-  max-width: 1100px; margin: 0 auto;
-  padding: 0 24px; display: flex; align-items: center; height: 62px; gap: 16px;
+.nav-inner{
+  max-width:1120px;margin:0 auto;
+  padding:0 28px;display:flex;align-items:center;height:62px;gap:16px;
 }
-.back-btn {
-  font-size: 13.5px; font-weight: 600; color: var(--accent);
-  text-decoration: none; display: flex; align-items: center; gap: 6px; transition: opacity .15s; white-space: nowrap;
+.back-btn{
+  font-size:13.5px;font-weight:600;color:var(--accent);
+  text-decoration:none;display:flex;align-items:center;gap:5px;
+  transition:opacity .15s;white-space:nowrap;
 }
-.back-btn:hover { opacity: .7; }
-.nav-store-name {
-  font-size: 17px; font-weight: 800; flex: 1; text-align: center;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: inherit;
+.back-btn:hover{opacity:.7}
+.nav-store-name{
+  font-family:var(--font-display);font-size:17px;font-weight:400;
+  flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:-.02em;
 }
-.nav-acct-btn {
-  display: flex; align-items: center; gap: 6px;
-  padding: 7px 13px; border: 1.5px solid var(--border); border-radius: var(--btn-r);
-  font-size: 13px; font-weight: 700; color: var(--text2);
-  text-decoration: none; white-space: nowrap; transition: all .15s; cursor: pointer; background: transparent; font-family: var(--font);
+.nav-acct-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border:1.5px solid var(--border);border-radius:var(--btn-r);
+  font-size:13px;font-weight:600;color:var(--text2);
+  white-space:nowrap;transition:all .15s;cursor:pointer;
+  background:transparent;font-family:var(--font);
 }
-.nav-acct-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-acct-btn:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ── PAGE ── */
-.page-wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
-.page-heading {
-  font-size: 28px; font-weight: 800; margin-bottom: 28px;
-  display: flex; align-items: center; gap: 10px; letter-spacing: -.02em;
+.page-wrap{max-width:1120px;margin:0 auto;padding:28px 28px 80px}
+.page-heading{
+  font-family:var(--font-display);font-size:28px;font-weight:400;
+  margin-bottom:28px;display:flex;align-items:center;gap:10px;letter-spacing:-.02em;
 }
-.layout { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+.layout{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
 
 /* ── CART SECTION ── */
-.cart-section {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden;
+.cart-section{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
 }
-.cart-header {
-  padding: 14px 20px; border-bottom: 1px solid var(--border);
-  font-size: 12.5px; font-weight: 700; color: var(--text2);
-  display: flex; justify-content: space-between; align-items: center;
-  text-transform: uppercase; letter-spacing: .06em;
+.cart-header{
+  padding:14px 22px;border-bottom:1px solid var(--border);
+  font-size:12px;font-weight:700;color:var(--text2);
+  display:flex;justify-content:space-between;align-items:center;
+  text-transform:uppercase;letter-spacing:.07em;
 }
-.cart-item {
-  display: flex; gap: 14px; padding: 16px 20px;
-  border-bottom: 1px solid var(--border); align-items: center;
-  transition: background .15s;
+.cart-item{
+  display:flex;gap:14px;padding:18px 22px;
+  border-bottom:1px solid var(--border);align-items:center;
+  transition:background .15s;
 }
-.cart-item:last-child { border-bottom: none; }
-.cart-item:hover { background: var(--bg); }
-.cart-img {
-  width: 76px; height: 76px; border-radius: calc(var(--radius) - 4px);
-  background: var(--bg); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; flex-shrink: 0; overflow: hidden;
+.cart-item:last-child{border-bottom:none}
+.cart-item:hover{background:var(--surface2)}
+.cart-img{
+  width:78px;height:78px;border-radius:calc(var(--radius) - 4px);
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;flex-shrink:0;overflow:hidden;
 }
-.cart-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.cart-item-info { flex: 1; min-width: 0; }
-.cart-item-name {
-  font-size: 14.5px; font-weight: 600; margin-bottom: 3px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.cart-img img{width:100%;height:100%;object-fit:cover;display:block}
+.cart-item-info{flex:1;min-width:0}
+.cart-item-name{font-size:14.5px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-item-variant{font-size:12px;color:var(--text3);margin-bottom:6px}
+.cart-item-price{font-size:15px;font-weight:700;color:var(--accent)}
+.cart-item-unit{font-size:11.5px;color:var(--text3);margin-top:2px}
+.cart-qty{
+  display:flex;align-items:center;
+  border:1.5px solid var(--border);border-radius:var(--btn-r);overflow:hidden;
 }
-.cart-item-variant { font-size: 12px; color: var(--text3); margin-bottom: 6px; }
-.cart-item-price { font-size: 15px; font-weight: 800; color: var(--accent); font-family: 'DM Mono', monospace; }
-.cart-item-unit { font-size: 11.5px; color: var(--text3); margin-top: 2px; font-family: 'DM Mono', monospace; }
-.cart-qty {
-  display: flex; align-items: center;
-  border: 1.5px solid var(--border); border-radius: calc(var(--btn-r) - 2px); overflow: hidden;
+.qty-btn{
+  width:34px;height:34px;border:none;background:var(--surface2);
+  font-size:16px;cursor:pointer;transition:background .15s,color .15s;color:var(--text);
+  display:flex;align-items:center;justify-content:center;
 }
-.qty-btn {
-  width: 32px; height: 32px; border: none; background: var(--bg);
-  font-size: 16px; cursor: pointer; transition: background .15s; color: var(--text);
+.qty-btn:hover{background:var(--accent);color:#fff}
+.qty-num{
+  width:38px;text-align:center;font-size:13.5px;font-weight:700;
+  border:none;background:var(--surface);
+  border-left:1px solid var(--border);border-right:1px solid var(--border);
+  height:34px;display:flex;align-items:center;justify-content:center;
 }
-.qty-btn:hover { background: color-mix(in srgb, var(--accent) 10%, white); color: var(--accent); }
-.qty-num {
-  width: 36px; text-align: center; font-size: 14px; font-weight: 700;
-  border: none; background: var(--surface);
-  border-left: 1px solid var(--border); border-right: 1px solid var(--border);
-  height: 32px; font-family: 'DM Mono', monospace;
-  display: flex; align-items: center; justify-content: center;
+.remove-btn{
+  background:none;border:none;color:var(--text3);font-size:16px;
+  cursor:pointer;padding:5px 8px;margin-left:4px;
+  border-radius:7px;transition:all .15s;
 }
-.remove-btn {
-  background: none; border: none; color: var(--text3); font-size: 17px;
-  cursor: pointer; padding: 4px 8px; margin-left: 4px;
-  border-radius: calc(var(--btn-r) - 2px); transition: all .15s;
-}
-.remove-btn:hover { color: var(--red); background: #fef2f2; }
+.remove-btn:hover{color:var(--red);background:#fef2f2}
 
-/* ── PANEL ── */
-.checkout-panel {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 22px; position: sticky; top: 82px;
+/* ── CHECKOUT PANEL ── */
+.checkout-panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;position:sticky;top:82px;
 }
-.panel-title {
-  font-size: 14px; font-weight: 800; margin-bottom: 18px;
-  padding-bottom: 14px; border-bottom: 1px solid var(--border);
-  text-transform: uppercase; letter-spacing: .06em; color: var(--text2);
+.panel-title{
+  font-family:var(--font-display);font-size:18px;font-weight:400;
+  margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);
+  letter-spacing:-.02em;
 }
-.summary-row {
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 13.5px; color: var(--text2); margin-bottom: 8px;
+.summary-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13.5px;color:var(--text2);margin-bottom:9px;
 }
-.summary-row.discount { color: var(--green); font-weight: 600; }
-.summary-total {
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 18px; font-weight: 900; margin-top: 14px; padding-top: 14px;
-  border-top: 2px solid var(--border);
+.summary-row.discount{color:var(--green);font-weight:600}
+.summary-total{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:18px;font-weight:800;margin-top:16px;padding-top:16px;
+  border-top:2px solid var(--border);
 }
-.summary-total span:last-child { color: var(--accent); font-family: 'DM Mono', monospace; }
+.summary-total span:last-child{color:var(--accent)}
 
-/* ── PAYMENT METHODS ── */
-.section-label {
-  font-size: 11px; font-weight: 700; color: var(--text3);
-  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; margin-top: 16px;
+/* ── PAYMENT ── */
+.section-label{
+  font-size:10.5px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px;margin-top:18px;
 }
-.payment-options { display: flex; flex-direction: column; gap: 7px; }
-.payment-option {
-  display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-  border: 2px solid var(--border); border-radius: calc(var(--radius) - 2px);
-  cursor: pointer; transition: all .15s; background: var(--bg);
+.payment-options{display:flex;flex-direction:column;gap:8px}
+.payment-option{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:var(--btn-r);
+  cursor:pointer;transition:all .15s;background:var(--bg);
 }
-.payment-option:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 4%, white); }
-.payment-option.selected {
-  border-color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, white);
-}
-.payment-option input[type=radio] { accent-color: var(--accent); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
-.payment-option-info { flex: 1; }
-.payment-option-title { font-size: 13.5px; font-weight: 700; color: var(--text); }
-.payment-option-desc { font-size: 11.5px; color: var(--text3); margin-top: 1px; }
-.payment-option-icon { font-size: 20px; }
-.razorpay-badge {
-  display: flex; align-items: center; gap: 6px;
-  background: #eef9f4; border: 1px solid #c3e6d8; border-radius: calc(var(--btn-r) - 2px);
-  padding: 7px 12px; margin-top: 6px; font-size: 11.5px; color: #15803d; font-weight: 600;
+.payment-option:hover{border-color:var(--accent)}
+.payment-option.selected{border-color:var(--accent);background:rgba(17,17,17,.04)}
+.payment-option input[type=radio]{accent-color:var(--accent);width:15px;height:15px;flex-shrink:0;cursor:pointer}
+.payment-option-info{flex:1}
+.payment-option-title{font-size:13.5px;font-weight:700;color:var(--text)}
+.payment-option-desc{font-size:11.5px;color:var(--text3);margin-top:1px}
+.payment-option-icon{font-size:20px}
+.razorpay-badge{
+  display:flex;align-items:center;gap:6px;
+  background:#eef9f4;border:1px solid #c3e6d8;border-radius:var(--btn-r);
+  padding:8px 12px;margin-top:6px;font-size:11.5px;color:#15803d;font-weight:600;
 }
 
 /* ── COUPON ── */
-.coupon-wrap { margin: 14px 0; }
-.coupon-input-row { display: flex; gap: 8px; }
-.coupon-input {
-  flex: 1; padding: 9px 12px; border: 1.5px solid var(--border);
-  border-radius: calc(var(--btn-r) - 2px); font-size: 13px;
-  font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .05em;
-  font-weight: 600; outline: none; background: var(--bg); transition: border-color .15s; color: var(--text);
+.coupon-wrap{margin:16px 0}
+.coupon-input-row{display:flex;gap:8px}
+.coupon-input{
+  flex:1;padding:9px 13px;border:1.5px solid var(--border);
+  border-radius:var(--btn-r);font-size:13px;
+  text-transform:uppercase;letter-spacing:.05em;
+  font-weight:600;outline:none;background:var(--surface);
+  transition:border-color .15s;color:var(--text);font-family:var(--font);
 }
-.coupon-input:focus { border-color: var(--accent); }
-.btn-apply {
-  padding: 9px 16px; background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: calc(var(--btn-r) - 2px); font-size: 13px; font-weight: 700; cursor: pointer;
-  font-family: var(--font); color: var(--text2); transition: all .15s; white-space: nowrap;
+.coupon-input:focus{border-color:var(--accent)}
+.btn-apply{
+  padding:9px 16px;background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:var(--btn-r);font-size:13px;font-weight:700;cursor:pointer;
+  font-family:var(--font);color:var(--text2);transition:all .15s;white-space:nowrap;
 }
-.btn-apply:hover { background: var(--accent); color: white; border-color: var(--accent); }
-.coupon-msg { font-size: 12.5px; margin-top: 7px; padding: 7px 12px; border-radius: 7px; display: none; }
-.coupon-msg.success { display: block; background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
-.coupon-msg.error   { display: block; background: #fef2f2; color: var(--red);   border: 1px solid #fecaca; }
+.btn-apply:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.coupon-msg{font-size:12.5px;margin-top:8px;padding:8px 13px;border-radius:8px;display:none}
+.coupon-msg.success{display:block;background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0}
+.coupon-msg.error{display:block;background:#fef2f2;color:var(--red);border:1px solid #fecaca}
 
 /* ── FORM ── */
-.form-section { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 18px; }
-.form-section-title {
-  font-size: 11px; font-weight: 700; color: var(--text2);
-  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px;
+.form-section{margin-top:20px;border-top:1px solid var(--border);padding-top:20px}
+.form-section-title{
+  font-size:10.5px;font-weight:700;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.09em;margin-bottom:14px;
 }
-.field { margin-bottom: 10px; }
-.field label { display: block; font-size: 11.5px; font-weight: 600; color: var(--text3); margin-bottom: 5px; }
-.field input {
-  width: 100%; padding: 9px 12px; border: 1.5px solid var(--border);
-  border-radius: calc(var(--btn-r) - 1px); font-size: 14px;
-  font-family: var(--font); color: var(--text); outline: none;
-  transition: border-color .15s; background: var(--bg);
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11.5px;font-weight:600;color:var(--text3);margin-bottom:5px}
+.field input{
+  width:100%;padding:10px 13px;border:1.5px solid var(--border);
+  border-radius:var(--btn-r);font-size:14px;
+  font-family:var(--font);color:var(--text);outline:none;
+  transition:border-color .15s,box-shadow .15s;background:var(--surface);
 }
-.field input:focus { border-color: var(--accent); background: var(--surface); }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(17,17,17,.05);background:#fff}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
 /* ── CHECKOUT BTN ── */
-.btn-checkout {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: 100%; padding: 14px; background: var(--accent); color: white;
-  border: none; border-radius: var(--btn-r); font-size: 15px; font-weight: 700;
-  cursor: pointer; font-family: var(--font); margin-top: 16px;
-  transition: opacity .15s, transform .15s;
+.btn-checkout{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:14px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--btn-r);font-size:14.5px;font-weight:700;
+  cursor:pointer;font-family:var(--font);margin-top:18px;
+  transition:opacity .15s,transform .15s var(--ease-spring);
 }
-.btn-checkout:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
-.btn-checkout:disabled { opacity: .55; cursor: not-allowed; transform: none; }
-.secure-note { text-align: center; font-size: 11.5px; color: var(--text3); margin-top: 10px; }
+.btn-checkout:hover:not(:disabled){opacity:.88;transform:translateY(-1px)}
+.btn-checkout:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.secure-note{text-align:center;font-size:11.5px;color:var(--text3);margin-top:10px}
 
 /* ── EMPTY ── */
-.empty-cart {
-  text-align: center; padding: 80px 40px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius);
+.empty-cart{
+  text-align:center;padding:80px 40px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
 }
-.empty-cart .icon { font-size: 60px; margin-bottom: 16px; }
-.empty-cart h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-.empty-cart p { color: var(--text2); margin-bottom: 24px; font-size: 15px; }
-.btn-shop {
-  display: inline-block; padding: 12px 28px;
-  background: var(--accent); color: white; border-radius: var(--btn-r);
-  text-decoration: none; font-weight: 700; transition: opacity .15s;
+.empty-cart .icon{font-size:60px;margin-bottom:16px;display:block}
+.empty-cart h2{font-family:var(--font-display);font-size:24px;font-weight:400;margin-bottom:8px;letter-spacing:-.02em}
+.empty-cart p{color:var(--text2);margin-bottom:24px;font-size:15px}
+.btn-shop{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:12px 28px;background:var(--accent);color:#fff;border-radius:var(--btn-r);
+  font-weight:700;transition:opacity .15s,transform .15s var(--ease-spring);font-family:var(--font);
 }
-.btn-shop:hover { opacity: .88; }
+.btn-shop:hover{opacity:.88;transform:translateY(-1px)}
 
 /* ── ERRORS ── */
-.error-msg {
-  background: #fef2f2; border: 1px solid #fecaca; color: var(--red);
-  padding: 10px 14px; border-radius: calc(var(--btn-r) - 1px);
-  font-size: 13px; margin-top: 10px; display: none;
+.error-msg{
+  background:#fef2f2;border:1px solid #fecaca;color:var(--red);
+  padding:10px 14px;border-radius:var(--btn-r);
+  font-size:13px;margin-top:12px;display:none;
 }
 
 /* ── LOADING ── */
-.loading-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.45);
-  display: none; align-items: center; justify-content: center; z-index: 9999;
-  backdrop-filter: blur(3px);
+.loading-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.48);
+  display:none;align-items:center;justify-content:center;z-index:9999;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
 }
-.loading-overlay.show { display: flex; }
-.spinner-wrap {
-  background: white; border-radius: var(--radius); padding: 28px 36px; text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+.loading-overlay.show{display:flex}
+.spinner-wrap{
+  background:#fff;border-radius:var(--radius);padding:32px 40px;text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.24);
 }
-.spinner {
-  width: 38px; height: 38px; border: 3px solid var(--border);
-  border-top-color: var(--accent); border-radius: 50%;
-  animation: spin .7s linear infinite; margin: 0 auto 12px;
+.spinner{
+  width:36px;height:36px;border:2.5px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;margin:0 auto 14px;
 }
-.spinner-wrap p { font-size: 14px; font-weight: 600; color: var(--text2); }
-.spinner-wrap p span { display: block; font-size: 12px; color: var(--text3); margin-top: 4px; }
-@keyframes spin { to { transform: rotate(360deg); } }
+.spinner-wrap p{font-size:14px;font-weight:600;color:var(--text2)}
+.spinner-wrap p span{display:block;font-size:12px;color:var(--text3);margin-top:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-@media(max-width:900px) {
-  .layout { grid-template-columns: 1fr; }
-  .checkout-panel { position: static; }
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .checkout-panel{position:static}
 }
-@media(max-width:540px) {
-  .field-row { grid-template-columns: 1fr; }
-  .page-wrap { padding: 20px 16px 60px; }
-  .nav-inner { padding: 0 16px; }
+@media(max-width:540px){
+  .field-row{grid-template-columns:1fr}
+  .page-wrap{padding:20px 16px 60px}
+  .nav-inner{padding:0 16px}
+  .page-heading{font-size:22px}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="page-nav" id="pageNav">
   <div class="nav-inner">
     <a class="back-btn" id="shopLink" href="javascript:history.back()">← Continue Shopping</a>
-    <span class="nav-store-name" id="navStoreName" data-store-name>Cart</span>
+    <span class="nav-store-name" id="navStoreName">Cart</span>
     <button class="nav-acct-btn" id="acctBtn" onclick="handleAcctClick()">
       👤 <span id="acctLabel">Account</span>
     </button>
@@ -295,205 +295,113 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); -web
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
 <script>
-/* ════════════════════════════════════
-   SLUG + URL HELPERS
-════════════════════════════════════ */
-function resolveSlug() {
-  const s = sessionStorage.getItem('ekart_store'); if (s) return s
-  const p = new URLSearchParams(location.search).get('store'); if (p) return p
-  const h = location.hostname
-  const SERVICE = ['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
-  if (h.endsWith('.aasaitech.in')) {
-    const sub = h.slice(0, h.indexOf('.aasaitech.in'))
-    const firstPart = sub.split('.')[0]
-    if (!SERVICE.includes(firstPart)) return firstPart
-    return null
-  }
-  if (!SERVICE.some(d => h.includes(d))) return h
+function resolveSlug(){
+  const s=sessionStorage.getItem('ekart_store');if(s)return s
+  const p=new URLSearchParams(location.search).get('store');if(p)return p
+  const h=location.hostname
+  const SVC=['ekartv1','ekart','ekarts','apiv2','storefront','ai-ekart-storefront.pages.dev','localhost','127.0.0.1']
+  if(h.endsWith('.aasaitech.in')){const sub=h.slice(0,h.indexOf('.aasaitech.in'));if(!SVC.includes(sub.split('.')[0]))return sub.split('.')[0];return null}
+  if(!SVC.some(d=>h.includes(d)))return h
   return null
 }
-const slug = resolveSlug()
-const _isCustom = !new URLSearchParams(location.search).get('store') && !sessionStorage.getItem('ekart_store') && slug !== null
-const storeUrl = (page, extra='') => _isCustom ? `${page}${extra?'?'+extra:''}` : `${page}?store=${slug}${extra?'&'+extra:''}`
-const API = 'https://apiv2.aasaitech.in'
-let currency = sessionStorage.getItem('ekart_currency') || '₹'
-let appliedCoupon = null
-let paymentEnabled = false
-let selectedPayment = 'cod'
-let storeConfig = {}
+const slug=resolveSlug()
+const _isCustom=!new URLSearchParams(location.search).get('store')&&!sessionStorage.getItem('ekart_store')&&slug!==null
+const storeUrl=(page,extra='')=>_isCustom?`${page}${extra?'?'+extra:''}`:`${page}?store=${slug}${extra?'&'+extra:''}`
+const API='https://apiv2.aasaitech.in'
+let currency=sessionStorage.getItem('ekart_currency')||'₹'
+let appliedCoupon=null,paymentEnabled=false,selectedPayment='cod',storeConfig={}
 
-/* ════════════════════════════════════
-   THEME LOADER
-════════════════════════════════════ */
-
-/* ── Nav logo renderer ── */
-function renderNavLogo(cfg) {
-  const imgEl  = document.getElementById('navLogoImg')
-  const txtEl  = document.getElementById('navLogoText')
-  if (!imgEl && !txtEl) return
-  if (cfg.logo_url) {
-    // Show image only — hide text
-    if (imgEl) imgEl.innerHTML = `<img src="${cfg.logo_url}" alt="${(cfg.name||'').replace(/"/g,'&quot;')}" style="height:32px;max-width:120px;border-radius:6px;object-fit:contain;display:block;vertical-align:middle;">`
-    if (txtEl) txtEl.style.display = 'none'
-  } else {
-    // No logo image — show store name as text
-    if (imgEl) imgEl.innerHTML = ''
-    if (txtEl) {
-      txtEl.style.display = ''
-      const name = cfg.name || 'eKart'
-      txtEl.innerHTML = `<span class="nav-logo-accent">${name[0]}</span>${name.slice(1)}`
-    }
-  }
-}
-function isColorDark(hex) {
-  const c = (hex||'').replace('#','')
-  if (c.length !== 6) return false
+function isColorDark(hex){
+  const c=(hex||'').replace('#','');if(c.length!==6)return false
   const r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16)
-  return (r*299+g*587+b*114)/1000 < 145
+  return(r*299+g*587+b*114)/1000<145
 }
-
-function parseThemeSettings(raw) {
-  if (!raw || typeof raw !== 'object') return {}
-  let doc = raw
-  if (raw.published && typeof raw.published === 'object') doc = raw.published
-  else if (raw.draft && typeof raw.draft === 'object') doc = raw.draft
-  const s = doc.settings || doc
-  // Scan sections[] for a navbar section to get its bgColor
-  let navBgFromSection = null, navTextFromSection = null
-  const sections = doc.sections || []
-  for (const sec of sections) {
-    const t = (sec.type || '').toLowerCase()
-    if (t === 'navbar' || t === 'navigation' || t === 'nav' || t === 'header') {
-      const sd = sec.data || sec.settings || {}
-      navBgFromSection   = sd.bgColor || sd.bg_color || sd.background || null
-      navTextFromSection = sd.textColor || sd.text_color || sd.linkColor || sd.link_color || null
-      break
+function parseThemeSettings(raw){
+  if(!raw||typeof raw!=='object')return{}
+  let doc=raw
+  if(raw.published&&typeof raw.published==='object')doc=raw.published
+  else if(raw.draft&&typeof raw.draft==='object')doc=raw.draft
+  const s=doc.settings||doc
+  let navBg=null,navText=null
+  for(const sec of(doc.sections||[])){
+    const t=(sec.type||'').toLowerCase()
+    if(t==='navbar'||t==='navigation'||t==='nav'||t==='header'){
+      const sd=sec.data||sec.settings||{}
+      navBg=sd.bgColor||sd.bg_color||null;navText=sd.textColor||sd.text_color||sd.linkColor||null;break
     }
   }
-  return {
-    primaryColor: s.primary_color || s.primaryColor || null,
-    bgColor:      s.secondary_color || s.bgColor || s.bg_color || null,
-    textColor:    s.accent_color || s.textColor || null,
-    font:         s.font_heading || s.fontHeading || s.font || null,
-    radius:       s.radius || s.border_radius || null,
-    buttonStyle:  s.button_style || s.buttonStyle || null,
-    navBg:        s.nav_bg || s.navBg || navBgFromSection || null,
-    navTextColor: s.nav_text_color || s.navTextColor || navTextFromSection || null,
-  }
+  return{primaryColor:s.primary_color||s.primaryColor||null,bgColor:s.secondary_color||s.bgColor||s.bg_color||null,textColor:s.accent_color||s.textColor||null,font:s.font_heading||s.fontHeading||s.font||null,radius:s.radius||s.border_radius||null,buttonStyle:s.button_style||s.buttonStyle||null,navBg:s.nav_bg||s.navBg||navBg||null,navTextColor:s.nav_text_color||s.navTextColor||navText||null}
 }
-
-function applyCSSVars(cfg, theme) {
-  const R = document.documentElement
-  const primary = theme.primaryColor || cfg.brand_color || null
-  if (primary) { R.style.setProperty('--accent', primary); R.style.setProperty('--primary', primary) }
-  if (theme.bgColor) { R.style.setProperty('--bg', theme.bgColor); document.body.style.background = theme.bgColor }
-  if (theme.textColor) R.style.setProperty('--text', theme.textColor)
-  if (theme.radius) {
-    const r = typeof theme.radius === 'number' ? `${theme.radius}px` : String(theme.radius).includes('px') ? theme.radius : `${theme.radius}px`
-    R.style.setProperty('--radius', r); R.style.setProperty('--card-radius', r)
-    const btnR = theme.buttonStyle === 'pill' ? '999px' : theme.buttonStyle === 'square' ? '4px' : r
-    R.style.setProperty('--btn-r', btnR)
+function applyCSSVars(cfg,theme){
+  const R=document.documentElement
+  const primary=theme.primaryColor||cfg.brand_color||null
+  if(primary){R.style.setProperty('--accent',primary);R.style.setProperty('--primary',primary)}
+  if(theme.bgColor){R.style.setProperty('--bg',theme.bgColor)}
+  if(theme.textColor)R.style.setProperty('--text',theme.textColor)
+  if(theme.radius){
+    const r=typeof theme.radius==='number'?`${theme.radius}px`:String(theme.radius).includes('px')?theme.radius:`${theme.radius}px`
+    R.style.setProperty('--radius',r)
+    const btnR=theme.buttonStyle==='pill'?'999px':theme.buttonStyle==='square'?'4px':r
+    R.style.setProperty('--btn-r',btnR)
   }
-  if (theme.font && theme.font !== 'Outfit' && theme.font !== 'system-ui') {
-    const fid = 'gf-' + theme.font.replace(/\s+/g,'-')
-    if (!document.getElementById(fid)) {
-      const l = document.createElement('link'); l.id = fid; l.rel = 'stylesheet'
-      l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`
-      document.head.appendChild(l)
-    }
-    R.style.setProperty('--font', `'${theme.font}', 'Outfit', system-ui, sans-serif`)
-    document.body.style.fontFamily = `'${theme.font}', 'Outfit', system-ui, sans-serif`
+  if(theme.font&&theme.font!=='DM Sans'){
+    const fid='gf-'+theme.font.replace(/\s+/g,'-')
+    if(!document.getElementById(fid)){const l=document.createElement('link');l.id=fid;l.rel='stylesheet';l.href=`https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`;document.head.appendChild(l)}
+    R.style.setProperty('--font',`'${theme.font}',system-ui,sans-serif`)
   }
-  if (theme.navBg) {
-    const R2 = document.documentElement
-    R2.style.setProperty('--navbar-bg', theme.navBg)
-    const nav = document.getElementById('pageNav')
-    if (nav) {
-      nav.style.background = theme.navBg
-      nav.style.borderBottomColor = isColorDark(theme.navBg) ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.07)'
-      const isDark = isColorDark(theme.navBg)
-      const textCol = theme.navTextColor || (isDark ? '#ffffff' : '')
-      if (textCol) {
-        nav.style.color = textCol
-        // Cascade to direct text children that have explicit inline colors
-        nav.querySelectorAll('a, span, button').forEach(el => {
-          if (!el.style.color) el.style.color = textCol
-        })
-      }
+  if(theme.navBg){
+    R.style.setProperty('--navbar-bg',theme.navBg)
+    const nav=document.getElementById('pageNav')
+    if(nav){
+      nav.style.background=theme.navBg
+      nav.style.borderBottomColor=isColorDark(theme.navBg)?'rgba(255,255,255,.1)':'rgba(0,0,0,.07)'
+      const tc=theme.navTextColor||(isColorDark(theme.navBg)?'#ffffff':'')
+      if(tc){nav.style.color=tc;nav.querySelectorAll('a,span,button').forEach(el=>{if(!el.style.color)el.style.color=tc})}
     }
   }
 }
-
-async function loadTheme() {
-  if (!slug) return
-  try {
-    const [cfgRes, themeRes] = await Promise.allSettled([
-      fetch(`${API}/shop/${slug}/config`).then(r => r.json()),
-      fetch(`${API}/shop/${slug}/theme`).then(r => r.json()),
-    ])
-    if (cfgRes.status === 'fulfilled' && !cfgRes.value.error) {
-      storeConfig = cfgRes.value
-      paymentEnabled = !!storeConfig.payment_enabled
-      if (storeConfig.currency === 'USD') currency = '$'
-      else if (storeConfig.currency === 'EUR') currency = '€'
-      sessionStorage.setItem('ekart_store', slug)
-      sessionStorage.setItem('ekart_currency', currency)
-      sessionStorage.setItem('ekart_store_name', storeConfig.name || '')
-      sessionStorage.setItem('ekart_pay_enabled', paymentEnabled ? '1' : '0')
-      const nameEl = document.getElementById('navStoreName')
-      if (nameEl) nameEl.textContent = storeConfig.name || 'Cart'
-      document.title = `Cart — ${storeConfig.name || 'Store'}`
+async function loadTheme(){
+  if(!slug)return
+  try{
+    const[cfgRes,themeRes]=await Promise.allSettled([fetch(`${API}/shop/${slug}/config`).then(r=>r.json()),fetch(`${API}/shop/${slug}/theme`).then(r=>r.json())])
+    if(cfgRes.status==='fulfilled'&&!cfgRes.value.error){
+      storeConfig=cfgRes.value;paymentEnabled=!!storeConfig.payment_enabled
+      if(storeConfig.currency==='USD')currency='$';else if(storeConfig.currency==='EUR')currency='€'
+      sessionStorage.setItem('ekart_store',slug);sessionStorage.setItem('ekart_currency',currency)
+      sessionStorage.setItem('ekart_store_name',storeConfig.name||'');sessionStorage.setItem('ekart_pay_enabled',paymentEnabled?'1':'0')
+      const nameEl=document.getElementById('navStoreName');if(nameEl)nameEl.textContent=storeConfig.name||'Cart'
+      document.title=`Cart — ${storeConfig.name||'Store'}`
     }
-    if (themeRes.status === 'fulfilled') {
-      applyCSSVars(storeConfig, parseThemeSettings(themeRes.value))
-    } else {
-      // Fallback to brand_color only
-      if (storeConfig.brand_color) {
-        document.documentElement.style.setProperty('--accent', storeConfig.brand_color)
-        document.documentElement.style.setProperty('--primary', storeConfig.brand_color)
-      }
-    }
-  } catch(e) { console.warn('[cart theme]', e.message) }
+    if(themeRes.status==='fulfilled')applyCSSVars(storeConfig,parseThemeSettings(themeRes.value))
+    else if(storeConfig.brand_color){document.documentElement.style.setProperty('--accent',storeConfig.brand_color);document.documentElement.style.setProperty('--primary',storeConfig.brand_color)}
+  }catch(e){console.warn('[cart theme]',e.message)}
 }
 
-/* ════════════════════════════════════
-   ACCOUNT BUTTON
-════════════════════════════════════ */
-function initAcctBtn() {
-  const tok  = slug && localStorage.getItem(`cust_token_${slug}`)
-  const name = slug && localStorage.getItem(`cust_name_${slug}`)
-  const lbl  = document.getElementById('acctLabel')
-  if (lbl) lbl.textContent = (tok && name) ? name.split(' ')[0] : 'Login'
+function initAcctBtn(){
+  const tok=slug&&localStorage.getItem(`cust_token_${slug}`),name=slug&&localStorage.getItem(`cust_name_${slug}`)
+  const lbl=document.getElementById('acctLabel');if(lbl)lbl.textContent=(tok&&name)?name.split(' ')[0]:'Login'
 }
-function handleAcctClick() {
-  const tok = slug && localStorage.getItem(`cust_token_${slug}`)
-  location.href = tok ? storeUrl('customer-account.html') : storeUrl('customer-login.html', `redirect=${encodeURIComponent(location.href)}`)
+function handleAcctClick(){
+  const tok=slug&&localStorage.getItem(`cust_token_${slug}`)
+  location.href=tok?storeUrl('customer-account.html'):storeUrl('customer-login.html',`redirect=${encodeURIComponent(location.href)}`)
 }
 
-/* ════════════════════════════════════
-   CART HELPERS
-════════════════════════════════════ */
-const getCart  = () => JSON.parse(localStorage.getItem('cart_' + slug) || '[]')
-const saveCart = c => localStorage.setItem('cart_' + slug, JSON.stringify(c))
+const getCart=()=>JSON.parse(localStorage.getItem('cart_'+slug)||'[]')
+const saveCart=c=>localStorage.setItem('cart_'+slug,JSON.stringify(c))
 
-/* ════════════════════════════════════
-   RENDER
-════════════════════════════════════ */
-function render() {
-  const cart = getCart()
-  const view = document.getElementById('cartView')
-  if (!cart.length) {
-    view.innerHTML = `<div class="empty-cart"><div class="icon">🛒</div><h2>Your cart is empty</h2><p>Looks like you haven't added anything yet.</p><a class="btn-shop" href="${storeUrl('index.html')}">Browse Products</a></div>`
+function render(){
+  const cart=getCart(),view=document.getElementById('cartView')
+  if(!cart.length){
+    view.innerHTML=`<div class="empty-cart"><span class="icon">🛒</span><h2>Your cart is empty</h2><p>Looks like you haven't added anything yet.</p><a class="btn-shop" href="${storeUrl('index.html')}">Browse Products →</a></div>`
     return
   }
-  const subtotal = cart.reduce((s,x) => s + x.price * x.qty, 0)
-  const discount = appliedCoupon ? appliedCoupon.discount : 0
-  const total    = Math.max(subtotal - discount, 0)
-  const totalQty = cart.reduce((s,x) => s + x.qty, 0)
+  const subtotal=cart.reduce((s,x)=>s+x.price*x.qty,0)
+  const discount=appliedCoupon?appliedCoupon.discount:0
+  const total=Math.max(subtotal-discount,0)
+  const totalQty=cart.reduce((s,x)=>s+x.qty,0)
 
-  const paymentSelector = paymentEnabled ? `
+  const paymentSelector=paymentEnabled?`
     <div class="section-label">Payment Method</div>
     <div class="payment-options">
       <label class="payment-option ${selectedPayment==='razorpay'?'selected':''}" onclick="selectPayment('razorpay')">
@@ -513,30 +421,25 @@ function render() {
         </div>
       </label>
     </div>
-    ${selectedPayment==='razorpay' ? `<div class="razorpay-badge">⚡ Powered by Razorpay — 100% secure</div>` : ''}
-  ` : `<div style="display:flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--btn-r);padding:11px 14px;margin:14px 0;font-size:13px;color:var(--green);font-weight:600;">💰 Cash on Delivery</div>`
+    ${selectedPayment==='razorpay'?`<div class="razorpay-badge">⚡ Powered by Razorpay — 100% secure</div>`:''}
+  `:`<div style="display:flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:var(--btn-r);padding:11px 14px;margin:16px 0;font-size:13px;color:var(--green);font-weight:600;">💰 Cash on Delivery</div>`
 
-  const btnLabel = selectedPayment === 'razorpay'
-    ? `💳 Pay ${currency}${total.toFixed(2)} Online`
-    : `✅ Place Order — ${currency}${total.toFixed(2)}`
+  const btnLabel=selectedPayment==='razorpay'?`💳 Pay ${currency}${total.toFixed(2)} Online`:`✅ Place Order — ${currency}${total.toFixed(2)}`
+  const secureNote=selectedPayment==='razorpay'?'🔒 Secured by Razorpay — UPI, Cards, Netbanking':'🔒 Pay in cash when your order arrives'
 
-  const secureNote = selectedPayment === 'razorpay'
-    ? '🔒 Secured by Razorpay — UPI, Cards, Netbanking'
-    : '🔒 Pay in cash when your order arrives'
-
-  view.innerHTML = `<div class="layout">
+  view.innerHTML=`<div class="layout">
     <div>
       <div class="cart-section">
         <div class="cart-header">
           <span>${totalQty} item${totalQty!==1?'s':''}</span>
-          <span style="font-family:'DM Mono',monospace;">${currency}${subtotal.toFixed(2)}</span>
+          <span>${currency}${subtotal.toFixed(2)}</span>
         </div>
-        ${cart.map((item,i) => `
+        ${cart.map((item,i)=>`
           <div class="cart-item">
-            <div class="cart-img">${item.image ? `<img src="${item.image}" alt="">` : '📦'}</div>
+            <div class="cart-img">${item.image?`<img src="${item.image}" alt="">`:' 📦'}</div>
             <div class="cart-item-info">
               <div class="cart-item-name">${esc(item.name)}</div>
-              ${item.variant ? `<div class="cart-item-variant">📌 ${esc(item.variant)}</div>` : ''}
+              ${item.variant?`<div class="cart-item-variant">📌 ${esc(item.variant)}</div>`:''}
               <div class="cart-item-price">${currency}${(item.price*item.qty).toFixed(2)}</div>
               <div class="cart-item-unit">${currency}${item.price.toFixed(2)} each</div>
             </div>
@@ -545,30 +448,26 @@ function render() {
               <div class="qty-num">${item.qty}</div>
               <button class="qty-btn" onclick="updateQty(${i},1)">+</button>
             </div>
-            <button class="remove-btn" onclick="removeItem(${i})">✕</button>
+            <button class="remove-btn" onclick="removeItem(${i})" title="Remove">✕</button>
           </div>`).join('')}
       </div>
     </div>
-
     <div>
       <div class="checkout-panel">
         <div class="panel-title">Order Summary</div>
         <div class="summary-row"><span>Subtotal (${totalQty} items)</span><span>${currency}${subtotal.toFixed(2)}</span></div>
-        <div class="summary-row"><span>Shipping</span><span style="color:var(--green);font-weight:600;">FREE</span></div>
-        ${appliedCoupon ? `<div class="summary-row discount"><span>🎟 Coupon (${esc(appliedCoupon.code)})</span><span>−${currency}${discount.toFixed(2)}</span></div>` : ''}
+        <div class="summary-row"><span>Shipping</span><span style="color:var(--green);font-weight:600">FREE</span></div>
+        ${appliedCoupon?`<div class="summary-row discount"><span>🎟 Coupon (${esc(appliedCoupon.code)})</span><span>−${currency}${discount.toFixed(2)}</span></div>`:''}
         <div class="summary-total"><span>Total</span><span>${currency}${total.toFixed(2)}</span></div>
-
         ${paymentSelector}
-
         <div class="coupon-wrap">
           <div class="section-label">Have a coupon?</div>
           <div class="coupon-input-row">
-            <input class="coupon-input" type="text" id="couponInput" placeholder="ENTER CODE" value="${appliedCoupon ? esc(appliedCoupon.code) : ''}">
-            <button class="btn-apply" onclick="${appliedCoupon ? 'removeCoupon()' : 'applyCoupon()'}">${appliedCoupon ? '✕ Remove' : 'Apply'}</button>
+            <input class="coupon-input" type="text" id="couponInput" placeholder="ENTER CODE" value="${appliedCoupon?esc(appliedCoupon.code):''}">
+            <button class="btn-apply" onclick="${appliedCoupon?'removeCoupon()':'applyCoupon()'}">${appliedCoupon?'✕ Remove':'Apply'}</button>
           </div>
           <div class="coupon-msg" id="couponMsg"></div>
         </div>
-
         <div class="form-section">
           <div class="form-section-title">👤 Contact Details</div>
           <div class="field"><label>Full Name *</label><input type="text" id="custName" placeholder="John Doe"></div>
@@ -576,7 +475,7 @@ function render() {
             <div class="field"><label>Email *</label><input type="email" id="custEmail" placeholder="you@email.com"></div>
             <div class="field"><label>Phone *</label><input type="tel" id="custPhone" placeholder="+91 98765 43210"></div>
           </div>
-          <div class="form-section-title" style="margin-top:16px;">📦 Shipping Address</div>
+          <div class="form-section-title" style="margin-top:18px">📦 Shipping Address</div>
           <div class="field"><label>Address Line 1 *</label><input type="text" id="addrLine1" placeholder="123 Main Street"></div>
           <div class="field"><label>Address Line 2</label><input type="text" id="addrLine2" placeholder="Landmark, Area (optional)"></div>
           <div class="field-row">
@@ -588,7 +487,6 @@ function render() {
             <div class="field"><label>Country</label><input type="text" id="addrCountry" value="India"></div>
           </div>
         </div>
-
         <div class="error-msg" id="errorMsg"></div>
         <button class="btn-checkout" id="checkoutBtn" onclick="handleCheckout()">${btnLabel}</button>
         <p class="secure-note">${secureNote}</p>
@@ -597,132 +495,96 @@ function render() {
   </div>`
 }
 
-function selectPayment(method) { selectedPayment = method; render() }
-function updateQty(i, delta) { const c=getCart(); c[i].qty=Math.max(1,c[i].qty+delta); saveCart(c); render() }
-function removeItem(i) { const c=getCart(); c.splice(i,1); saveCart(c); render() }
+function selectPayment(method){selectedPayment=method;render()}
+function updateQty(i,delta){const c=getCart();c[i].qty=Math.max(1,c[i].qty+delta);saveCart(c);render()}
+function removeItem(i){const c=getCart();c.splice(i,1);saveCart(c);render()}
 
-/* ════════════════════════════════════
-   COUPON
-════════════════════════════════════ */
-async function applyCoupon() {
-  const code = document.getElementById('couponInput')?.value.trim(); if (!code) return
-  const cart = getCart(); const subtotal = cart.reduce((s,x) => s+x.price*x.qty, 0)
-  const msgEl = document.getElementById('couponMsg')
-  try {
-    const res  = await fetch(`${API}/shop/${slug}/coupons/validate`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({code,subtotal}) })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error || 'Invalid coupon')
-    appliedCoupon = { code: data.code, discount: data.discount }; render()
-    const m = document.getElementById('couponMsg')
-    m.className = 'coupon-msg success'
-    m.textContent = `✅ ${data.type==='percent'?data.value+'% off':currency+data.value+' off'} applied! You save ${currency}${data.discount.toFixed(2)}`
-  } catch(e) {
-    if (msgEl) { msgEl.className = 'coupon-msg error'; msgEl.textContent = '❌ ' + e.message }
-  }
+async function applyCoupon(){
+  const code=document.getElementById('couponInput')?.value.trim();if(!code)return
+  const cart=getCart(),subtotal=cart.reduce((s,x)=>s+x.price*x.qty,0)
+  const msgEl=document.getElementById('couponMsg')
+  try{
+    const res=await fetch(`${API}/shop/${slug}/coupons/validate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,subtotal})})
+    const data=await res.json()
+    if(!res.ok)throw new Error(data.error||'Invalid coupon')
+    appliedCoupon={code:data.code,discount:data.discount};render()
+    const m=document.getElementById('couponMsg')
+    m.className='coupon-msg success';m.textContent=`✅ ${data.type==='percent'?data.value+'% off':currency+data.value+' off'} applied! You save ${currency}${data.discount.toFixed(2)}`
+  }catch(e){if(msgEl){msgEl.className='coupon-msg error';msgEl.textContent='❌ '+e.message}}
 }
-function removeCoupon() { appliedCoupon = null; render() }
+function removeCoupon(){appliedCoupon=null;render()}
 
-/* ════════════════════════════════════
-   FORM
-════════════════════════════════════ */
-function getFormData() {
-  return {
-    name:    document.getElementById('custName')?.value.trim()    || '',
-    email:   document.getElementById('custEmail')?.value.trim()   || '',
-    phone:   document.getElementById('custPhone')?.value.trim()   || '',
-    line1:   document.getElementById('addrLine1')?.value.trim()   || '',
-    line2:   document.getElementById('addrLine2')?.value.trim()   || '',
-    city:    document.getElementById('addrCity')?.value.trim()    || '',
-    state:   document.getElementById('addrState')?.value.trim()   || '',
-    pincode: document.getElementById('addrPin')?.value.trim()     || '',
-    country: document.getElementById('addrCountry')?.value.trim() || 'India',
-  }
+function getFormData(){
+  return{name:document.getElementById('custName')?.value.trim()||'',email:document.getElementById('custEmail')?.value.trim()||'',phone:document.getElementById('custPhone')?.value.trim()||'',line1:document.getElementById('addrLine1')?.value.trim()||'',line2:document.getElementById('addrLine2')?.value.trim()||'',city:document.getElementById('addrCity')?.value.trim()||'',state:document.getElementById('addrState')?.value.trim()||'',pincode:document.getElementById('addrPin')?.value.trim()||'',country:document.getElementById('addrCountry')?.value.trim()||'India'}
 }
-function validateForm(f) {
-  if (!f.name || !f.email || !f.phone || !f.line1 || !f.city || !f.state || !f.pincode)
-    return 'Please fill in all required fields'
-  if (!/\S+@\S+\.\S+/.test(f.email)) return 'Please enter a valid email address'
-  if (!/^\d{6}$/.test(f.pincode))    return 'PIN code must be 6 digits'
+function validateForm(f){
+  if(!f.name||!f.email||!f.phone||!f.line1||!f.city||!f.state||!f.pincode)return'Please fill in all required fields'
+  if(!/\S+@\S+\.\S+/.test(f.email))return'Please enter a valid email address'
+  if(!/^\d{6}$/.test(f.pincode))return'PIN code must be 6 digits'
   return null
 }
-function showError(msg) {
-  const el = document.getElementById('errorMsg'); if (!el) return
-  el.textContent = msg; el.style.display = 'block'
-  el.scrollIntoView({ behavior:'smooth', block:'center' })
+function showError(msg){const el=document.getElementById('errorMsg');if(!el)return;el.textContent=msg;el.style.display='block';el.scrollIntoView({behavior:'smooth',block:'center'})}
+function setLoading(show,text='Placing your order…',subtext=''){
+  document.getElementById('loadingOverlay').classList.toggle('show',show)
+  document.getElementById('loadingText').innerHTML=text+(subtext?`<span>${subtext}</span>`:'')
+  const btn=document.getElementById('checkoutBtn');if(btn)btn.disabled=show
 }
-function setLoading(show, text='Placing your order…', subtext='') {
-  document.getElementById('loadingOverlay').classList.toggle('show', show)
-  document.getElementById('loadingText').innerHTML = text + (subtext ? `<span>${subtext}</span>` : '')
-  const btn = document.getElementById('checkoutBtn'); if (btn) btn.disabled = show
-}
-
-/* ════════════════════════════════════
-   CHECKOUT
-════════════════════════════════════ */
-function handleCheckout() {
-  const errEl = document.getElementById('errorMsg'); if (errEl) errEl.style.display = 'none'
-  selectedPayment === 'razorpay' ? payWithRazorpay() : placeOrderCOD()
+function handleCheckout(){
+  const errEl=document.getElementById('errorMsg');if(errEl)errEl.style.display='none'
+  selectedPayment==='razorpay'?payWithRazorpay():placeOrderCOD()
 }
 
-async function placeOrderCOD() {
-  const f = getFormData(); const err = validateForm(f); if (err) { showError(err); return }
-  const cart = getCart()
-  const body = { customer_name: f.name, customer_email: f.email, customer_phone: f.phone, shipping_address: {line1:f.line1,line2:f.line2,city:f.city,state:f.state,pincode:f.pincode,country:f.country}, items: cart.map(x=>({product_id:x.product_id,qty:x.qty,variant:x.variant||null})), coupon_code: appliedCoupon?appliedCoupon.code:null }
-  setLoading(true, 'Placing your order…', 'This will just take a moment')
-  try {
-    const res  = await fetch(`${API}/shop/${slug}/checkout`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) })
-    const data = await res.json()
-    if (!res.ok || !data.success) throw new Error(data.error || 'Order failed')
-    localStorage.removeItem('cart_' + slug)
-    location.href = storeUrl('order-confirm.html', `order=${data.order_number}&email=${encodeURIComponent(f.email)}`)
-  } catch(e) { setLoading(false); showError(e.message) }
+async function placeOrderCOD(){
+  const f=getFormData(),err=validateForm(f);if(err){showError(err);return}
+  const cart=getCart()
+  const body={customer_name:f.name,customer_email:f.email,customer_phone:f.phone,shipping_address:{line1:f.line1,line2:f.line2,city:f.city,state:f.state,pincode:f.pincode,country:f.country},items:cart.map(x=>({product_id:x.product_id,qty:x.qty,variant:x.variant||null})),coupon_code:appliedCoupon?appliedCoupon.code:null}
+  setLoading(true,'Placing your order…','This will just take a moment')
+  try{
+    const res=await fetch(`${API}/shop/${slug}/checkout`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    const data=await res.json()
+    if(!res.ok||!data.success)throw new Error(data.error||'Order failed')
+    localStorage.removeItem('cart_'+slug)
+    location.href=storeUrl('order-confirm.html',`order=${data.order_number}&email=${encodeURIComponent(f.email)}`)
+  }catch(e){setLoading(false);showError(e.message)}
 }
 
-async function payWithRazorpay() {
-  const f = getFormData(); const err = validateForm(f); if (err) { showError(err); return }
-  const cart = getCart()
-  setLoading(true, 'Preparing payment…', 'Setting up secure checkout')
+async function payWithRazorpay(){
+  const f=getFormData(),err=validateForm(f);if(err){showError(err);return}
+  const cart=getCart()
+  setLoading(true,'Preparing payment…','Setting up secure checkout')
   let orderData
-  try {
-    const res = await fetch(`${API}/shop/${slug}/create-order`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ customer_name:f.name, customer_email:f.email, customer_phone:f.phone, shipping_address:{line1:f.line1,line2:f.line2,city:f.city,state:f.state,pincode:f.pincode,country:f.country}, items:cart.map(x=>({product_id:x.product_id,qty:x.qty,variant:x.variant||null})), coupon_code:appliedCoupon?appliedCoupon.code:null }) })
-    orderData = await res.json(); if (!res.ok) throw new Error(orderData.error || 'Failed to create order')
-  } catch(e) { setLoading(false); showError(e.message); return }
+  try{
+    const res=await fetch(`${API}/shop/${slug}/create-order`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({customer_name:f.name,customer_email:f.email,customer_phone:f.phone,shipping_address:{line1:f.line1,line2:f.line2,city:f.city,state:f.state,pincode:f.pincode,country:f.country},items:cart.map(x=>({product_id:x.product_id,qty:x.qty,variant:x.variant||null})),coupon_code:appliedCoupon?appliedCoupon.code:null})})
+    orderData=await res.json();if(!res.ok)throw new Error(orderData.error||'Failed to create order')
+  }catch(e){setLoading(false);showError(e.message);return}
   setLoading(false)
-  const options = {
-    key: orderData.razorpay_key_id, amount: orderData.amount, currency: orderData.currency || 'INR',
-    name: orderData.store_name || storeConfig.name || 'eKart Store',
-    description: `Order #${orderData.order_number}`, order_id: orderData.razorpay_order_id,
-    prefill: { name: f.name, email: f.email, contact: f.phone },
-    notes: { order_number: orderData.order_number, shipping: `${f.line1}, ${f.city} - ${f.pincode}` },
-    theme: { color: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#111111' },
-    handler: async function(response) {
-      setLoading(true, 'Verifying payment…', 'Please do not close this page')
-      try {
-        const vRes = await fetch(`${API}/shop/${slug}/verify-payment`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ razorpay_order_id:response.razorpay_order_id, razorpay_payment_id:response.razorpay_payment_id, razorpay_signature:response.razorpay_signature, order_number:orderData.order_number }) })
-        const vData = await vRes.json(); if (!vRes.ok) throw new Error(vData.error || 'Verification failed')
-        localStorage.removeItem('cart_' + slug)
-        location.href = storeUrl('order-confirm.html', `order=${orderData.order_number}&email=${encodeURIComponent(f.email)}&paid=1`)
-      } catch(e) { setLoading(false); showError('Payment received but verification failed. Contact support with order #' + orderData.order_number) }
+  const options={
+    key:orderData.razorpay_key_id,amount:orderData.amount,currency:orderData.currency||'INR',
+    name:orderData.store_name||storeConfig.name||'eKart Store',
+    description:`Order #${orderData.order_number}`,order_id:orderData.razorpay_order_id,
+    prefill:{name:f.name,email:f.email,contact:f.phone},
+    notes:{order_number:orderData.order_number,shipping:`${f.line1}, ${f.city} - ${f.pincode}`},
+    theme:{color:getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#111111'},
+    handler:async function(response){
+      setLoading(true,'Verifying payment…','Please do not close this page')
+      try{
+        const vRes=await fetch(`${API}/shop/${slug}/verify-payment`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature,order_number:orderData.order_number})})
+        const vData=await vRes.json();if(!vRes.ok)throw new Error(vData.error||'Verification failed')
+        localStorage.removeItem('cart_'+slug)
+        location.href=storeUrl('order-confirm.html',`order=${orderData.order_number}&email=${encodeURIComponent(f.email)}&paid=1`)
+      }catch(e){setLoading(false);showError('Payment received but verification failed. Contact support with order #'+orderData.order_number)}
     },
-    modal: { ondismiss: function() { setLoading(false); showError('Payment cancelled. Your cart is saved — try again when ready.') } }
+    modal:{ondismiss:function(){setLoading(false);showError('Payment cancelled. Your cart is saved — try again when ready.')}}
   }
-  try {
-    const rzp = new Razorpay(options)
-    rzp.on('payment.failed', r => { setLoading(false); showError(`Payment failed: ${r.error.description}`) })
-    rzp.open()
-  } catch(e) { setLoading(false); showError('Could not open payment window. Please refresh and try again.') }
+  try{const rzp=new Razorpay(options);rzp.on('payment.failed',r=>{setLoading(false);showError(`Payment failed: ${r.error.description}`)});rzp.open()}
+  catch(e){setLoading(false);showError('Could not open payment window. Please refresh and try again.')}
 }
 
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
 
-/* ════════════════════════════════════
-   INIT
-════════════════════════════════════ */
-async function init() {
-  if (slug) document.getElementById('shopLink').href = storeUrl('index.html')
-  await loadTheme()
-  initAcctBtn()
-  render()
+async function init(){
+  if(slug)document.getElementById('shopLink').href=storeUrl('index.html')
+  await loadTheme();initAcctBtn();render()
 }
 init()
 </script>
