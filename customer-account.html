@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Account</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -23,7 +25,7 @@
   --yellow:   #f59e0b;
   --radius:   12px;
   --btn-r:    10px;
-  --font:     'Outfit', sans-serif;
+  --font:     'DM Sans',system-ui,sans-serif;
 }
 body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
@@ -352,15 +354,15 @@ function applyCSSVars(cfg, theme) {
     const btnR = theme.buttonStyle === 'pill' ? '999px' : theme.buttonStyle === 'square' ? '4px' : r
     R.style.setProperty('--btn-r', btnR)
   }
-  if (theme.font && theme.font !== 'Outfit' && theme.font !== 'system-ui') {
+  if (theme.font && theme.font !== 'DM Sans' && theme.font !== 'system-ui') {
     const fid = 'gf-' + theme.font.replace(/\s+/g,'-')
     if (!document.getElementById(fid)) {
       const l = document.createElement('link'); l.id = fid; l.rel = 'stylesheet'
       l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(theme.font)}:wght@400;500;600;700;800&display=swap`
       document.head.appendChild(l)
     }
-    R.style.setProperty('--font', `'${theme.font}', 'Outfit', system-ui, sans-serif`)
-    document.body.style.fontFamily = `'${theme.font}', 'Outfit', system-ui, sans-serif`
+    R.style.setProperty('--font', `'${theme.font}', 'DM Sans',system-ui,sans-serif`)
+    document.body.style.fontFamily = `'${theme.font}', 'DM Sans',system-ui,sans-serif`
   }
   if (theme.navBg) {
     const R2 = document.documentElement
